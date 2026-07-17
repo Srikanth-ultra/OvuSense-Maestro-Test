@@ -1,0 +1,16 @@
+# OS files
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+
+# Maestro debug output
+.maestro/
+
+# Screenshots
+screenshots/
+*.png
+
+# Temp files
+*.tmp

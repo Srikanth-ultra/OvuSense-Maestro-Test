@@ -1,0 +1,110 @@
+appId: com.fertilityfocus.ovusense3
+name: "Help Tab - Navigation and Verification"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# TC-125: Select the Help tab. Check the app shows the Help page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_help"
+- waitForAnimationToEnd
+- assertVisible: "Help"
+- assertVisible: "Safety Information"
+- assertVisible: "User Guide"
+- assertVisible: "Before Use"
+- assertVisible: "Technical Details"
+- takeScreenshot: /tmp/ovusense_tc125_help_main
+
+# TC-126: Tap 'Safety Information'
+- tapOn: "Safety Information"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc126_safety_info
+- back
+- waitForAnimationToEnd
+
+# TC-127: From Help, tap 'User Guide'
+- tapOn: "User Guide"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc127_user_guide
+- back
+- waitForAnimationToEnd
+
+# TC-131: From Help, tap 'Understanding Your Charts & Cycles'
+- tapOn:
+    text: "Understanding Your Charts \\& Cycles"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc131_charts_cycles
+- back
+- waitForAnimationToEnd
+
+# TC-132: From Help, tap 'Before Use'
+- tapOn: "Before Use"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc132_before_use
+- back
+- waitForAnimationToEnd
+
+# TC-133: From Help, tap 'Technical Details'
+- tapOn: "Technical Details"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc133_technical_details
+- back
+- waitForAnimationToEnd
+
+# TC-134: From Help, tap 'Ovusense Website' - opens external browser
+- tapOn: "Ovusense Website"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc134_website
+- back
+- waitForAnimationToEnd
+
+# TC-135: From Help, tap 'Ovusense Support' - opens external browser
+- tapOn: "Ovusense Support"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc135_support
+- back
+- waitForAnimationToEnd
+
+# TC-136: From Help, tap 'Facebook Group'
+- tapOn: "Facebook Group"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc136_facebook
+- back
+- waitForAnimationToEnd
+
+# TC-137: From Help, tap 'Instagram'
+- tapOn: "Instagram"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc137_instagram
+- back
+- waitForAnimationToEnd
+
+# TC-138: From Help, tap 'Contact Customer Support' - opens external browser
+- scrollUntilVisible:
+    element: "Contact Customer Support"
+    direction: DOWN
+- tapOn: "Contact Customer Support"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc138_contact_support
+- back
+- waitForAnimationToEnd

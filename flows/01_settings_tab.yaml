@@ -1,0 +1,100 @@
+appId: com.fertilityfocus.ovusense3
+name: "Settings Tab - Navigation and Verification"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# TC-140: Select the Settings tab. Check Settings page with account email and version
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"
+    text: "Settings"
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/user_info_email"
+- assertVisible: "Account"
+- assertVisible: "Subscriptions"
+- assertVisible: "Notifications"
+- assertVisible: "Sensors"
+- assertVisible: "Preferences"
+- assertVisible: "Data Sharing"
+- assertVisible: "LOG OUT"
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/settings_options_footer"
+- takeScreenshot: /tmp/ovusense_tc140_settings_main
+
+# TC-141: Tap the 'Account' option, check app moves to the Account page
+- tapOn: "Account"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc141_account
+
+# TC-142: Tap Update Email. Check Update Email page appears
+- tapOn: "Update Email"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc142_update_email
+- back
+- waitForAnimationToEnd
+
+# TC-146: Tap Update Password. Check Update Password page appears
+- tapOn: "Update Password"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc146_update_password
+- back
+- waitForAnimationToEnd
+
+# TC-151: Tap Personal Details. Check About Me page appears
+- tapOn: "Personal Details"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc151_personal_details
+- back
+- waitForAnimationToEnd
+
+# TC-155: Tap Delete Account
+- scrollUntilVisible:
+    element: "Delete Account"
+    direction: DOWN
+- tapOn: "Delete Account"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc155_delete_account
+- back
+- waitForAnimationToEnd
+
+# Go back to Settings
+- back
+- waitForAnimationToEnd
+
+# TC-156: From Settings, tap 'Subscriptions'
+- tapOn: "Subscriptions"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc156_subscriptions
+- back
+- waitForAnimationToEnd
+
+# TC-159: From Settings, tap 'Notifications'
+- tapOn: "Notifications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc159_notifications
+- back
+- waitForAnimationToEnd
+
+# TC-160: From Settings, tap 'Sensors'
+- tapOn: "Sensors"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc160_sensors
+- back
+- waitForAnimationToEnd
+
+# TC-161: From Settings, tap 'Preferences'
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc161_preferences
+- back
+- waitForAnimationToEnd
+
+# TC-179: From Settings, tap 'Data Sharing'
+- tapOn: "Data Sharing"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc179_data_sharing
+- back
+- waitForAnimationToEnd
