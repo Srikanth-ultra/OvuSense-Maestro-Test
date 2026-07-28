@@ -1,6 +1,7 @@
 appId: com.fertilityfocus.ovusense3
 name: "Settings Tab - Navigation and Verification"
 ---
+- clearState
 - launchApp
 - waitForAnimationToEnd
 # Force logout + login

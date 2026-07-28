@@ -259,8 +259,20 @@ jobs:
           RESULTS_DIR="test-results/shard-${SHARD_INDEX}"
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
           echo "Emulator booted successfully"
+          # Disable autofill to prevent save-password dialogs from blocking UI
+          adb shell settings put secure autofill_service null 2>/dev/null || true
+          # Disable IME popups and spell checker
+          adb shell settings put secure spell_checker_enabled 0 2>/dev/null || true
+          adb shell settings put secure show_ime_with_hard_keyboard 0 2>/dev/null || true
+          # Dismiss any system dialogs
+          adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS 2>/dev/null || true
+          # Increase screen timeout to max
+          adb shell settings put system screen_off_timeout 2147483647 2>/dev/null || true
+          echo "Emulator configured for testing"
           adb install -r "$APK_PATH"
           echo "APK installed: $APP_PACKAGE"
+          # Grant all runtime permissions to avoid permission dialogs
+          adb shell pm grant "$APP_PACKAGE" android.permission.POST_NOTIFICATIONS 2>/dev/null || true
           echo "Using account: $EMAIL"
           mkdir -p "$RESULTS_DIR"
           SHARD_FLOWS=$(tr '\n' ' ' < shard_flows.txt)

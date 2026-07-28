@@ -5,6 +5,9 @@ name: "Body - Settings Preferences - Deep Tests"
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Preferences"
+    timeout: 10000
 - tapOn: "Preferences"
 - waitForAnimationToEnd
 - takeScreenshot: /tmp/ovusense_tc161_prefs_initial

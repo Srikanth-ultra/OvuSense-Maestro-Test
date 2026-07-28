@@ -26,7 +26,38 @@ name: "Helper - Clear state then login"
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/user_sign_in"
 - waitForAnimationToEnd
+
+# Dismiss any autofill/save-password prompts after login
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- tapOn:
+    text: "No thanks"
+    optional: true
+- tapOn:
+    text: "Not now"
+    optional: true
+- tapOn:
+    text: "NO THANKS"
+    optional: true
+
+# Wait for main app to load
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/navigation_data"
-    timeout: 20000
+    timeout: 30000
+
+# Dismiss any remaining overlays
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- tapOn:
+    text: "No thanks"
+    optional: true
+- waitForAnimationToEnd
+
+# Confirm we're on the main screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 10000
