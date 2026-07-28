@@ -74,7 +74,7 @@ jobs:
           APK_URL="${{ github.event.inputs.apk_url }}"
           if [ -z "$APK_URL" ]; then
             # Default: download from OvuSense dev server
-            APK_URL="https://dev.ovusense.com/adhocapps/ovusense-3.2.0-debug.apk"
+            APK_URL="https://dev.ovusense.com/adhocapps/android.php"
           fi
           echo "Downloading APK from: $APK_URL"
           curl -L -f -o "${{ env.APK_PATH }}" "$APK_URL" || {
