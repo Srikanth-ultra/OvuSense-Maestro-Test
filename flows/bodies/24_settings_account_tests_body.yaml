@@ -4,6 +4,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 # Navigate to Settings > Account
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Account"
@@ -65,6 +66,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 # Navigate to Settings main via bottom nav (reliable), then Account > Update Password
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Account"
 - waitForAnimationToEnd
@@ -181,6 +183,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 # Navigate to Settings main via bottom nav (reliable), then Account > Personal Details
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 
 # ============================================================
@@ -215,5 +218,6 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 # Navigate to Settings main via bottom nav (reliable)
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 

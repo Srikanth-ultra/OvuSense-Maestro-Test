@@ -7,6 +7,7 @@ name: "Login & Data - lots@ovusense.com"
 # Ensure we're logged out first
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -51,6 +52,7 @@ name: "Login & Data - lots@ovusense.com"
 # TC: Confirm version number & UDI on Settings page
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - assertVisible:
     id: "com.fertilityfocus.ovusense3:id/settings_options_footer"

@@ -7,6 +7,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # ============================================================
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Subscriptions"
@@ -46,6 +47,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # Navigate via bottom nav to ensure we're on Settings main
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd

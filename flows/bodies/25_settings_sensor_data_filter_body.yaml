@@ -6,6 +6,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # ============================================================
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -45,6 +46,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # ============================================================
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -72,6 +74,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # ============================================================
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

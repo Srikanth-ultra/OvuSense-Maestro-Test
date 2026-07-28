@@ -23,3 +23,10 @@ name: "Helper - Login with provided credentials"
       id: "com.fertilityfocus.ovusense3:id/navigation_data"
     timeout: 30000
 - waitForAnimationToEnd
+
+# Wait for bottom navigation to be fully interactive (emulator needs extra settle time)
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    timeout: 15000
+- waitForAnimationToEnd

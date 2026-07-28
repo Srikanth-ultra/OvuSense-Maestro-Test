@@ -7,6 +7,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # First, go to Settings > Preferences > Select displayed Medications
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -53,6 +54,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # Go to Settings > Preferences > Select displayed Medications
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -99,6 +101,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # Now go back to Settings and remove the added medication
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

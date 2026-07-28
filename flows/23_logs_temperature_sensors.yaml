@@ -11,6 +11,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Logout if already logged in
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -52,6 +53,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Navigate to Settings > Subscription
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Subscription"
@@ -80,6 +82,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Logout nosub
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
     optional: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
@@ -175,6 +178,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Logout none@
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -258,6 +262,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Logout oldsensor@
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -380,6 +385,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # TC-38/39: Navigate to Settings > Sensors
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Sensors"
@@ -457,6 +463,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Logout
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

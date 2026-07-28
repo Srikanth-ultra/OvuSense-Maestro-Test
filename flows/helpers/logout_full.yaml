@@ -4,6 +4,7 @@ name: "Helper - Full logout with autofill dismissal"
 # Navigate to Settings and logout
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

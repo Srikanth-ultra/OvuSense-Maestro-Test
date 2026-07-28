@@ -136,6 +136,7 @@ name: "Body - Data Tab - pods@ Deep Tests"
 # TC-152/153/154/155: Sensor data shown on graph
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -165,6 +166,7 @@ name: "Body - Data Tab - pods@ Deep Tests"
 # TC-154: Select OvuFirst data only
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -188,6 +190,7 @@ name: "Body - Data Tab - pods@ Deep Tests"
 # TC-155: Select All data
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

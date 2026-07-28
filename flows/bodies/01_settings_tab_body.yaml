@@ -4,6 +4,7 @@ name: "Body - Settings Tab - Navigation and Verification"
 # TC-140: Select the Settings tab. Check Settings page with account email and version
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:

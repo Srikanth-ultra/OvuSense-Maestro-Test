@@ -33,9 +33,17 @@ name: "Settings - Data Sharing and Forgot Password"
     timeout: 30000
 - waitForAnimationToEnd
 
+# Wait for bottom navigation to be fully interactive
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    timeout: 15000
+- waitForAnimationToEnd
+
 # TC-179: Settings > Data Sharing
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Data Sharing"
