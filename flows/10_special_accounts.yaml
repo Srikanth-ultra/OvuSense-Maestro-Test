@@ -1,0 +1,242 @@
+appId: com.fertilityfocus.ovusense3
+name: "Special Account Tests"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Logout if already logged in
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "LOG OUT"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ========== high@ovusense.com ==========
+# TC-57: Sign in with high@ovusense.com. Confirm cycles display correctly
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "high@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc57_high_data
+
+# Check Cycles page has no flags
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc57_high_cycles_no_flags
+- back
+- waitForAnimationToEnd
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
+
+# ========== free@ovusense.com ==========
+# TC-58: Sign in with free@ovusense.com. Check fertile window
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "free@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc58_free_data
+
+# Check Medical Profile for Average cycle length
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- tapOn: "Medical Profile"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc58_free_medical_profile
+- back
+- waitForAnimationToEnd
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
+
+# ========== prgs@ovusense.com ==========
+# TC-59: Sign in with prgs@ovusense.com. Check pregnancy cycles
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "prgs@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc59_prgs_data
+
+# Check Cycles page for pregnancy info
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc59_prgs_cycles
+- back
+- waitForAnimationToEnd
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
+
+# ========== preg@ovusense.com ==========
+# TC-60: Sign in with preg@ovusense.com. Check no DPO in create cycle message
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "preg@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc60_preg_data
+- takeScreenshot: /tmp/ovusense_tc60_preg_create_cycle_msg
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
+
+# ========== nosub@ovusense.com ==========
+# TC-101: Check no Download action, Check subscription link
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "nosub@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Go to Logs > Temperature
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc101_nosub_logs_temp
+
+# TC-102: Check Subscription status says 'No subscription'
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Subscriptions"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc102_nosub_subscription
+- back
+- waitForAnimationToEnd
+
+# Logout
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd

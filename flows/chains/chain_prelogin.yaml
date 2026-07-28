@@ -1,0 +1,18 @@
+appId: com.fertilityfocus.ovusense3
+name: "Chain - Pre-login Navigation (01-04)"
+---
+# Assumes user is already logged in as test@ovusense.com
+- launchApp
+- waitForAnimationToEnd
+
+# Flow 01: Settings Tab Navigation
+- runFlow: ../bodies/01_settings_tab_body.yaml
+
+# Flow 02: Help Tab Navigation
+- runFlow: ../bodies/02_help_tab_body.yaml
+
+# Flow 03: Me Tab Navigation
+- runFlow: ../bodies/03_me_tab_body.yaml
+
+# Flow 04: Data and Logs Tab
+- runFlow: ../bodies/04_data_logs_tab_body.yaml

@@ -1,0 +1,58 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data Tab - pods@ovusense.com"
+---
+# Wait for data to load
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/data_title"
+    timeout: 15000
+- takeScreenshot: /tmp/ovusense_tc_pods_data_main
+
+# TC-30: Click on back arrow to scroll to previous cycle
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc30_cycles_list
+
+# TC-42/43: Confirm Cycles page shows cycle flags
+- takeScreenshot: /tmp/ovusense_tc42_cycle_flags
+- back
+- waitForAnimationToEnd
+
+# TC-34: Tap the graph settings gear icon at bottom-left
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc34_graph_settings_open
+
+# TC-34: Tap different graph type icons on the left sidebar
+# Each coloured icon represents a different graph/overlay type
+# Take screenshots as we tap through them
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc34_graph_settings_menu
+
+# Go back to data view
+- back
+- waitForAnimationToEnd
+
+# TC-36: Tap on day info bar to go to Day page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc36_day_page
+- back
+- waitForAnimationToEnd
+
+# TC-37: Go to Settings > Data Sharing
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Data Sharing"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc37_data_sharing
+- back
+- waitForAnimationToEnd

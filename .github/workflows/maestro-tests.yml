@@ -1,0 +1,364 @@
+name: OvuSense Maestro UI Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      shard_count:
+        description: 'Number of parallel shards (1-4)'
+        required: false
+        default: '4'
+        type: choice
+        options: ['1', '2', '3', '4']
+      api_level:
+        description: 'Android API level for emulator'
+        required: false
+        default: '33'
+        type: choice
+        options: ['30', '31', '33', '34']
+      apk_url:
+        description: 'APK download URL (leave empty to use default)'
+        required: false
+        default: ''
+        type: string
+
+env:
+  APP_PACKAGE: com.fertilityfocus.ovusense3
+  APK_PATH: app-debug.apk
+
+jobs:
+  # -----------------------------------------------------------
+  # Job 1: Build or download the APK
+  # -----------------------------------------------------------
+  prepare-apk:
+    name: Prepare APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APK
+        run: |
+          APK_URL="${{ github.event.inputs.apk_url }}"
+          if [ -z "$APK_URL" ]; then
+            # Default: download from OvuSense dev server
+            APK_URL="https://dev.ovusense.com/adhocapps/ovusense-3.2.0-debug.apk"
+          fi
+          echo "Downloading APK from: $APK_URL"
+          curl -L -f -o "${{ env.APK_PATH }}" "$APK_URL" || {
+            echo "::warning::Failed to download APK from $APK_URL"
+            echo "::warning::Please provide a valid APK URL via workflow_dispatch input"
+            exit 1
+          }
+          echo "APK downloaded: $(ls -lh ${{ env.APK_PATH }})"
+
+      - name: Upload APK for test jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: ${{ env.APK_PATH }}
+          retention-days: 1
+
+  # -----------------------------------------------------------
+  # Job 2: Run Maestro tests in parallel shards
+  # -----------------------------------------------------------
+  maestro-test:
+    name: "Shard ${{ matrix.shard }}"
+    runs-on: ubuntu-latest
+    needs: prepare-apk
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APK
+        uses: actions/download-artifact@v4
+        with:
+          name: apk
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Maestro CLI
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Enable KVM for hardware acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Load test account config
+        run: |
+          # Load credentials from config file (no secrets needed)
+          set -a
+          source config/accounts.env
+          set +a
+          echo "EMAIL=$EMAIL" >> $GITHUB_ENV
+          echo "PASSWORD=$PASSWORD" >> $GITHUB_ENV
+          echo "Loaded test accounts from config/accounts.env"
+
+      - name: Determine shard config
+        id: config
+        run: |
+          SHARDS=${{ github.event.inputs.shard_count || '4' }}
+          API=${{ github.event.inputs.api_level || '33' }}
+          echo "shard_count=$SHARDS" >> $GITHUB_OUTPUT
+          echo "api_level=$API" >> $GITHUB_OUTPUT
+
+      - name: Run Maestro tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ steps.config.outputs.api_level }}
+          arch: x86_64
+          ram-size: 4096M
+          disk-size: 8G
+          emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect
+          script: |
+            # Wait for emulator to be fully booted
+            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+            echo "Emulator booted successfully"
+
+            # Install the app
+            adb install -r "${{ env.APK_PATH }}"
+            echo "APK installed: ${{ env.APP_PACKAGE }}"
+
+            # Credentials are already in env from 'Load test account config' step
+            echo "Using account: $EMAIL"
+
+            # Create output directory
+            mkdir -p test-results/shard-${{ matrix.shard }}
+
+            # Get list of numbered flow files only (exclude helpers, check_, test_ utilities)
+            FLOW_FILES=$(ls flows/[0-9]*.yaml 2>/dev/null | sort)
+            TOTAL_FLOWS=$(echo "$FLOW_FILES" | wc -l | tr -d ' ')
+            SHARD_COUNT=${{ steps.config.outputs.shard_count }}
+            SHARD_INDEX=${{ matrix.shard }}
+
+            echo "Total flows: $TOTAL_FLOWS, Shard: $SHARD_INDEX of $SHARD_COUNT"
+
+            # Skip this shard if index >= shard_count
+            if [ "$SHARD_INDEX" -ge "$SHARD_COUNT" ]; then
+              echo "::notice::Shard $SHARD_INDEX skipped (only $SHARD_COUNT shards configured)"
+              echo '{"shard": ${{ matrix.shard }}, "skipped": true}' > test-results/shard-${{ matrix.shard }}/summary.json
+              exit 0
+            fi
+
+            # Distribute flows across shards (round-robin)
+            SHARD_FLOWS=""
+            INDEX=0
+            for flow in $FLOW_FILES; do
+              if [ $((INDEX % SHARD_COUNT)) -eq $SHARD_INDEX ]; then
+                SHARD_FLOWS="$SHARD_FLOWS $flow"
+              fi
+              INDEX=$((INDEX + 1))
+            done
+
+            echo ""
+            echo "Flows assigned to shard $SHARD_INDEX:"
+            for f in $SHARD_FLOWS; do echo "  - $(basename $f)"; done
+            echo ""
+
+            # Run each flow and track results
+            PASSED=0
+            FAILED=0
+            TOTAL=0
+            ERRORS=""
+            START_TIME=$(date +%s)
+
+            for flow in $SHARD_FLOWS; do
+              FLOW_NAME=$(basename "$flow" .yaml)
+              TOTAL=$((TOTAL + 1))
+              FLOW_START=$(date +%s)
+
+              echo ""
+              echo "=========================================="
+              echo "[$TOTAL] Running: $FLOW_NAME"
+              echo "=========================================="
+
+              if maestro test "$flow" --format junit \
+                --output "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}.xml" \
+                2>&1 | tee "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}.log"; then
+                FLOW_END=$(date +%s)
+                FLOW_DUR=$((FLOW_END - FLOW_START))
+                echo "PASSED: $FLOW_NAME (${FLOW_DUR}s)"
+                PASSED=$((PASSED + 1))
+              else
+                FLOW_END=$(date +%s)
+                FLOW_DUR=$((FLOW_END - FLOW_START))
+                echo "::error::FAILED: $FLOW_NAME (${FLOW_DUR}s)"
+                FAILED=$((FAILED + 1))
+                ERRORS="$ERRORS\n  - $FLOW_NAME"
+
+                # Capture screenshot on failure for debugging
+                adb exec-out screencap -p > \
+                  "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}_failure.png" 2>/dev/null || true
+              fi
+            done
+
+            END_TIME=$(date +%s)
+            TOTAL_DUR=$((END_TIME - START_TIME))
+            MINUTES=$((TOTAL_DUR / 60))
+            SECONDS=$((TOTAL_DUR % 60))
+
+            # Write summary JSON for report job
+            cat > "test-results/shard-${{ matrix.shard }}/summary.json" <<EOJSON
+            {
+              "shard": ${{ matrix.shard }},
+              "passed": $PASSED,
+              "failed": $FAILED,
+              "total": $TOTAL,
+              "duration_seconds": $TOTAL_DUR,
+              "skipped": false
+            }
+            EOJSON
+
+            # Print summary
+            echo ""
+            echo "=========================================="
+            echo "SHARD $SHARD_INDEX COMPLETE"
+            echo "=========================================="
+            echo "Passed:   $PASSED"
+            echo "Failed:   $FAILED"
+            echo "Duration: ${MINUTES}m ${SECONDS}s"
+            if [ -n "$ERRORS" ]; then
+              echo -e "Failed flows:$ERRORS"
+            fi
+
+            # Fail the job if any flow failed
+            if [ $FAILED -gt 0 ]; then
+              exit 1
+            fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-shard-${{ matrix.shard }}
+          path: test-results/
+          retention-days: 14
+
+      - name: Upload Maestro logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-logs-shard-${{ matrix.shard }}
+          path: ~/.maestro/tests/
+          retention-days: 7
+
+  # -----------------------------------------------------------
+  # Job 3: Aggregate results and generate report
+  # -----------------------------------------------------------
+  report:
+    name: Test Report
+    runs-on: ubuntu-latest
+    needs: maestro-test
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-shard-*
+          merge-multiple: true
+          path: all-results/
+
+      - name: Generate summary report
+        run: |
+          echo "## OvuSense 3.2.0 - Maestro UI Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**App:** \`${{ env.APP_PACKAGE }}\` | **API Level:** ${{ github.event.inputs.api_level || '33' }} | **Shards:** ${{ github.event.inputs.shard_count || '4' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Parse shard summaries
+          echo "| Shard | Passed | Failed | Total | Duration | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|--------|-------|----------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          GRAND_PASS=0
+          GRAND_FAIL=0
+          GRAND_TOTAL=0
+          MAX_DUR=0
+
+          for summary in all-results/shard-*/summary.json; do
+            if [ -f "$summary" ]; then
+              SHARD=$(python3 -c "import json; print(json.load(open('$summary'))['shard'])")
+              SKIPPED=$(python3 -c "import json; print(json.load(open('$summary')).get('skipped', False))")
+
+              if [ "$SKIPPED" = "True" ]; then
+                echo "| Shard $SHARD | - | - | - | - | :fast_forward: Skipped |" >> $GITHUB_STEP_SUMMARY
+                continue
+              fi
+
+              PASS=$(python3 -c "import json; print(json.load(open('$summary'))['passed'])")
+              FAIL=$(python3 -c "import json; print(json.load(open('$summary'))['failed'])")
+              TOTAL=$(python3 -c "import json; print(json.load(open('$summary'))['total'])")
+              DUR=$(python3 -c "import json; print(json.load(open('$summary'))['duration_seconds'])")
+              MINS=$((DUR / 60))
+              SECS=$((DUR % 60))
+
+              GRAND_PASS=$((GRAND_PASS + PASS))
+              GRAND_FAIL=$((GRAND_FAIL + FAIL))
+              GRAND_TOTAL=$((GRAND_TOTAL + TOTAL))
+              if [ "$DUR" -gt "$MAX_DUR" ]; then MAX_DUR=$DUR; fi
+
+              if [ "$FAIL" -gt 0 ]; then
+                STATUS=":x: Failed"
+              else
+                STATUS=":white_check_mark: Passed"
+              fi
+
+              echo "| Shard $SHARD | $PASS | $FAIL | $TOTAL | ${MINS}m ${SECS}s | $STATUS |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          MAX_MINS=$((MAX_DUR / 60))
+          MAX_SECS=$((MAX_DUR % 60))
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Totals: $GRAND_PASS passed, $GRAND_FAIL failed out of $GRAND_TOTAL flows | Wall clock: ${MAX_MINS}m ${MAX_SECS}s**" >> $GITHUB_STEP_SUMMARY
+
+          # List failed flows
+          FAILED_FLOWS=$(find all-results/ -name "*_failure.png" 2>/dev/null | \
+            sed 's|.*/||;s|_failure.png||' | sort)
+          if [ -n "$FAILED_FLOWS" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### :x: Failed Flows" >> $GITHUB_STEP_SUMMARY
+            echo "$FAILED_FLOWS" | while read flow; do
+              echo "- \`$flow\`" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+          # Test accounts used
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "<details><summary>Test Accounts (from config/accounts.env)</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Account | Flows |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| test@ovusense.com | 01,02,03,04,07,08,09,11,12,14,18,19,20,21,22,24,26,27,28,29,33,37,38,39,41 |" >> $GITHUB_STEP_SUMMARY
+          echo "| pods@ovusense.com | 06,13,16,25,30,31,32 |" >> $GITHUB_STEP_SUMMARY
+          echo "| lots@ovusense.com | 05,34 |" >> $GITHUB_STEP_SUMMARY
+          echo "| rnd26@ovusense.com | 17,40 |" >> $GITHUB_STEP_SUMMARY
+          echo "| preg@ovusense.com | 10,35 |" >> $GITHUB_STEP_SUMMARY
+          echo "| high@, free@, prgs@, nosub@ | 10 |" >> $GITHUB_STEP_SUMMARY
+          echo "| none@, oldsensor@ | 15,23 |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload combined report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-full-report
+          path: all-results/
+          retention-days: 30

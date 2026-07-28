@@ -1,0 +1,121 @@
+appId: com.fertilityfocus.ovusense3
+name: "Onboard - lots@ Cycle Navigation & Fertile Window"
+---
+- clearState
+- launchApp
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+
+# Login with lots@ovusense.com
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "lots@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# ============================================================
+# Row 8: Check fertile window, change cycle start date
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r8_lots_initial_data
+
+# Tap Current Cycle to go to Cycles page
+- tapOn:
+    text: "Current Cycle.*"
+    optional: true
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r8_lots_cycles
+
+# Take screenshot of cycle details showing fertile window info
+- tapOn:
+    text: "Cycle.*"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r8_lots_cycle_detail
+
+# Check for edit/date options
+- tapOn:
+    text: ".*date.*"
+    optional: true
+- tapOn:
+    text: ".*Date.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r8_lots_date_edit
+
+# Go back (may land on Data tab or cycles list)
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 9: Move to Cycle 45, confirm last OvuCore point
+# ============================================================
+# Navigate to Cycles page from Data tab via cycle title
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+
+# Cycle 45 should be visible on the cycles list (lots@ has ~46 cycles)
+- takeScreenshot: /tmp/ovusense_r9_cycle45_visible
+
+# Tap Cycle 45 (text includes "(natural)" suffix)
+- tapOn: ".*Cycle 45.*"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r9_cycle45_detail
+
+# Go back to Data tab to view Cycle 45 graph
+- back
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Scroll graph to find the last data point area (April 2021)
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r9_graph_scroll1
+
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r9_graph_scroll2
+
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r9_graph_last_ovucore_point
+
+# Cleanup
+- clearState

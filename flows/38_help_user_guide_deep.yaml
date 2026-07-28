@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Help Tab - User Guide Deep Tests"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/38_help_user_guide_deep_body.yaml
+# Cleanup
+- clearState

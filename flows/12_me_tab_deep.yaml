@@ -1,0 +1,15 @@
+appId: com.fertilityfocus.ovusense3
+name: "Me Tab - Deep Interaction Tests"
+---
+- launchApp
+- waitForAnimationToEnd
+# Force logout + login
+- runFlow:
+    file: helpers/login_force.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/12_me_tab_deep_body.yaml
+# Logout
+- runFlow: helpers/logout_full.yaml

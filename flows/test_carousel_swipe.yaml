@@ -1,0 +1,33 @@
+appId: com.fertilityfocus.ovusense3
+name: "Test Carousel Swipe"
+---
+# App should already be open on Logs tab
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/carousel_test_start
+
+# Swipe carousel area LEFT using start/end points (y=82% targets carousel)
+- swipe:
+    start: "80%, 82%"
+    end: "20%, 82%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/carousel_test_swipe1
+
+# Swipe carousel again
+- swipe:
+    start: "80%, 82%"
+    end: "20%, 82%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/carousel_test_swipe2
+
+# Swipe carousel again
+- swipe:
+    start: "80%, 82%"
+    end: "20%, 82%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/carousel_test_swipe3

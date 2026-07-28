@@ -1,0 +1,93 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
+---
+# ============================================================
+# TC-27: Check 'Sensor data shown on graph' option available
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc27_pods_preferences
+
+# Scroll down to find "Sensor data shown on graph"
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- assertVisible: "Sensor data shown on graph"
+- takeScreenshot: /tmp/ovusense_tc27_sensor_data_option
+
+# ============================================================
+# TC-28: Select 'OvuCore data only'
+# ============================================================
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc28_sensor_picker
+
+# Select OvuCore data only (dialog auto-dismisses on selection)
+- tapOn: "OvuCore data only"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc28_ovucore_selected
+
+# Switch to Data tab to verify graph shows only OvuCore data
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc28_data_ovucore_only
+
+# ============================================================
+# TC-29: Select 'OvuFirst data only'
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+
+# Select OvuFirst data only (dialog auto-dismisses on selection)
+- tapOn: "OvuFirst data only"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc29_ovufirst_selected
+
+# Switch to Data tab to verify
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc29_data_ovufirst_only
+
+# ============================================================
+# TC-30: Select 'All data'
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+
+# Select All data (dialog auto-dismisses on selection)
+- tapOn: "All data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc30_all_data_selected
+
+# Switch to Data tab to verify both OvuCore and OvuFirst shown
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc30_data_all_sensors
+

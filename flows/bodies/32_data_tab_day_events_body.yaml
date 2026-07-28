@@ -1,0 +1,203 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data Tab - Day Page, Cycle Flags & Event CRUD (pods@)"
+---
+# ============================================================
+# Row 38: Cycles page - tap cycle with flags
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Tap cycle title to go to Cycles page
+- tapOn:
+    text: "Current Cycle.*"
+    optional: true
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r38_cycles_page
+
+# Scroll to find a cycle with flags
+- swipe:
+    start: "50%, 60%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r38_cycles_scrolled
+
+# Tap a cycle entry (optional - look for flag indicators)
+- tapOn:
+    text: "Cycle.*"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r38_cycle_detail_flags
+
+# ============================================================
+# Row 39: Tap Cycle Flags row → Personalised Advice
+# ============================================================
+- tapOn:
+    text: ".*lag.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r39_personalised_advice
+
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 41: Tap day info bar → Day page → ADD/EDIT logs
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Tap the day info bar
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r41_day_page
+
+# Look for ADD/EDIT logs button
+- tapOn:
+    text: "ADD.*EDIT.*"
+    optional: true
+- tapOn:
+    text: "ADD / EDIT.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r41_logs_from_day
+
+# ============================================================
+# Row 42-45: Date picker on Events/Logs page
+# ============================================================
+# Tap date bar at top
+- tapOn:
+    text: "Today.*"
+    optional: true
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_date_title"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r42_date_picker
+
+# Change date (tap a different date in picker)
+- tapOn:
+    text: "15"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r43_date_changed
+
+# Close date picker
+- tapOn:
+    text: "OK"
+    optional: true
+- tapOn:
+    text: "DONE"
+    optional: true
+- back
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r45_date_restored
+
+# ============================================================
+# Row 46: Create a Medication event from Logs page
+# ============================================================
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Open grid view to go to Medications
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Medications"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r46_medication_log
+
+# Tap a medication to create event
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- tapOn:
+    text: ".*"
+    index: 5
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r46_medication_event_created
+
+# ============================================================
+# Row 47: From Day page, tap event → Event page with Remove
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Open Day page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r47_day_page_events
+
+# Tap on an event
+- tapOn:
+    text: ".*"
+    index: 4
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r47_event_page_remove
+
+# ============================================================
+# Row 48-49: Date range icon and Range selection
+# ============================================================
+- tapOn:
+    text: ".*ange.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r48_date_range
+
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 50: Swipe event left to reveal Delete
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+
+# Swipe an event row left to reveal Delete
+- swipe:
+    start: "80%, 40%"
+    end: "20%, 40%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r50_swipe_delete
+
+# ============================================================
+# Row 51: Delete event via Remove button on Event page
+# ============================================================
+- tapOn:
+    text: "Delete"
+    optional: true
+- tapOn:
+    text: "Remove"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r51_event_deleted
+
+- back
+- waitForAnimationToEnd
+

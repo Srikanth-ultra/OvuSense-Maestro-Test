@@ -1,0 +1,15 @@
+appId: com.fertilityfocus.ovusense3
+name: "Data Tab - pods@ Deep Tests"
+---
+- launchApp
+- waitForAnimationToEnd
+# Force logout + login
+- runFlow:
+    file: helpers/login_force.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/16_pods_deep_body.yaml
+# Logout
+- runFlow: helpers/logout_full.yaml

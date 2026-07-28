@@ -1,0 +1,15 @@
+appId: com.fertilityfocus.ovusense3
+name: "Logs - Mood, Diet, Exercise, Pain Interactions"
+---
+- launchApp
+- waitForAnimationToEnd
+# Force logout + login
+- runFlow:
+    file: helpers/login_force.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/22_logs_mood_diet_exercise_pain_body.yaml
+# Logout
+- runFlow: helpers/logout_full.yaml

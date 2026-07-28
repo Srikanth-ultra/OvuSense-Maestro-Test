@@ -1,0 +1,71 @@
+appId: com.fertilityfocus.ovusense3
+name: "Login & Data - lots@ovusense.com"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Ensure we're logged out first
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "LOG OUT"
+    optional: true
+- waitForAnimationToEnd
+
+# TC: Sign in with lots@ovusense.com
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc_signin_screen
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "lots@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+
+# TC: Check main graph shows data loading
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc_lots_data_loading
+
+# Wait for data to fully load
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/data_title"
+    timeout: 15000
+- takeScreenshot: /tmp/ovusense_tc_lots_data_loaded
+
+# TC: Confirm version number & UDI on Settings page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/settings_options_footer"
+- takeScreenshot: /tmp/ovusense_tc_lots_settings_udi
+
+# TC: Log out. Check the App logs the user out and displays the Sign In screen
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- takeScreenshot: /tmp/ovusense_tc_lots_logout_success

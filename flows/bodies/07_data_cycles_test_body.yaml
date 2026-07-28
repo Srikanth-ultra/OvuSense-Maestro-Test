@@ -1,0 +1,30 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data Cycles - test@ovusense.com"
+---
+
+# TC-63: Tap 'Current Cycle' at top of Data tab. Check Cycles page opens
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc63_cycles_page
+
+# TC-64: Tap 'Create New Cycle' button at top
+- tapOn: "Create New Cycle"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc64_create_cycle_page
+
+# Go back without creating
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# TC-36: Tap on day info bar to check Day page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc36_day_page
+
+- back
+- waitForAnimationToEnd

@@ -1,0 +1,209 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data Tab - pods@ Deep Tests"
+---
+
+# TC-26: Dual graph options - tap Graph Settings icon
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_settings_panel
+
+# Select Temperature graph
+- tapOn:
+    text: "Temperature"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_temperature
+
+# Open settings again, select Logs graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Logs"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_logs
+
+# Open settings again, select Weight graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Weight"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_weight
+
+# Open settings again, select Pain graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Pain"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_pain
+
+# Open settings again, select Health graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Health"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_health
+
+# Open settings again, select Period graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Period"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_period
+
+# Reset to Combined data
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Combined"
+    optional: true
+- waitForAnimationToEnd
+
+# TC-34: Cycles page - tap a cycle with flags
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc34_pods_cycles_page
+
+# Tap first cycle in the list (Cycle 1 should have flags)
+- tapOn:
+    text: "Cycle 1.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc34_cycle_with_flags
+
+# TC-35: Tap Cycle Flags row if available
+- tapOn:
+    text: ".*flag.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc35_cycle_flags_detail
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# TC-37: Tap day info bar to go to Day page, then ADD/EDIT logs
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc37_day_page
+
+# Tap ADD/EDIT logs button
+- tapOn:
+    text: "ADD.*EDIT.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc37_add_edit_logs
+
+# TC-38: Tap date bar at top of Logs page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_date_text"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc38_date_selector
+- back
+- waitForAnimationToEnd
+
+# Navigate back to Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# TC-152/153/154/155: Sensor data shown on graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+# TC-152: Check 'Sensor data shown on graph' option is available
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc152_sensor_data_option
+
+# TC-153: Select OvuCore data only
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc153_sensor_picker
+- tapOn:
+    text: "OvuCore.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Check Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc153_data_ovucore_only
+
+# TC-154: Select OvuFirst data only
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+- tapOn:
+    text: "OvuFirst.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Check Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc154_data_ovufirst_only
+
+# TC-155: Select All data
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Sensor data shown on graph"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Sensor data shown on graph"
+- waitForAnimationToEnd
+- tapOn:
+    text: "All data.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Check Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc155_data_all

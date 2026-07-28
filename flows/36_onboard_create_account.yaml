@@ -1,0 +1,174 @@
+appId: com.fertilityfocus.ovusense3
+name: "Onboard - Create Account & Medical Profile Forms (STUBS)"
+---
+- clearState
+- launchApp
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+
+# ============================================================
+# Row 14-18: Onboarding form stubs
+# Navigate to CREATE ACCOUNT to check form structure
+# NOT actually creating an account
+# ============================================================
+- takeScreenshot: /tmp/ovusense_r14_signin_page
+
+# Tap CREATE ACCOUNT button
+- tapOn:
+    text: "CREATE ACCOUNT"
+    optional: true
+- tapOn:
+    text: "Create Account"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r14_create_account_page
+
+# Row 14: Check Medical Profile form fields
+# Look for form fields: Date of birth, Current tracking goal,
+# Weight, Height, BMI, Regular cycles, Average cycle/period length
+- takeScreenshot: /tmp/ovusense_r14_medical_profile_fields
+
+# Row 15: Check Date of Birth is not limited
+- tapOn:
+    text: "Date of birth"
+    optional: true
+- tapOn:
+    text: "Date of Birth"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r15_dob_picker
+
+# Dismiss date picker
+- tapOn:
+    text: "Cancel"
+    optional: true
+- tapOn:
+    text: "CANCEL"
+    optional: true
+- back
+- waitForAnimationToEnd
+
+# Row 16: Current tracking goal field
+- tapOn:
+    text: ".*tracking goal.*"
+    optional: true
+- tapOn:
+    text: ".*Tracking goal.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r16_tracking_goal
+
+# Go back to sign-in without creating account
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# Row 17-18: Stubs for Pregnancy/Miscarriage form and cycle creation
+- takeScreenshot: /tmp/ovusense_r17_stub_medical_history
+- takeScreenshot: /tmp/ovusense_r18_stub_create_cycle
+
+# ============================================================
+# Rows 19-22: Logged-in tests for scale markers and Medical Profile
+# Login with test@ovusense.com
+# ============================================================
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "test@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Row 19: Slide finger over coloured scale markers on graph
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Swipe on left side scale markers
+- swipe:
+    start: "5%, 35%"
+    end: "5%, 55%"
+    duration: 1000
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r19_scale_marker_swipe1
+
+- swipe:
+    start: "5%, 55%"
+    end: "5%, 35%"
+    duration: 1000
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r19_scale_marker_swipe2
+
+# Row 20: Me > Medical Profile, enter values
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+
+- tapOn: "Medical Profile"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r20_medical_profile
+
+# Check fields are editable
+- scrollUntilVisible:
+    element: "Weight"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_r20_profile_weight_height
+
+- scrollUntilVisible:
+    element: ".*cycle length.*"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_r20_profile_cycle_period
+
+- back
+- waitForAnimationToEnd
+
+# Row 21: Scroll past period block for Create new cycle button
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Swipe right on graph to scroll into future (past period blocks)
+- swipe:
+    start: "30%, 50%"
+    end: "70%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- swipe:
+    start: "30%, 50%"
+    end: "70%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- swipe:
+    start: "30%, 50%"
+    end: "70%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r21_past_period_create_cycle
+
+# Row 22: Set cycle length to 0 (STUB - screenshot only)
+- takeScreenshot: /tmp/ovusense_r22_stub_cycle_length_zero
+
+# Cleanup
+- clearState

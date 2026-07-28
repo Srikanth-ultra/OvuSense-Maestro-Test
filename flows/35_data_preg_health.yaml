@@ -1,0 +1,122 @@
+appId: com.fertilityfocus.ovusense3
+name: "Data Tab - preg@ Miscarriage Health Log"
+---
+- clearState
+- launchApp
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+
+# Login with preg@ovusense.com
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "preg@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# ============================================================
+# Row 56: Add miscarriage/stillbirth Health log
+# Check cycle message updates, then remove and verify revert
+# ============================================================
+
+# Take initial Data page screenshot showing cycle message
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_preg_initial_data
+
+# Navigate to Logs tab > Health log
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Open grid view to find Health log
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Health"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_health_log
+
+# Look for Miscarriage or Stillbirth option and tap
+- tapOn:
+    text: "Miscarriage"
+    optional: true
+- tapOn:
+    text: "Stillbirth"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_miscarriage_selected
+
+# Check if confirmation is needed
+- tapOn:
+    text: "Confirm"
+    optional: true
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# Navigate to Data tab to check cycle message updated
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_data_after_miscarriage
+
+# Navigate back to Health log to remove the entry
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Health"
+    optional: true
+- waitForAnimationToEnd
+
+# Tap Miscarriage/Stillbirth again to deselect
+- tapOn:
+    text: "Miscarriage"
+    optional: true
+- tapOn:
+    text: "Stillbirth"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_miscarriage_removed
+
+# Confirm removal if needed
+- tapOn:
+    text: "Confirm"
+    optional: true
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# Navigate to Data tab to verify message reverted
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r56_data_reverted
+
+# Cleanup
+- clearState

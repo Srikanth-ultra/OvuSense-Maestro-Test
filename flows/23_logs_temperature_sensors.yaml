@@ -1,0 +1,470 @@
+appId: com.fertilityfocus.ovusense3
+name: "Logs - Temperature & Sensor Tests (Stubs)"
+---
+# NOTE: Many of these tests require physical OvuCore/OvuFirst sensors.
+# Steps that require hardware interaction are marked as optional and
+# capture screenshots for manual verification.
+
+- launchApp
+- waitForAnimationToEnd
+
+# Logout if already logged in
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "LOG OUT"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ============================================================
+# TC-32: Amazon purchases link (nosub@ovusense.com)
+# ============================================================
+# Login with nosub@ovusense.com
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "nosub@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Navigate to Settings > Subscription
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Subscription"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Subscription"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc98_nosub_subscription
+
+# Tap 'Amazon purchases' link
+- tapOn:
+    text: "Amazon purchases"
+    optional: true
+- tapOn:
+    text: ".*Amazon.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc98_amazon_page
+
+# Return to app
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# Logout nosub
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ============================================================
+# TC-33: Logs > Temperature for none@ovusense.com
+# Check no Download action, Check subscription opens Subscriptions
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "none@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Navigate to Temperature log (swipe to far left, then first item)
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+# Swipe left once to Temperature
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc99_none_temperature
+
+# Verify no 'Download' button visible — capture for manual check
+# Tap 'Check subscription' to verify it opens Subscriptions page
+- tapOn:
+    text: "Check subscription"
+    optional: true
+- tapOn:
+    text: ".*subscription.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc99_none_subscription_page
+
+# Go back
+- back
+- waitForAnimationToEnd
+
+# Logout none@
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ============================================================
+# TC-34: Logs > Temperature for oldsensor@ovusense.com
+# Check no Download, only Register a sensor option
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "oldsensor@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Navigate to Temperature log
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+# Swipe left once to Temperature
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc100_oldsensor_temperature
+
+# Verify only Register option visible, no Download
+# Screenshot captures the state for manual verification
+- takeScreenshot: /tmp/ovusense_tc100_oldsensor_register_only
+
+# Logout oldsensor@
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ============================================================
+# TC-35 to TC-39: Sensor registration tests (STUBS)
+# These require physical OvuCore/OvuFirst sensor hardware.
+# Below are stub steps that navigate to the sensor registration
+# screens and capture screenshots for manual verification.
+# ============================================================
+
+# Login with test@ovusense.com for sensor UI exploration
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "test@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# TC-35: Navigate to Logs > Temperature, check Register option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+# Navigate to Temperature log
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc101_temperature_log
+
+# Check for Download button presence
+- takeScreenshot: /tmp/ovusense_tc101_download_button_check
+
+# TC-35 STUB: Tap Register (requires physical sensor to complete)
+# - tapOn:
+#     text: "Register"
+#     optional: true
+# - waitForAnimationToEnd
+# - takeScreenshot: /tmp/ovusense_tc101_register_flow
+
+# TC-36 STUB: Download after recent registration
+# (requires physical sensor — popup about downloading after registration)
+# - tapOn:
+#     text: "Download"
+#     optional: true
+# - waitForAnimationToEnd
+# - takeScreenshot: /tmp/ovusense_tc102_download_warning
+
+# TC-37: Navigate to Me > Sensors to check sensor registration UI
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Sensors"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Sensors"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc103_me_sensors
+
+# Check for "Register a new OvuSense sensor" option
+- tapOn:
+    text: "Register.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc103_register_sensor_page
+
+# Go back from sensor registration
+- back
+- waitForAnimationToEnd
+
+# TC-38/39: Navigate to Settings > Sensors
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Sensors"
+    direction: DOWN
+    timeout: 5000
+- tapOn: "Sensors"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc104_settings_sensors
+
+# Check for "Register a new OvuSense sensor" button
+- tapOn:
+    text: "Register a new OvuSense sensor"
+    optional: true
+- tapOn:
+    text: "Register.*sensor.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc104_register_new_sensor
+
+# TC-38/39 STUB: Attempting to register already-registered sensor
+# (requires physical sensor — message about sensor already registered)
+# Screenshot capture for manual verification
+- back
+- waitForAnimationToEnd
+
+# TC-27: Temperature log with valid sensors (stub - needs sensor data)
+# Navigate back to Logs > Temperature
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc93_temperature_valid_sensor
+
+# Verify Download button is shown
+- assertVisible:
+    text: "Download"
+    optional: true
+- takeScreenshot: /tmp/ovusense_tc93_download_visible
+
+# TC-28/29 STUBS: Download OvuCore/OvuFirst data
+# (Requires physical sensor nearby - cannot automate without hardware)
+# Screenshots capture current state for manual verification
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd

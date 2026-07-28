@@ -1,0 +1,216 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings - Account Email, Password & Contact Tests"
+---
+# Navigate to Settings > Account
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Account"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_settings_account_page
+
+# ============================================================
+# TC-04 (STUB): Try changing to existing email - za@cache.uk
+# ============================================================
+- tapOn: "Update Email"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc04_update_email_page
+
+# Enter existing email in both fields
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_email_text"
+- eraseText: 50
+- inputText: "za@cache.uk"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_email_confirm"
+- eraseText: 50
+- inputText: "za@cache.uk"
+- hideKeyboard
+- takeScreenshot: /tmp/ovusense_tc04_existing_email_entered
+
+# Tap UPDATE to check error message
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/button_update"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc04_existing_email_error
+
+# Dismiss any popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-05 (STUB): Try changing to unregistered email with capital
+# Reuse same Update Email page - just clear and re-enter
+# ============================================================
+# Clear and enter new email WITH capital letter
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_email_text"
+- eraseText: 50
+- inputText: "MrsX@cache.uk"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_email_confirm"
+- eraseText: 50
+- inputText: "MrsX@cache.uk"
+- hideKeyboard
+- takeScreenshot: /tmp/ovusense_tc05_new_email_capital
+
+# Screenshot for verification - NOT submitting to protect account
+# TC-05 & TC-06 require actually changing email - STUB only
+
+# Navigate to Settings main via bottom nav (reliable), then Account > Update Password
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Account"
+- waitForAnimationToEnd
+- tapOn: "Update Password"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/settings_account_password_old"
+    timeout: 10000
+
+# ============================================================
+# TC-08: Update Password - incorrect old password
+# ============================================================
+- takeScreenshot: /tmp/ovusense_tc08_update_password_page
+
+# Enter incorrect old password
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_old"
+- eraseText: 50
+- inputText: "wrongpassword"
+
+# Enter valid new password
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new"
+- eraseText: 50
+- inputText: "ovutest?0"
+
+# Enter confirm new password
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new_confirm"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- takeScreenshot: /tmp/ovusense_tc08_wrong_old_password
+
+# Tap UPDATE
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/button_update"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc08_incorrect_password_error
+
+# Dismiss error popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-09: Password too short - 'abc'
+# ============================================================
+# Clear fields and try short password
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_old"
+- eraseText: 50
+- inputText: "ovutest?0"
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new"
+- eraseText: 50
+- inputText: "abc"
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new_confirm"
+- eraseText: 50
+- inputText: "abc"
+- hideKeyboard
+
+# Tap UPDATE
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/button_update"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc09_short_password_error
+
+# Dismiss error popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-10: New passwords don't match
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_old"
+- eraseText: 50
+- inputText: "ovutest?0"
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new"
+- eraseText: 50
+- inputText: "newpassword1"
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_account_password_new_confirm"
+- eraseText: 50
+- inputText: "newpassword1X"
+- hideKeyboard
+
+# Tap UPDATE
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/button_update"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc10_password_mismatch_error
+
+# Dismiss error popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+
+# TC-11: Successful password change - STUB only (not changing actual password)
+- takeScreenshot: /tmp/ovusense_tc11_stub_not_changing
+
+# Navigate to Settings main via bottom nav (reliable), then Account > Personal Details
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-15: Contact permission toggle - "Are you happy for us..."
+# Navigate to Account > Personal Details
+# ============================================================
+- tapOn: "Account"
+- waitForAnimationToEnd
+- tapOn: "Personal Details"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc15_personal_details
+
+# Scroll down to find the contact permission toggle
+- scrollUntilVisible:
+    element: "Are you happy.*"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc15_contact_toggle_visible
+
+# Tap the toggle to change its state
+- tapOn:
+    text: "Are you happy.*"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc15_contact_toggled_1
+
+# Tap again to toggle back
+- tapOn:
+    text: "Are you happy.*"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc15_contact_toggled_2
+
+# Navigate to Settings main via bottom nav (reliable)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+

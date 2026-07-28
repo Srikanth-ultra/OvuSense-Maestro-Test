@@ -1,0 +1,66 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Me Tab - Navigation and Verification"
+---
+# TC-112: Select the Me tab. Check Me page shows user name with options
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc112_me_main
+
+# TC-116: From Me page, tap 'Medical Profile'
+- tapOn: "Medical Profile"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc116_medical_profile
+- back
+- waitForAnimationToEnd
+
+# TC-117: From Me page, tap 'Medical History'
+- tapOn: "Medical History"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc117_medical_history
+- back
+- waitForAnimationToEnd
+
+# TC-119: From Me page, tap 'Personalised Advice'
+- tapOn: "Personalised Advice"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc119_personalised_advice
+- back
+- waitForAnimationToEnd
+
+# TC-113: Tap the Notifications row
+- tapOn: "Notifications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc113_notifications
+- back
+- waitForAnimationToEnd
+
+# Return to Me tab after Notifications
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+
+# TC-121: From Me page, tap 'Sensors'
+- tapOn: "Sensors"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc121_sensors
+- back
+- waitForAnimationToEnd
+
+# Return to Me tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+
+# TC-122: From Me page, tap 'Subscriptions'
+- scrollUntilVisible:
+    element: "Subscriptions"
+    direction: DOWN
+- tapOn: "Subscriptions"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc122_subscriptions
+- back
+- waitForAnimationToEnd

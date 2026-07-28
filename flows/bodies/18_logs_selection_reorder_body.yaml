@@ -1,0 +1,140 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs Selection & Reorder Tests"
+---
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_logs_initial
+
+# TC-02: Navigate to Logs Selection (first item in carousel)
+# The carousel is at ~76-88% Y of the screen (1080x2400).
+# Carousel icon centers are at approximately 80% Y.
+# First, drag the carousel to scroll left so the eye icon becomes visible/centered.
+# Swipe within the carousel: drag from left to right to scroll icons leftward.
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_carousel_scrolled
+
+# Tap the eye icon (Logs Selection) — should now be centered or near center
+# The eye icon is the grey circle at the leftmost position of the carousel
+- tapOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_after_eye_tap
+
+# Check if we're on Logs Selection — if not, try tapping further left
+- tapOn:
+    point: "20%, 80%"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_logs_selection
+
+# Verify Logs Selection page shows "Select/reorder what to track"
+- assertVisible:
+    text: "Select/reorder what to track"
+- takeScreenshot: /tmp/ovusense_tc68_logs_selection_verified
+
+# Verify the order of items in the Logs Selection list
+- assertVisible: "Temperature"
+- assertVisible: "Period"
+- assertVisible: "Weight"
+- assertVisible: "Height"
+- assertVisible: "Diet"
+- assertVisible: "Exercise"
+- takeScreenshot: /tmp/ovusense_tc68_item_order_top
+
+# Scroll down to see if more items exist below Exercise
+- swipe:
+    start: "50%, 60%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_item_order_scrolled
+
+# Scroll back up
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 60%"
+    duration: 500
+- waitForAnimationToEnd
+
+# TC-04: Tap a row to hide an item from Logs options
+# Tap the checkmark on "Diet" row to toggle it off (hide from carousel)
+- tapOn: "Diet"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc70_diet_hidden
+
+# TC-05: Tap the hidden item row to restore it
+# Tap "Diet" again to toggle it back on
+- tapOn: "Diet"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc71_diet_restored
+
+# TC-06: Long press the centre icon of the carousel to show grid view
+# Navigate to a log item by tapping an icon to the right of centre
+- tapOn:
+    point: "65%, 80%"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc72_on_log_item
+
+# Long press on the active centre icon of the carousel to trigger grid view
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc72_grid_view
+
+# Tap a different icon in the grid to navigate to that log
+- tapOn:
+    text: "Period"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc72_grid_tap_period
+
+# TC-03: Reordering items (tap and hold three-bars icon, drag to new position)
+# Navigate back to Logs Selection by scrolling carousel and tapping eye icon
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "25%, 80%"
+    end: "75%, 80%"
+    duration: 600
+- waitForAnimationToEnd
+
+# Tap the eye icon
+- tapOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc69_before_reorder
+
+# Attempt reorder: long press the three-bars drag handle icon on a row
+# The three-bars icon is at the far right of each row (~93% X).
+# "Period" row is the 3rd item at approximately 35% Y.
+# Long press on the drag handle, then drag upward to reorder.
+- swipe:
+    start: "93%, 35%"
+    end: "93%, 22%"
+    duration: 2000
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc69_after_reorder

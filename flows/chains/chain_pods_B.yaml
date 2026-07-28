@@ -1,0 +1,33 @@
+appId: com.fertilityfocus.ovusense3
+name: "Chain - pods@ Pattern B (25,30,31,32)"
+---
+# Clean login with pods@ovusense.com
+- runFlow:
+    file: ../helpers/login_clean.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+
+# Flow 25: Settings Sensor Data Filter
+- runFlow: ../bodies/25_settings_sensor_data_filter_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 30: Data Tab Graph Details
+- runFlow: ../bodies/30_data_tab_graph_details_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 31: Data Tab Shared User
+- runFlow: ../bodies/31_data_tab_shared_user_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 32: Data Tab Day Events
+- runFlow: ../bodies/32_data_tab_day_events_body.yaml
+
+# Cleanup
+- clearState

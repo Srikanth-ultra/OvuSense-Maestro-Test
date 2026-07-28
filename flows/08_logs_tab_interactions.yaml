@@ -1,0 +1,15 @@
+appId: com.fertilityfocus.ovusense3
+name: "Logs Tab - Interaction Tests"
+---
+- launchApp
+- waitForAnimationToEnd
+# Force logout + login
+- runFlow:
+    file: helpers/login_force.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/08_logs_tab_interactions_body.yaml
+# Logout
+- runFlow: helpers/logout_full.yaml

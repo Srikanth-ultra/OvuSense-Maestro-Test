@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Data Tab - Cycle Create & Edit (test@)"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/33_data_cycles_create_edit_body.yaml
+# Cleanup
+- clearState

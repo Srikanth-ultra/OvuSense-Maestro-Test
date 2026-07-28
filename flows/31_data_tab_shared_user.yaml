@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Data Tab - Shared User Restrictions (pods@)"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/31_data_tab_shared_user_body.yaml
+# Cleanup
+- clearState

@@ -1,0 +1,42 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data and Logs Tab - Basic Verification"
+---
+# TC: Navigate to Data tab and verify basic elements
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+- takeScreenshot: /tmp/ovusense_tc_data_main
+
+# TC: Check graph scale units are visible
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_scale_units"
+
+# TC: Check graph type icon is visible
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- takeScreenshot: /tmp/ovusense_tc_data_graph
+
+# TC-34: Tap the Graph Settings button (bottom-left icon) and check graph options
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc34_graph_settings
+- back
+- waitForAnimationToEnd
+
+# TC: Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc_logs_main
+
+# TC-72: Check the logs page appears
+- takeScreenshot: /tmp/ovusense_tc72_logs_page
+
+# TC-77: Press and hold the centre icon of the carousel - check grid appears
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_logs_carousel

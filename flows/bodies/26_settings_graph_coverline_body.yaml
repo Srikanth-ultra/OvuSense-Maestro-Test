@@ -1,0 +1,114 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings - Graph Type Sync & Cover Line Tests"
+---
+# ============================================================
+# TC-26: Change graph type in Data tab, verify Settings syncs
+# ============================================================
+# Start on Data tab - take screenshot of current graph type icon
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_data_initial_graph
+
+# Tap graph type icon to open selector
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_graph_type_dialog
+
+# Select 'smooth' graph type and confirm
+- tapOn: "smooth"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_data_graph_changed
+- tapOn: "UPDATE"
+- waitForAnimationToEnd
+
+# Switch to Settings > Preferences and check same graph type is displayed
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc26_settings_graph_sync
+
+# Verify the default graph type matches the one set from Data tab
+# Screenshot captures the current value for visual comparison
+- assertVisible: "Default graph type"
+- takeScreenshot: /tmp/ovusense_tc26_default_graph_type_sync
+
+# ============================================================
+# TC-35: Cover line - move by sliding finger on temperature scale
+# ============================================================
+# Enable cover line first
+- scrollUntilVisible:
+    element: "Enable cover line"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Enable cover line"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc35_coverline_enabled
+
+# Switch to Data tab to see the cover line
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc35_data_coverline_visible
+
+# Slide finger up on the temperature scale to move the cover line
+# Temperature scale is on the left side of the graph (~3% X)
+# Slide from middle to upper portion
+- swipe:
+    start: "3%, 55%"
+    end: "3%, 40%"
+    duration: 1000
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc35_coverline_moved_up
+
+# Slide finger down to move the cover line back
+- swipe:
+    start: "3%, 40%"
+    end: "3%, 60%"
+    duration: 1000
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc35_coverline_moved_down
+
+# ============================================================
+# TC-36: Cover line stays on same temperature across graphs
+# ============================================================
+# Take note of cover line position on current graph
+- takeScreenshot: /tmp/ovusense_tc36_graph1_coverline
+
+# Switch graph type to 'raw' to check cover line persists
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- waitForAnimationToEnd
+- tapOn: "raw"
+- waitForAnimationToEnd
+- tapOn: "UPDATE"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc36_graph2_coverline
+
+# Switch graph type to 'combined'
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_type"
+- waitForAnimationToEnd
+- tapOn: "combined"
+- waitForAnimationToEnd
+- tapOn: "UPDATE"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc36_graph3_coverline
+
+# Disable cover line back in Settings
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Enable cover line"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Enable cover line"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc36_coverline_disabled
+

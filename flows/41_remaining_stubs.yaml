@@ -1,0 +1,100 @@
+appId: com.fertilityfocus.ovusense3
+name: "Remaining Stubs - External/Destructive Tests"
+---
+# This flow covers test cases that cannot be fully automated:
+# Row 4: App removal/reinstall (requires OS-level uninstall)
+# Row 23: Sign in with newly created email (depends on account creation)
+# Row 118: Subscription verification with subs@ (requires check-subs.php)
+# Row 140: Logout and sign in with changed email (destructive)
+# Row 159: Manage Subscription (opens Play Store - external)
+# Row 163: Verify notification actually appears (requires real notification wait)
+# Row 176: Verify haptic feedback physically triggers (physical verification)
+# Row 178-179: Delete Account (destructive)
+# Row 183: Verify shared user sees data on their device (requires second device)
+
+- clearState
+- launchApp
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+
+# ============================================================
+# ROW 4 STUB: App removal & reinstall
+# Cannot automate OS-level app uninstall from Maestro
+# clearState serves as a proxy for fresh app state
+# ============================================================
+- takeScreenshot: /tmp/ovusense_row4_stub_fresh_install
+
+# ============================================================
+# ROW 23 STUB: Sign in with newly created email
+# Requires a real account to have been created first
+# ============================================================
+- takeScreenshot: /tmp/ovusense_row23_stub_new_email_signin
+
+# ============================================================
+# ROW 118 STUB: Subscription verification with subs@
+# Requires check-subs.php external tool
+# ============================================================
+# Login as test@ to capture subscription-related screens
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "test@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# Navigate to Me > Subscriptions for subscription screenshot
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Subscriptions"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Subscriptions"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_row118_stub_subscription_page
+
+# ============================================================
+# ROW 140 STUB: Logout and sign in with changed email
+# Destructive - would require actually changing the email
+# ============================================================
+- takeScreenshot: /tmp/ovusense_row140_stub_email_change_login
+
+# ============================================================
+# ROW 159 STUB: Manage Subscription (external Play Store link)
+# ============================================================
+# Look for Manage Subscription button
+- tapOn:
+    text: "Manage.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_row159_stub_manage_subscription
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# ROWS 163, 176, 178-179, 183 STUBS
+# These require physical verification, second device, or destructive actions
+# ============================================================
+- takeScreenshot: /tmp/ovusense_row163_stub_notification_verify
+- takeScreenshot: /tmp/ovusense_row176_stub_haptic_verify
+- takeScreenshot: /tmp/ovusense_row178_stub_delete_account
+- takeScreenshot: /tmp/ovusense_row183_stub_shared_user_device
+
+# Cleanup
+- clearState

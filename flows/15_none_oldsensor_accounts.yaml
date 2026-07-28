@@ -1,0 +1,176 @@
+appId: com.fertilityfocus.ovusense3
+name: "Account Tests - none@ and oldsensor@"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Logout if already logged in
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "LOG OUT"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# ========== none@ovusense.com ==========
+# TC-93: Go to Logs > Temperature for none@. Check no Download action
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "none@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc93_none_data
+
+# Go to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc93_none_logs
+
+# Swipe right to Temperature log (first item)
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc93_none_temperature_log
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
+
+# ========== oldsensor@ovusense.com ==========
+# TC-94: Go to Logs > Temperature for oldsensor@. Check no Download, can only Register
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "oldsensor@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc94_oldsensor_data
+
+# Go to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Swipe right to Temperature log
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc94_oldsensor_temperature_log
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd

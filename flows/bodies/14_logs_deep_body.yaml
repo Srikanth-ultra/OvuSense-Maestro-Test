@@ -1,0 +1,156 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs - Deep Interaction Tests"
+---
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc67_logs_initial
+
+# TC-62: Swipe to far left to find Logs Selection
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc62_logs_selection
+
+# TC-68: Navigate to Sex Log - swipe left through carousel
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_log_after_selection
+
+# Keep swiping to find specific logs
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_sex_log_check1
+
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc68_sex_log_check2
+
+# TC-69: Period Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc69_period_log_check
+
+# TC-70: Sleep Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc70_sleep_log_check
+
+# Continue swiping through logs
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc_log_swipe6
+
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc_log_swipe7
+
+# TC-80: Mood Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc80_mood_log_check
+
+# TC-82: Diet Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc82_diet_log_check
+
+# TC-83: Exercise Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc83_exercise_log_check
+
+# TC-84: Pain Log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc84_pain_log_check
+
+# TC-85/86: Navigate to previous day using left arrow
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_left_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc85_prev_day_pain
+
+# Navigate back to today
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_right_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_today_restored
+
+# TC-74: Medication Log - continue swiping from Pain log position
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc74_medication_log
+
+# Try to tap medication selection (optional - may need scroll)
+- tapOn:
+    text: "Select which medications.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc74_medication_check
+- back
+- waitForAnimationToEnd
+
+# TC-77: Diagnostic Tests Log - swipe one more from Medication
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_diag_tests_log
+
+# Try to tap diagnostic tests selection (optional)
+- tapOn:
+    text: "Select which diagnostic tests.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_diag_tests_check
+- back
+- waitForAnimationToEnd

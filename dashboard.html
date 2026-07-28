@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OvuSense 3.2.0 - Test Automation Dashboard</title>
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --blue: #2563eb;
+  --blue-light: #dbeafe;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --red: #dc2626;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-900: #111827;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.6;
+}
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal), var(--blue));
+  color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+.header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.header .subtitle { font-size: 16px; opacity: 0.9; margin-bottom: 16px; }
+.header-meta {
+  display: flex; flex-wrap: wrap; gap: 24px;
+  font-size: 14px; opacity: 0.85;
+}
+.header-meta span { display: flex; align-items: center; gap: 6px; }
+.header-meta .label { font-weight: 600; opacity: 1; }
+
+/* Metric Cards */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.metric-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-top: 4px solid var(--teal);
+  transition: transform 0.15s;
+}
+.metric-card:hover { transform: translateY(-2px); }
+.metric-card .value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  line-height: 1.2;
+}
+.metric-card .label {
+  font-size: 13px;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+.metric-card.highlight { border-top-color: var(--green); }
+.metric-card.highlight .value { color: var(--green); }
+
+/* Section card */
+.section-card {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.section-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--teal-light);
+}
+
+/* Donut Chart */
+.donut-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px;
+}
+.donut {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(var(--green) 0deg 352.17deg, var(--amber) 352.17deg 360deg);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.donut::after {
+  content: '';
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+}
+.donut-center {
+  position: absolute;
+  z-index: 1;
+  text-align: center;
+}
+.donut-center .pct { font-size: 36px; font-weight: 800; color: var(--green); }
+.donut-center .lbl { font-size: 12px; color: var(--gray-500); }
+.donut-legend { display: flex; flex-direction: column; gap: 12px; }
+.legend-item { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.legend-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  display: inline-block; flex-shrink: 0;
+}
+.legend-dot.green { background: var(--green); }
+.legend-dot.amber { background: var(--amber); }
+.legend-count { font-weight: 700; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+thead th {
+  background: var(--teal);
+  color: white;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--gray-200);
+  vertical-align: top;
+}
+tbody tr:nth-child(even) { background: var(--gray-50); }
+tbody tr:hover { background: var(--blue-light); }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-pass { background: var(--green-light); color: var(--green); }
+.badge-stub { background: #fef3c7; color: #b45309; }
+.badge-regression { background: var(--blue-light); color: var(--blue); }
+.badge-na { background: #fee2e2; color: #dc2626; }
+.badge-info { background: var(--blue-light); color: var(--blue); }
+
+/* Account badges */
+.badge-account {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.acct-test { background: #dbeafe; color: #1d4ed8; }
+.acct-pods { background: #fce7f3; color: #be185d; }
+.acct-lots { background: #d1fae5; color: #065f46; }
+.acct-rnd26 { background: #ede9fe; color: #6d28d9; }
+.acct-preg { background: #fef3c7; color: #92400e; }
+.acct-prgs { background: #fed7aa; color: #9a3412; }
+.acct-free { background: #cffafe; color: #0e7490; }
+.acct-high { background: #fecaca; color: #991b1b; }
+.acct-nosub { background: #e2e8f0; color: #475569; }
+.acct-none { background: #f1f5f9; color: #64748b; }
+.acct-oldsensor { background: #f5f5f4; color: #78716c; }
+.acct-new { background: #ecfccb; color: #3f6212; }
+.acct-na { background: #f3f4f6; color: #9ca3af; }
+.acct-various { background: #faf5ff; color: #7e22ce; }
+
+/* Search box */
+.search-box {
+  display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.search-box input, .search-box select {
+  padding: 8px 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-box input:focus, .search-box select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+}
+.search-box input { flex: 1; min-width: 240px; }
+.search-count { font-size: 13px; color: var(--gray-500); margin-bottom: 8px; }
+
+/* Details/Summary */
+details { margin-bottom: 24px; }
+details summary {
+  background: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--gray-900);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::before {
+  content: '\25B6';
+  font-size: 12px;
+  color: var(--teal);
+  transition: transform 0.2s;
+}
+details[open] summary::before { transform: rotate(90deg); }
+details[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0;
+}
+details .detail-content {
+  background: white;
+  padding: 20px;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Progress bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+/* Screenshot links */
+.ss-link {
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 13px;
+  word-break: break-all;
+}
+.ss-link:hover { text-decoration: underline; }
+
+/* Account matrix */
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.account-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 16px;
+}
+.account-card .email {
+  font-weight: 700;
+  color: var(--teal-dark);
+  font-size: 14px;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+.account-card .flows-used {
+  font-size: 13px;
+  color: var(--gray-700);
+}
+
+/* Section-level collapsible TC groups */
+.tc-section-group {
+  margin-bottom: 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.tc-section-group summary {
+  background: var(--teal-light);
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--teal-dark);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.tc-section-group[open] summary {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+.tc-section-group summary::-webkit-details-marker { display: none; }
+.tc-section-group summary::before {
+  content: '\25B6';
+  font-size: 10px;
+  color: var(--teal);
+  transition: transform 0.2s;
+}
+.tc-section-group[open] summary::before { transform: rotate(90deg); }
+.tc-section-group .section-badge {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-500);
+}
+.tc-section-group .detail-content {
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Screenshot links in TC rows */
+.tc-screenshots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.tc-ss-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--blue-light);
+  color: var(--blue);
+  border-radius: 4px;
+  font-size: 11px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.tc-ss-badge:hover {
+  background: var(--blue);
+  color: white;
+  text-decoration: none;
+}
+.tc-ss-count {
+  font-size: 11px;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+/* Timing bars */
+.timing-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.timing-bar {
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--teal), var(--blue));
+  min-width: 4px;
+  transition: width 0.3s;
+}
+.timing-bar.slow { background: linear-gradient(90deg, var(--amber), #f59e0b); }
+.timing-bar.fast { background: linear-gradient(90deg, #10b981, var(--green)); }
+.timing-label {
+  font-size: 12px;
+  color: var(--gray-700);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.timing-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.timing-stat {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+.timing-stat .ts-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  line-height: 1.2;
+}
+.timing-stat .ts-label {
+  font-size: 12px;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+.timing-note {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* NA reason cards */
+.na-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.na-card {
+  background: var(--amber-light);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  padding: 16px;
+}
+.na-card .tc-num { font-weight: 700; color: var(--amber); font-size: 16px; margin-bottom: 4px; }
+.na-card .tc-desc { font-size: 13px; color: var(--gray-700); margin-bottom: 8px; }
+.na-card .tc-reason { font-size: 13px; font-weight: 600; color: var(--gray-900); }
+
+/* Screenshot grid */
+.ss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 8px;
+}
+.ss-item {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: var(--gray-50);
+  border-radius: 4px;
+  border: 1px solid var(--gray-200);
+  word-break: break-all;
+}
+
+/* Table wrapper scroll */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Print styles */
+@media print {
+  body { background: white; font-size: 11px; }
+  .container { padding: 0; max-width: 100%; }
+  .header { background: var(--teal-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .metric-card, .section-card, details summary, .detail-content { box-shadow: none; border: 1px solid var(--gray-200); }
+  details { break-inside: avoid; }
+  .search-box { display: none; }
+  thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+@media (max-width: 768px) {
+  .header { padding: 20px; }
+  .header h1 { font-size: 22px; }
+  .donut-container { flex-direction: column; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============ HEADER ============ -->
+<div class="header">
+  <h1>OvuSense 3.2.0 &mdash; Test Automation Dashboard</h1>
+  <div class="subtitle">Maestro UI Test Automation Report &bull; Android Platform</div>
+  <div class="header-meta">
+    <span><span class="label">App:</span> OvuSense 3.2.0</span>
+    <span><span class="label">Platform:</span> Android</span>
+    <span><span class="label">Device:</span> Samsung S21 Ultra (RF8N1171KDZ)</span>
+    <span><span class="label">Date:</span> July 18, 2026</span>
+    <span><span class="label">Testers:</span> AP, Srikanth</span>
+    <span><span class="label">Framework:</span> Maestro</span>
+  </div>
+</div>
+
+<!-- ============ METRIC CARDS ============ -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="value">184</div>
+    <div class="label">Total Test Cases</div>
+  </div>
+  <div class="metric-card highlight">
+    <div class="value">169</div>
+    <div class="label">Fully Automated (92%)</div>
+  </div>
+  <div class="metric-card" style="border-top-color:var(--blue)">
+    <div class="value" style="color:var(--blue)">3</div>
+    <div class="label">Regression Pass</div>
+  </div>
+  <div class="metric-card" style="border-top-color:#b45309">
+    <div class="value" style="color:#b45309">8</div>
+    <div class="label">Stubs (Partial)</div>
+  </div>
+  <div class="metric-card" style="border-top-color:var(--red)">
+    <div class="value" style="color:var(--red)">4</div>
+    <div class="label">Not Automatable</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">41</div>
+    <div class="label">Maestro Flows</div>
+  </div>
+  <div class="metric-card">
+    <div class="value">366</div>
+    <div class="label">Screenshots</div>
+  </div>
+  <div class="metric-card" style="border-top-color:var(--blue)">
+    <div class="value" style="color:var(--blue);font-size:28px">~92 min</div>
+    <div class="label">Total Run Time</div>
+  </div>
+</div>
+
+<!-- ============ DONUT CHART ============ -->
+<div class="section-card">
+  <h2>Coverage Overview</h2>
+  <div class="donut-container">
+    <div class="donut" style="background: conic-gradient(var(--green) 0deg 330.7deg, var(--blue) 330.7deg 336.5deg, #b45309 336.5deg 352.2deg, var(--red) 352.2deg 360deg);">
+      <div class="donut-center">
+        <div class="pct">92%</div>
+        <div class="lbl">Fully Automated</div>
+      </div>
+    </div>
+    <div class="donut-legend">
+      <div class="legend-item">
+        <span class="legend-dot green"></span>
+        <span>Fully Automated &mdash; <span class="legend-count">169</span> test cases (92%)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:var(--blue)"></span>
+        <span>Regression Pass &mdash; <span class="legend-count">3</span> test cases (1.6%)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#b45309"></span>
+        <span>Stub / Partial &mdash; <span class="legend-count">8</span> test cases (4.3%)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:var(--red)"></span>
+        <span>Not Automatable &mdash; <span class="legend-count">4</span> test cases (2.2%)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SECTION COVERAGE ============ -->
+<div class="section-card">
+  <h2>Section-by-Section Coverage</h2>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Section</th>
+        <th>TC Range</th>
+        <th>Total</th>
+        <th>Automated</th>
+        <th>Regression</th>
+        <th>Stubs</th>
+        <th>Not Automatable</th>
+        <th>Coverage</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Install, Onboard &amp; Login</strong></td>
+        <td>TC-001 &ndash; TC-020</td>
+        <td>20</td>
+        <td>18</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td><span class="badge badge-pass">90%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Data Tab</strong></td>
+        <td>TC-021 &ndash; TC-052</td>
+        <td>32</td>
+        <td>32</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td><span class="badge badge-pass">100%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Data &gt; Cycles</strong></td>
+        <td>TC-053 &ndash; TC-060</td>
+        <td>8</td>
+        <td>8</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td><span class="badge badge-pass">100%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Logs Tab</strong></td>
+        <td>TC-061 &ndash; TC-099</td>
+        <td>39</td>
+        <td>35</td>
+        <td>0</td>
+        <td>4</td>
+        <td>0</td>
+        <td><span class="badge badge-pass">90%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Me Tab</strong></td>
+        <td>TC-100 &ndash; TC-111</td>
+        <td>12</td>
+        <td>11</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td><span class="badge badge-pass">92%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Help Tab</strong></td>
+        <td>TC-112 &ndash; TC-125</td>
+        <td>14</td>
+        <td>14</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td><span class="badge badge-pass">100%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Settings Tab</strong></td>
+        <td>TC-126 &ndash; TC-175</td>
+        <td>50</td>
+        <td>46</td>
+        <td>0</td>
+        <td>3</td>
+        <td>1</td>
+        <td><span class="badge badge-pass">92%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>Updates / Bug Fixes</strong></td>
+        <td>TC-176 &ndash; TC-184</td>
+        <td>9</td>
+        <td>5</td>
+        <td>3</td>
+        <td>0</td>
+        <td>1</td>
+        <td><span class="badge badge-pass">56%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:56%"></div></div></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="background:var(--teal-light);font-weight:700;">
+        <td>TOTAL</td>
+        <td></td>
+        <td>184</td>
+        <td>169</td>
+        <td>3</td>
+        <td>8</td>
+        <td>4</td>
+        <td><span class="badge badge-pass">92%</span></td>
+        <td><div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div></td>
+      </tr>
+    </tfoot>
+  </table>
+  </div>
+</div>
+
+<!-- ============ ALL 184 TEST CASES ============ -->
+<div class="section-card">
+  <h2>All 184 Test Cases &mdash; Detailed Status</h2>
+  <div class="search-box">
+    <input type="text" id="tcSearch" placeholder="Search test cases by description, TC #, or screenshot..." oninput="filterTCs()">
+    <select id="tcStatusFilter" onchange="filterTCs()">
+      <option value="">All Statuses</option>
+      <option value="pass">Fully Automated</option>
+      <option value="stub">Stub / Partial</option>
+      <option value="regression">Regression Pass</option>
+      <option value="na">Not Automatable</option>
+    </select>
+    <select id="tcAccountFilter" onchange="filterTCs()">
+      <option value="">All Accounts</option>
+      <option value="test@">test@ovusense.com</option>
+      <option value="pods@">pods@ovusense.com</option>
+      <option value="lots@">lots@ovusense.com</option>
+      <option value="rnd26@">rnd26@ovusense.com</option>
+      <option value="preg@">preg@ovusense.com</option>
+      <option value="prgs@">prgs@ovusense.com</option>
+      <option value="free@">free@ovusense.com</option>
+      <option value="high@">high@ovusense.com</option>
+      <option value="nosub@">nosub@ovusense.com</option>
+      <option value="none@">none@ovusense.com</option>
+      <option value="oldsensor@">oldsensor@ovusense.com</option>
+      <option value="(new)">(new account)</option>
+    </select>
+    <button onclick="toggleAllSections(true)" style="padding:6px 14px;border:1px solid var(--gray-300);border-radius:6px;background:white;cursor:pointer;font-size:13px;">Expand All</button>
+    <button onclick="toggleAllSections(false)" style="padding:6px 14px;border:1px solid var(--gray-300);border-radius:6px;background:white;cursor:pointer;font-size:13px;">Collapse All</button>
+  </div>
+  <div class="search-count" id="tcCount">Showing 184 of 184 test cases</div>
+  <div id="tcSections"></div>
+</div>
+
+<!-- ============ FLOW EXECUTION DETAILS ============ -->
+<details>
+  <summary>Flow Execution Details &mdash; 41 Maestro Flows</summary>
+  <div class="detail-content">
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px">#</th>
+          <th>Flow Name</th>
+          <th style="width:180px">Account(s)</th>
+          <th style="width:70px">Steps</th>
+          <th style="width:90px">Duration</th>
+          <th style="width:80px">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td>settings_tab</td><td>test@ovusense.com</td><td>67</td><td>1m 41s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>02</td><td>help_tab</td><td>test@ovusense.com</td><td>67</td><td>2m 57s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>03</td><td>me_tab</td><td>test@ovusense.com</td><td>43</td><td>1m 45s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>04</td><td>data_logs_tab</td><td>test@ovusense.com</td><td>22</td><td>0m 43s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>05</td><td>login_lots_account</td><td>lots@ovusense.com</td><td>32</td><td>1m 12s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>06</td><td>data_tab_pods</td><td>pods@ovusense.com</td><td>46</td><td>1m 46s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>07</td><td>data_cycles_test</td><td>test@ovusense.com</td><td>43</td><td>1m 36s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>08</td><td>logs_tab_interactions</td><td>test@ovusense.com</td><td>69</td><td>2m 00s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>09</td><td>settings_preferences_deep</td><td>pods@ovusense.com</td><td>161</td><td>5m 22s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>10</td><td>special_accounts</td><td>high@, free@, prgs@, preg@, nosub@</td><td>127</td><td>6m 12s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>11</td><td>updates_bugfixes</td><td>test@, rnd26@ovusense.com</td><td>57</td><td>2m 02s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>12</td><td>me_tab_deep</td><td>test@ovusense.com</td><td>106</td><td>4m 02s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>13</td><td>settings_data_sharing</td><td>pods@ovusense.com</td><td>71</td><td>2m 43s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>14</td><td>logs_deep</td><td>test@ovusense.com</td><td>98</td><td>2m 30s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>15</td><td>none_oldsensor_accounts</td><td>none@, oldsensor@ovusense.com</td><td>85</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>16</td><td>pods_deep</td><td>pods@ovusense.com</td><td>127</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>17</td><td>rnd26_graph_marker</td><td>rnd26@ovusense.com</td><td>40</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>18</td><td>logs_selection_reorder</td><td>test@ovusense.com</td><td>84</td><td>2m 55s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>19</td><td>logs_sex_period_sleep</td><td>test@ovusense.com</td><td>87</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>20</td><td>logs_water_weight_height</td><td>test@ovusense.com</td><td>124</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>21</td><td>logs_medication_diagnostic</td><td>test@ovusense.com</td><td>153</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>22</td><td>logs_mood_diet_exercise_pain</td><td>test@ovusense.com</td><td>187</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>23</td><td>logs_temperature_sensors</td><td>test@, nosub@, oldsensor@</td><td>201</td><td>&mdash;</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>24</td><td>settings_account_tests</td><td>test@ovusense.com</td><td>126</td><td>6m 43s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>25</td><td>settings_sensor_data_filter</td><td>pods@ovusense.com</td><td>59</td><td>2m 41s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>26</td><td>settings_graph_coverline</td><td>pods@ovusense.com</td><td>70</td><td>2m 57s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>27</td><td>settings_displayed_events</td><td>test@ovusense.com</td><td>73</td><td>3m 17s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>28</td><td>settings_data_sharing_deep</td><td>pods@ovusense.com</td><td>61</td><td>2m 26s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>29</td><td>settings_forgot_password</td><td>test@ovusense.com</td><td>53</td><td>1m 05s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>30</td><td>data_tab_graph_details</td><td>pods@ovusense.com</td><td>82</td><td>3m 19s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>31</td><td>data_tab_shared_user</td><td>pods@ovusense.com</td><td>57</td><td>2m 02s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>32</td><td>data_tab_day_events</td><td>test@ovusense.com</td><td>93</td><td>3m 10s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>33</td><td>data_cycles_create_edit</td><td>test@ovusense.com</td><td>77</td><td>2m 23s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>34</td><td>onboard_lots_cycles</td><td>lots@ovusense.com</td><td>53</td><td>1m 58s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>35</td><td>data_preg_health</td><td>preg@ovusense.com</td><td>52</td><td>2m 23s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>36</td><td>onboard_create_account</td><td>(new account)</td><td>70</td><td>2m 14s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>37</td><td>me_tab_deep_tests</td><td>test@ovusense.com</td><td>72</td><td>3m 00s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>38</td><td>help_user_guide_deep</td><td>test@ovusense.com</td><td>63</td><td>4m 21s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>39</td><td>settings_password_personal</td><td>test@ovusense.com</td><td>112</td><td>5m 37s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>40</td><td>updates_rnd26_marker</td><td>rnd26@ovusense.com</td><td>35</td><td>1m 16s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+        <tr><td>41</td><td>remaining_stubs</td><td>various</td><td>34</td><td>1m 15s</td><td><span class="badge badge-pass">Pass</span></td></tr>
+      </tbody>
+      <tfoot>
+        <tr style="background:var(--teal-light);font-weight:700;">
+          <td></td><td>TOTAL</td><td></td><td>3,339</td><td>~91m 32s</td><td></td>
+        </tr>
+      </tfoot>
+    </table>
+    </div>
+  </div>
+</details>
+
+<!-- ============ EXECUTION TIMING ============ -->
+<details>
+  <summary>Execution Timing &mdash; Flow Duration Analysis</summary>
+  <div class="detail-content">
+    <!-- Summary stats -->
+    <div class="timing-summary-grid">
+      <div class="timing-stat">
+        <div class="ts-value">91m 32s</div>
+        <div class="ts-label">Total Execution Time</div>
+      </div>
+      <div class="timing-stat">
+        <div class="ts-value">1h 32m</div>
+        <div class="ts-label">Wall Clock (~)</div>
+      </div>
+      <div class="timing-stat">
+        <div class="ts-value">2m 46s</div>
+        <div class="ts-label">Avg per Flow</div>
+      </div>
+      <div class="timing-stat">
+        <div class="ts-value">0m 43s</div>
+        <div class="ts-label">Fastest Flow</div>
+      </div>
+      <div class="timing-stat">
+        <div class="ts-value">6m 43s</div>
+        <div class="ts-label">Slowest Flow</div>
+      </div>
+      <div class="timing-stat">
+        <div class="ts-value">33 / 41</div>
+        <div class="ts-label">Flows Timed</div>
+      </div>
+    </div>
+
+    <!-- Visual bar chart -->
+    <h3 style="font-size:16px;font-weight:600;color:var(--gray-900);margin-bottom:12px;">Duration per Flow (sorted longest first)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px">#</th>
+          <th style="width:240px">Flow Name</th>
+          <th style="width:80px">Duration</th>
+          <th>Visual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>24</td><td>settings_account_tests</td><td>6m 43s</td><td><div class="timing-bar-wrap"><div class="timing-bar slow" style="width:100%"></div></div></td></tr>
+        <tr><td>10</td><td>special_accounts</td><td>6m 12s</td><td><div class="timing-bar-wrap"><div class="timing-bar slow" style="width:92%"></div></div></td></tr>
+        <tr><td>39</td><td>settings_password_personal</td><td>5m 37s</td><td><div class="timing-bar-wrap"><div class="timing-bar slow" style="width:84%"></div></div></td></tr>
+        <tr><td>09</td><td>settings_preferences_deep</td><td>5m 22s</td><td><div class="timing-bar-wrap"><div class="timing-bar slow" style="width:80%"></div></div></td></tr>
+        <tr><td>38</td><td>help_user_guide_deep</td><td>4m 21s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:65%"></div></div></td></tr>
+        <tr><td>12</td><td>me_tab_deep</td><td>4m 02s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:60%"></div></div></td></tr>
+        <tr><td>30</td><td>data_tab_graph_details</td><td>3m 19s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:49%"></div></div></td></tr>
+        <tr><td>27</td><td>settings_displayed_events</td><td>3m 17s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:49%"></div></div></td></tr>
+        <tr><td>32</td><td>data_tab_day_events</td><td>3m 10s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:47%"></div></div></td></tr>
+        <tr><td>37</td><td>me_tab_deep_tests</td><td>3m 00s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:45%"></div></div></td></tr>
+        <tr><td>02</td><td>help_tab</td><td>2m 57s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:44%"></div></div></td></tr>
+        <tr><td>26</td><td>settings_graph_coverline</td><td>2m 57s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:44%"></div></div></td></tr>
+        <tr><td>18</td><td>logs_selection_reorder</td><td>2m 55s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:43%"></div></div></td></tr>
+        <tr><td>13</td><td>settings_data_sharing</td><td>2m 43s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:40%"></div></div></td></tr>
+        <tr><td>25</td><td>settings_sensor_data_filter</td><td>2m 41s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:40%"></div></div></td></tr>
+        <tr><td>14</td><td>logs_deep</td><td>2m 30s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:37%"></div></div></td></tr>
+        <tr><td>28</td><td>settings_data_sharing_deep</td><td>2m 26s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:36%"></div></div></td></tr>
+        <tr><td>33</td><td>data_cycles_create_edit</td><td>2m 23s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:35%"></div></div></td></tr>
+        <tr><td>35</td><td>data_preg_health</td><td>2m 23s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:35%"></div></div></td></tr>
+        <tr><td>36</td><td>onboard_create_account</td><td>2m 14s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:33%"></div></div></td></tr>
+        <tr><td>11</td><td>updates_bugfixes</td><td>2m 02s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:30%"></div></div></td></tr>
+        <tr><td>31</td><td>data_tab_shared_user</td><td>2m 02s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:30%"></div></div></td></tr>
+        <tr><td>08</td><td>logs_tab_interactions</td><td>2m 00s</td><td><div class="timing-bar-wrap"><div class="timing-bar" style="width:30%"></div></div></td></tr>
+        <tr><td>34</td><td>onboard_lots_cycles</td><td>1m 58s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:29%"></div></div></td></tr>
+        <tr><td>03</td><td>me_tab</td><td>1m 45s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:26%"></div></div></td></tr>
+        <tr><td>06</td><td>data_tab_pods</td><td>1m 46s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:26%"></div></div></td></tr>
+        <tr><td>01</td><td>settings_tab</td><td>1m 41s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:25%"></div></div></td></tr>
+        <tr><td>07</td><td>data_cycles_test</td><td>1m 36s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:24%"></div></div></td></tr>
+        <tr><td>40</td><td>updates_rnd26_marker</td><td>1m 16s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:19%"></div></div></td></tr>
+        <tr><td>41</td><td>remaining_stubs</td><td>1m 15s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:19%"></div></div></td></tr>
+        <tr><td>05</td><td>login_lots_account</td><td>1m 12s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:18%"></div></div></td></tr>
+        <tr><td>29</td><td>settings_forgot_password</td><td>1m 05s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:16%"></div></div></td></tr>
+        <tr><td>04</td><td>data_logs_tab</td><td>0m 43s</td><td><div class="timing-bar-wrap"><div class="timing-bar fast" style="width:11%"></div></div></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="timing-note">Timing data from Maestro execution logs (July 17&ndash;18, 2026). 8 flows (15&ndash;17, 19&ndash;23) not yet timed &mdash; marked with &ldquo;&mdash;&rdquo; in the Flow Details table above. Durations reflect command execution time; wall-clock time including Maestro overhead is ~15&ndash;20% higher.</p>
+  </div>
+</details>
+
+<!-- ============ TEST ACCOUNT MATRIX ============ -->
+<details>
+  <summary>Test Account Matrix &mdash; 11 Accounts</summary>
+  <div class="detail-content">
+    <div class="account-grid">
+      <div class="account-card">
+        <div class="email">test@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 01, 02, 03, 04, 07, 08, 11, 12, 14, 18, 19, 20, 21, 22, 23, 24, 27, 29, 32, 33, 37, 38, 39</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Primary test account &mdash; used in 23 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">pods@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 06, 09, 13, 16, 25, 26, 28, 30, 31</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Multi-sensor account with OvuCore + OvuFirst data &mdash; 9 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">lots@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 05, 34</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Account with many cycles of data &mdash; 2 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">rnd26@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 11, 17, 40</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">OvuFirst graph marker verification &mdash; 3 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">preg@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 10, 35</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Pregnancy tracking account &mdash; 2 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">prgs@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 10</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Multiple pregnancy cycles account &mdash; 1 flow</div>
+      </div>
+      <div class="account-card">
+        <div class="email">free@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 10</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Free tier account &mdash; fertile window display &mdash; 1 flow</div>
+      </div>
+      <div class="account-card">
+        <div class="email">high@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 10</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">High temperature / out-of-bounds data &mdash; 1 flow</div>
+      </div>
+      <div class="account-card">
+        <div class="email">nosub@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 10, 15, 23</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">No subscription account &mdash; 3 flows</div>
+      </div>
+      <div class="account-card">
+        <div class="email">none@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 15</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Minimal / empty account &mdash; 1 flow</div>
+      </div>
+      <div class="account-card">
+        <div class="email">oldsensor@ovusense.com</div>
+        <div class="flows-used"><strong>Flows:</strong> 15, 23</div>
+        <div style="margin-top:6px;font-size:12px;color:var(--gray-500)">Legacy sensor registration &mdash; 2 flows</div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- ============ SCREENSHOT EVIDENCE ============ -->
+<details>
+  <summary>Screenshot Evidence &mdash; 366 Screenshots</summary>
+  <div class="detail-content">
+    <p style="margin-bottom:16px;font-size:14px;color:var(--gray-500);">
+      All screenshots are stored in <code>/tmp/ovusense_*.png</code>. Click any link below to open in your file browser.
+    </p>
+    <div id="screenshotSection"></div>
+  </div>
+</details>
+
+<!-- ============ NOT AUTOMATABLE ============ -->
+<details>
+  <summary>Stubs &amp; Not Automatable &mdash; 12 Cases</summary>
+  <div class="detail-content">
+    <h3 style="font-size:16px;font-weight:600;color:#b45309;margin-bottom:12px;">Stub / Partial Coverage &mdash; 8 Test Cases</h3>
+    <p style="margin-bottom:16px;font-size:14px;color:var(--gray-700);">
+      These test cases have Maestro flows that navigate to the relevant screens and take screenshots, but cannot fully verify the expected outcome because they require physical hardware (sensors) or external tools (email, PHP admin pages).
+    </p>
+    <div class="na-cards" style="margin-bottom:24px;">
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-088</div>
+        <div class="tc-desc">Download non-room-temperature data using a registered OvuCore sensor.</div>
+        <div class="tc-reason">Reason: Requires a physical OvuCore sensor paired via Bluetooth. Flow 23 navigates to the download screen.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-089</div>
+        <div class="tc-desc">Download non-room-temperature data using a registered OvuFirst sensor.</div>
+        <div class="tc-reason">Reason: Requires a physical OvuFirst sensor paired via Bluetooth. Flow 23 navigates to the download screen.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-095</div>
+        <div class="tc-desc">From Logs > Temperature, tap Register and follow instructions to register an OvuCore sensor.</div>
+        <div class="tc-reason">Reason: Requires a physical OvuCore sensor for NFC/Bluetooth registration. Flow 23 navigates to the registration screen.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-097</div>
+        <div class="tc-desc">From Me > Sensors, tap Register and follow instructions to register an OvuFirst sensor.</div>
+        <div class="tc-reason">Reason: Requires a physical OvuFirst sensor for NFC/Bluetooth registration. Flow 23 navigates to the registration screen.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-111</div>
+        <div class="tc-desc">Use check-subs.php to check and cancel the subscription for 'subs@ovusense.com'. Manage subscription flow.</div>
+        <div class="tc-reason">Reason: Requires external PHP admin tool (check-subs.php) and Magento backend. Flow 41 navigates to the subscription page and takes a screenshot.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-169</div>
+        <div class="tc-desc">Check invited user email holder has received confirmatory email.</div>
+        <div class="tc-reason">Reason: Requires checking an external email inbox. Maestro cannot read emails. Flow 28 sends the invitation and verifies the UI response.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-173</div>
+        <div class="tc-desc">Check this email account receives Password Reset email, and click on reset link.</div>
+        <div class="tc-reason">Reason: Requires checking an external email inbox and clicking a link in a browser. Maestro cannot access email or browser.</div>
+      </div>
+      <div class="na-card" style="border-color:#b45309;background:#fffbeb;">
+        <div class="tc-num" style="color:#b45309;">TC-174</div>
+        <div class="tc-desc">Check 'Reset your password for OvuSense' box appears after clicking reset link, enter password, check success message.</div>
+        <div class="tc-reason">Reason: Requires interacting with a password reset web page in a browser. Maestro only controls the mobile app.</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;font-weight:600;color:var(--red);margin-bottom:12px;">Not Automatable &mdash; 4 Test Cases</h3>
+    <p style="margin-bottom:16px;font-size:14px;color:var(--gray-700);">
+      These test cases cannot be automated with Maestro at all due to OS-level requirements, physical verification, or non-reproducible conditions.
+    </p>
+    <div class="na-cards">
+      <div class="na-card">
+        <div class="tc-num">TC-001</div>
+        <div class="tc-desc">Remove previous version of OvuSense App software on test device [Android: hold icon until pop-up menu shows; select 'Uninstall'], or test device does not have OvuSense installed.</div>
+        <div class="tc-reason">Reason: Maestro cannot uninstall/reinstall apps. The app package must already be installed on the device before automation begins. This is a pre-condition handled manually.</div>
+      </div>
+      <div class="na-card">
+        <div class="tc-num">TC-020</div>
+        <div class="tc-desc">Log out (Settings &gt; LOG OUT) and then sign in again using that new email address. Check app signs in.</div>
+        <div class="tc-reason">Reason: Requires a genuinely new, unique email address created in TC-009. Each automation run would need a fresh email provider integration, which is outside Maestro's scope.</div>
+      </div>
+      <div class="na-card">
+        <div class="tc-num">TC-163</div>
+        <div class="tc-desc">Disable haptic feedback. If your phone is haptic-enabled, check moving the graph in the Data tab doesn't create minute vibrations.</div>
+        <div class="tc-reason">Reason: Verifying physical haptic vibration feedback requires hardware-level sensing. Maestro can toggle the setting but cannot detect whether the device actually vibrates.</div>
+      </div>
+      <div class="na-card">
+        <div class="tc-num">TC-183</div>
+        <div class="tc-desc">2729: [Android] Improve Sync Logout : Impossible to force occurrence. Pass if standard regression testing okay.</div>
+        <div class="tc-reason">Reason: This defect involves a race condition during sync logout that is impossible to force/reproduce deterministically. Cannot be reliably triggered in automated tests.</div>
+      </div>
+    </div>
+  </div>
+</details>
+
+<!-- ============ FOOTER ============ -->
+<div style="text-align:center;padding:24px;color:var(--gray-500);font-size:13px;">
+  OvuSense 3.2.0 Test Automation Dashboard &bull; Generated July 18, 2026 &bull; Maestro Framework
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ============ TEST CASE DATA ============
+const testCases = [
+  {tc:1,section:"Install, Onboard and Login",description:"Remove previous version of OvuSense App software on test device [Android: hold icon until pop-up menu shows; select 'Uninstall'], or test device does not have OvuSense installed.",flow:"",automatable:false},
+  {tc:2,section:"Install, Onboard and Login",description:"Download latest version of OvuSense App [from https://dev.ovusense.com/adhocapps/]",flow:"Flow 05 (launchApp verifies install)",automatable:true},
+  {tc:3,section:"Install, Onboard and Login",description:"Open App. Check Sign in page is shown.",flow:"All flows (launchApp + waitUntil sign_in)",automatable:true},
+  {tc:4,section:"Install, Onboard and Login",description:"Sign in with lots@ovusense.com. Check the main graph shows 'Loading...' and the rest of the UI shows no text while the data loads. Confirm version number & UDI on Settings page.",flow:"Flow 05 (lots@ login + data/UDI)",automatable:true},
+  {tc:5,section:"Install, Onboard and Login",description:"If the fertile window is not showing, tap 'Current Cycle' at the top of the screen to change the current cycle start date to fourteen days before the current date. Check the predicted ovulation.",flow:"Flow 34 (onboard lots cycles)",automatable:true},
+  {tc:6,section:"Install, Onboard and Login",description:"Move to Cycle 45. Confirm last OvuCore point is on 18 April 2021.",flow:"Flow 34 (lots cycles navigation)",automatable:true},
+  {tc:7,section:"Install, Onboard and Login",description:"Log out (Settings > LOG OUT). Check the App logs the user out and displays the Sign In screen.",flow:"Flow 05 (logout + sign-in screen)",automatable:true},
+  {tc:8,section:"Install, Onboard and Login",description:"Create a new account with existing email 'test@ovusense.com'. Confirm you can only create account if both checkboxes are ticked. Check app displays 'The email test@ovusense.com is already registered'.",flow:"Flow 36 (create account validation)",automatable:true},
+  {tc:9,section:"Install, Onboard and Login",description:"Create a new user account with a new email, using an email WITH AT LEAST ONE CAPITAL LETTER. Check app creates account and moves to the Welcome form.",flow:"Flow 36 (new account creation)",automatable:true},
+  {tc:10,section:"Install, Onboard and Login",description:"Choose values, or leave blank and tap Next. Check app moves to the 'Medical Profile' form.",flow:"Flow 36 (onboarding welcome form)",automatable:true},
+  {tc:11,section:"Install, Onboard and Login",description:"In the Medical Profile onboarding form, confirm the fields only include Date of birth, Current tracking goal, Weight, Height, BMI, Regular cycles, Average cycle length and Average period length.",flow:"Flow 36 (medical profile fields)",automatable:true},
+  {tc:12,section:"Install, Onboard and Login",description:"In the Medical Profile onboarding form, select Date of Birth and check the date is not limited to the current date, so you can enter a date in the future if you wish.",flow:"Flow 36 (DOB picker)",automatable:true},
+  {tc:13,section:"Install, Onboard and Login",description:"In the Medical Profile onboarding form, enter a value for 'Current tracking goal', then tap Next. Confirm the app moves to the Medical History.",flow:"Flow 36 (tracking goal + next)",automatable:true},
+  {tc:14,section:"Install, Onboard and Login",description:"Enter values for 'Pregnancy' or 'Miscarriage', and check that the other values can be ticked and unticked by tapping their rows, and then tap 'Next'. Check app moves to 'Your first cycle'.",flow:"Flow 36 (medical history)",automatable:true},
+  {tc:15,section:"Install, Onboard and Login",description:"Enter values and then tap 'Create new cycle'. Check the app moves to the Data tab showing the 'Logs' graph type.",flow:"Flow 36 (create first cycle)",automatable:true},
+  {tc:16,section:"Install, Onboard and Login",description:"On the Data page Logs chart, slide your finger over the coloured scale markers on the left side of the graph. Confirm a message pops up for each section whilst your finger is held down.",flow:"Flow 36 (scale marker swipe)",automatable:true},
+  {tc:17,section:"Install, Onboard and Login",description:"Go to Me > Medical Profile, and enter values for 'Weight', 'Height', 'Regular cycles?', 'Average cycle length' and 'Average period length'.",flow:"Flow 36 (medical profile edit)",automatable:true},
+  {tc:18,section:"Install, Onboard and Login",description:"On the Data page, confirm that scrolling into/past the next period block brings up the 'Create new cycle' button.",flow:"Flow 36 (create cycle button)",automatable:true},
+  {tc:19,section:"Install, Onboard and Login",description:"Go to Me > Medical Profile and set 'Average cycle length' to 0. Confirm that the Data page has removed the Fertile window.",flow:"Flow 36 (cycle length zero)",automatable:true},
+  {tc:20,section:"Install, Onboard and Login",description:"Log out (Settings > LOG OUT) and then sign in again using that new email address. Check app signs in.",flow:"",automatable:false},
+  {tc:21,section:"Data Tab",description:"Logout and then sign in with 'pods@ovusense.com'. Click on back arrow to scroll to previous cycle showing an ovulation window. Check title says 'Previous Cycle : Cycle X' or 'Pregnancy : Cycle X'.",flow:"Flow 06 (pods@ login + data tab)",automatable:true},
+  {tc:22,section:"Data Tab",description:"Move the graph along the timeline and check each reading is displayed in the blue information bar to two decimal places.",flow:"Flow 30 (graph timeline details)",automatable:true},
+  {tc:23,section:"Data Tab",description:"Check event indicators are shown beneath graph.",flow:"Flow 06 (data tab screenshots)",automatable:true},
+  {tc:24,section:"Data Tab",description:"Check ovulation window shading and ovulation lines are correctly drawn and correspond with dates shown for graph point.",flow:"Flow 30 (ovulation window verify)",automatable:true},
+  {tc:25,section:"Data Tab",description:"On the Data page tap the Graph Settings button and select different graphs. Check 'Raw data' graph shows blue/lavender lines, 'Smooth data' shows green/orange lines.",flow:"Flow 06 (graph settings screenshots)",automatable:true},
+  {tc:26,section:"Data Tab",description:"On the Data page tap the Graph Settings button and select different dual graph options. Check 'Temperature' graph, 'Logs' graph, etc.",flow:"Flow 30 (dual graph options)",automatable:true},
+  {tc:27,section:"Data Tab",description:"Tap on the day's info bar (blue) and check the page moves to the Day page, with the correct corresponding information at the top.",flow:"Flow 06 (day page)",automatable:true},
+  {tc:28,section:"Data Tab",description:"Go to Settings > Data Sharing, and select a different user. Then tap back to the Data tab and ensure the graphs have been updated.",flow:"Flow 06 (data sharing screenshots)",automatable:true},
+  {tc:29,section:"Data Tab",description:"With this different user, from the Data tab, select a Day. Check the 'ADD / EDIT logs' button is hidden.",flow:"Flow 31 (shared user day page)",automatable:true},
+  {tc:30,section:"Data Tab",description:"With this different user, from the Day page, tap a Medication, Test or Procedure event, and check you cannot edit the value.",flow:"Flow 31 (shared user event readonly)",automatable:true},
+  {tc:31,section:"Data Tab",description:"With this different user, check you cannot access the Cycles editing pages.",flow:"Flow 31 (shared user cycles readonly)",automatable:true},
+  {tc:32,section:"Data Tab",description:"Return to Settings > Data Sharing. Check the email of the account 'owner' is top of the list. Tap it and check the Data returns to the user's data.",flow:"Flow 31 (restore own data)",automatable:true},
+  {tc:33,section:"Data Tab",description:"Using pods@ovusense.com, from the Data tab, tap Current/Previous Cycle. Confirm the Cycles page opens and that each cycle includes flags.",flow:"Flow 06 (cycles page)",automatable:true},
+  {tc:34,section:"Data Tab",description:"From the Cycles page, tap a cycle with flags. Confirm the Cycle page opens and there is a dedicated row showing the cycle flags.",flow:"Flow 16 (cycle detail flags)",automatable:true},
+  {tc:35,section:"Data Tab",description:"From the Cycle page, tap the Cycle Flags row. Confirm the app moves to the Personalised Advice displaying information about the flag.",flow:"Flow 16 (personalised advice from flags)",automatable:true},
+  {tc:36,section:"Data Tab",description:"Using pods@ovusense.com, select a day in the Data tab which has some events, and tap the Info display or a row in the list.",flow:"Flow 06 (day page from data tab)",automatable:true},
+  {tc:37,section:"Data Tab",description:"Tap the 'ADD / EDIT logs' button and check the Logs tab is shown with the correct date displayed at the top.",flow:"Flow 32 (add/edit logs button)",automatable:true},
+  {tc:38,section:"Data Tab",description:"Tap on the date bar at the top of the Events/Logs page. Check the date selector opens up and that the corresponding date is selected.",flow:"Flow 32 (date selector open)",automatable:true},
+  {tc:39,section:"Data Tab",description:"Change the selected date using the arrows at the top or by tapping the date and selecting a new one, and check that the events update.",flow:"Flow 32 (date change + events update)",automatable:true},
+  {tc:40,section:"Data Tab",description:"Check the max date is today's date, and the earliest date is the first Cycle start date: 1 Sep 2020 for pods@ovusense.com.",flow:"Flow 32 (date range bounds)",automatable:true},
+  {tc:41,section:"Data Tab",description:"Move the date back to the original date, and close the date picker.",flow:"Flow 32 (date restore)",automatable:true},
+  {tc:42,section:"Data Tab",description:"From the Logs page, create a Test or Medication event. Confirm the event has been added to the appropriate Day page.",flow:"Flow 32 (create medication event)",automatable:true},
+  {tc:43,section:"Data Tab",description:"From the Day page, tap that same event. Check app moves to the Event page with the event name and a 'Remove' button.",flow:"Flow 32 (event page + remove button)",automatable:true},
+  {tc:44,section:"Data Tab",description:"Tap on the date range icon. Check icon becomes coloured and new Range field is displayed showing 1 day.",flow:"Flow 32 (date range icon)",automatable:true},
+  {tc:45,section:"Data Tab",description:"Tap the Range row to open the range picker, and select 2 days. Tap Confirm. Check the event shows on consecutive days.",flow:"Flow 32 (range picker)",automatable:true},
+  {tc:46,section:"Data Tab",description:"On the Day page, slide an event name to the left and check the 'Delete' bar appears. Tap 'Delete' and check the event is removed.",flow:"Flow 32 (swipe delete event)",automatable:true},
+  {tc:47,section:"Data Tab",description:"Delete the new event by navigating to its 'Event' page and tapping the 'Remove' button. Confirm the entry has been removed.",flow:"Flow 32 (remove event from event page)",automatable:true},
+  {tc:48,section:"Data Tab",description:"Log out and sign in with high@ovusense.com. Confirm all cycles display the data and temperature scale correctly.",flow:"Flow 10 (high@ data + cycles)",automatable:true},
+  {tc:49,section:"Data Tab",description:"Log out and sign in with free@ovusense.com. In Me > Medical Profile ensure the Average cycle length is set. Confirm the fertile window continues to be displayed.",flow:"Flow 10 (free@ data + medical profile)",automatable:true},
+  {tc:50,section:"Data Tab",description:"Log out and sign in with prgs@ovusense.com. Confirm Cycle 1 & 2 do not display as Pregnancies. Also confirm Cycle 4 and Cycle 7 messages.",flow:"Flow 10 (prgs@ data + cycles)",automatable:true},
+  {tc:51,section:"Data Tab",description:"Log out and sign in with preg@ovusense.com. On the Data page, confirm the 'CREATE new cycle' message for the current cycle does not show DPO.",flow:"Flow 10 (preg@ data)",automatable:true},
+  {tc:52,section:"Data Tab",description:"With preg@ovusense.com, go to Logs and add a miscarriage or stillbirth Health log; Confirm the cycle message on the Data page updates appropriately.",flow:"Flow 35 (preg health log)",automatable:true},
+  {tc:53,section:"Data > Cycles",description:"Log out and sign in with test@ovusense.com. Tap 'Current Cycle' at the top of the Data tab. Check app moves to Cycles page.",flow:"Flow 07 (test@ cycles page)",automatable:true},
+  {tc:54,section:"Data > Cycles",description:"Tap 'Create New Cycle' button at the top of the Cycles page. Check app moves to the 'Create New Cycle' page.",flow:"Flow 07 (create new cycle page)",automatable:true},
+  {tc:55,section:"Data > Cycles",description:"Create a new 'Medicated - Endometriosis' cycle with the start date 4 days before the current date.",flow:"Flow 33 (create medicated cycle)",automatable:true},
+  {tc:56,section:"Data > Cycles",description:"Check the Data page and confirm the Cycle 3 data displays the same information.",flow:"Flow 33 (verify cycle on data page)",automatable:true},
+  {tc:57,section:"Data > Cycles",description:"From Data > Cycles, tap 'Cycle 3'. Edit the date and change the type to IVF-Implantation.",flow:"Flow 33 (edit cycle type)",automatable:true},
+  {tc:58,section:"Data > Cycles",description:"Check the Data page and confirm the Cycle 3 data displays the updated information.",flow:"Flow 33 (verify edited cycle)",automatable:true},
+  {tc:59,section:"Data > Cycles",description:"Edit Cycle 3 so it starts 13 days before the current date, change the type to 'natural'. Check message says waiting to confirm ovulation.",flow:"Flow 33 (edit to natural cycle)",automatable:true},
+  {tc:60,section:"Data > Cycles",description:"Check the Data page and confirm the Cycle 3 data displays the same information and that no fertile window is shown.",flow:"Flow 33 (verify no fertile window)",automatable:true},
+  {tc:61,section:"Logs Tab",description:"Tap Logs tab for 'test@ovusense.com'. Check the logs page appears on the second log item, unless you have already selected a different Log.",flow:"Flow 08 (logs tab)",automatable:true},
+  {tc:62,section:"Logs Tab",description:"Check the first item is 'Logs Selection', and that the order of items is identical to the Logs options.",flow:"Flow 18 (logs selection order)",automatable:true},
+  {tc:63,section:"Logs Tab",description:"Use the reordering option to change the order of the items, and check the Logs options changes correspondingly.",flow:"Flow 18 (logs reorder)",automatable:true},
+  {tc:64,section:"Logs Tab",description:"Tap a row to remove the item from the Logs options. Check it has gone from the Logs options.",flow:"Flow 18 (logs hide item)",automatable:true},
+  {tc:65,section:"Logs Tab",description:"Tap the row of a hidden item to restore it. Check it is now included in the Logs options.",flow:"Flow 18 (logs restore item)",automatable:true},
+  {tc:66,section:"Logs Tab",description:"Press and hold the centre icon of the carousel. Confirm a grid is displayed showing all the available logs.",flow:"Flow 18 (carousel grid view)",automatable:true},
+  {tc:67,section:"Logs Tab",description:"Move through the Logs options and check the correct views appear for each Log.",flow:"Flow 08 (swipe through 11 log items)",automatable:true},
+  {tc:68,section:"Logs Tab",description:"Move to the Sex Log. Check you can select two options, (or more), and then remove them.",flow:"Flow 19 (sex log selection)",automatable:true},
+  {tc:69,section:"Logs Tab",description:"Move to the Period Log. Check you can only select one option, and remove it.",flow:"Flow 19 (period log selection)",automatable:true},
+  {tc:70,section:"Logs Tab",description:"Move to the Sleep Log. Check you can set the start and end times.",flow:"Flow 19 (sleep log times)",automatable:true},
+  {tc:71,section:"Logs Tab",description:"Move to the Water Log. Check you can set a quantity by using the +/- buttons, and by dragging up and down on the cup icon.",flow:"Flow 20 (water log quantity)",automatable:true},
+  {tc:72,section:"Logs Tab",description:"Move to the Weight Log. Check you can set a new weight. Check you can set the units by tapping on the settings icon.",flow:"Flow 20 (weight log)",automatable:true},
+  {tc:73,section:"Logs Tab",description:"Move to the Height Log. Check you can set a new height. Check you can set the units by tapping on the settings icon.",flow:"Flow 20 (height log)",automatable:true},
+  {tc:74,section:"Logs Tab",description:"Move to the Medication Log. Scroll to bottom, tap on 'Select which medications you would like to track'. Check this brings up the Medications selection page.",flow:"Flow 21 (medication log selection)",automatable:true},
+  {tc:75,section:"Logs Tab",description:"In the Medication Log, tap a medication and check this opens the Event page, with no values set. Add a value and notes.",flow:"Flow 21 (medication event create)",automatable:true},
+  {tc:76,section:"Logs Tab",description:"Tap this same medication. Check the values are correct. Tap the Remove button. Check the medication is no longer highlighted.",flow:"Flow 21 (medication event remove)",automatable:true},
+  {tc:77,section:"Logs Tab",description:"Move to the Diagnostic Tests Log. Scroll to bottom, tap on 'Select which diagnostic tests you would like to track'.",flow:"Flow 21 (diagnostic tests selection)",automatable:true},
+  {tc:78,section:"Logs Tab",description:"In the Diagnostic Tests Log, tap a test and check this opens the Event page. Add a value and notes.",flow:"Flow 21 (diagnostic event create)",automatable:true},
+  {tc:79,section:"Logs Tab",description:"Tap this same test. Check the values are correct. Tap the Remove button.",flow:"Flow 21 (diagnostic event remove)",automatable:true},
+  {tc:80,section:"Logs Tab",description:"Move to the Mood Log. Check you can select and deselect more than one option.",flow:"Flow 22 (mood log)",automatable:true},
+  {tc:81,section:"Logs Tab",description:"Press and hold one Mood option. Check a notes pop-up is displayed. Enter some notes and tap 'Update'.",flow:"Flow 22 (mood notes popup)",automatable:true},
+  {tc:82,section:"Logs Tab",description:"Move to the Diet Log. Check you can select a value for one or more options, and that setting a zero value removes the item.",flow:"Flow 22 (diet log)",automatable:true},
+  {tc:83,section:"Logs Tab",description:"Move to the Exercise Log. Check you can select time intervals for one or more options.",flow:"Flow 22 (exercise log)",automatable:true},
+  {tc:84,section:"Logs Tab",description:"Move to the Pain Log. Check you can select a pain level, and for Head, Back, Pelvic or Vulval pain you can also select descriptors.",flow:"Flow 22 (pain log)",automatable:true},
+  {tc:85,section:"Logs Tab",description:"At the top of the page, tap the left arrow next to the 'Today is...' title. Check the day and date changes to the day before.",flow:"Flow 08 (prev/next day arrows)",automatable:true},
+  {tc:86,section:"Logs Tab",description:"Create a Pain log on yesterday's date. Check moving back to 'Today' using the right arrow restores the previously created Pain events.",flow:"Flow 14 (prev day pain log)",automatable:true},
+  {tc:87,section:"Logs Tab",description:"Sign in with a user with valid sensors and subscription, and move to the Logs tab, Temperature item. Check the button shows 'Download' option.",flow:"Flow 23 (temperature download option)",automatable:true},
+  {tc:88,section:"Logs Tab",description:"Download some non-room-temperature data using a registered OvuCore sensor.",flow:"Flow 23 (OvuCore download stub)",automatable:true},
+  {tc:89,section:"Logs Tab",description:"Download some non-room-temperature data using a registered OvuFirst sensor.",flow:"Flow 23 (OvuFirst download stub)",automatable:true},
+  {tc:90,section:"Logs Tab",description:"Go to Logs > Temperature for 'nosub@ovusense.com'. Check there is no 'Download' action, and tapping 'Check subscription' opens the Subscriptions page.",flow:"Flow 10 (nosub@ logs tab)",automatable:true},
+  {tc:91,section:"Logs Tab",description:"In Settings > Subscription, check 'Subscription status' says 'No subscription', and the 'Amazon purchases' information is shown.",flow:"Flow 10 (nosub@ subscription page)",automatable:true},
+  {tc:92,section:"Logs Tab",description:"Tap 'Amazon purchases'. Check the app opens the OvuSense website Amazon page.",flow:"Flow 15 (Amazon purchases link)",automatable:true},
+  {tc:93,section:"Logs Tab",description:"Go to Logs > Temperature for 'none@ovusense.com'. Check there is no 'Download' action.",flow:"Flow 15 (none@ temperature)",automatable:true},
+  {tc:94,section:"Logs Tab",description:"Go to Logs > Temperature for 'oldsensor@ovusense.com'. Check there is no 'Download' action, and you can only Register a sensor.",flow:"Flow 15 (oldsensor@ temperature)",automatable:true},
+  {tc:95,section:"Logs Tab",description:"Log out, sign in as a different user. From Logs > Temperature, tap Register and follow instructions to register an OvuCore sensor.",flow:"Flow 23 (sensor registration stub)",automatable:true},
+  {tc:96,section:"Logs Tab",description:"From the Logs > Temperature page, tap Download. Confirm a pop-up appears warning about downloading after recently registering.",flow:"Flow 23 (download warning popup)",automatable:true},
+  {tc:97,section:"Logs Tab",description:"From Me > Sensors, tap Register an OvuSense sensor and follow the instructions to register an OvuFirst sensor.",flow:"Flow 23 (OvuFirst register stub)",automatable:true},
+  {tc:98,section:"Logs Tab",description:"From Settings > Sensors, tap 'Register a new OvuSense sensor' and attempt to register the currently registered OvuCore sensor. Check already registered message.",flow:"Flow 23 (duplicate OvuCore check)",automatable:true},
+  {tc:99,section:"Logs Tab",description:"From Settings > Sensors, tap 'Register a new OvuSense sensor' and attempt to register the currently registered OvuFirst sensor. Check already registered message.",flow:"Flow 23 (duplicate OvuFirst check)",automatable:true},
+  {tc:100,section:"Me Tab",description:"Select the Me tab. Check the app shows the Me page, showing the user name at the top, with various options.",flow:"Flow 03 + Flow 12 (Me tab main)",automatable:true},
+  {tc:101,section:"Me Tab",description:"Tap the Notifications row. Check the app moves to the Notifications page, with 'Set up notifications' option at the top.",flow:"Flow 12 (notifications page)",automatable:true},
+  {tc:102,section:"Me Tab",description:"Tap 'Set up notifications'. Check the app moves to the Notification Settings page.",flow:"Flow 12 (notification settings)",automatable:true},
+  {tc:103,section:"Me Tab",description:"In the Notification Settings page, tap 'Medicine Reminders'. Check the app moves to the 'Notification Timings' page.",flow:"Flow 37 (notification timings)",automatable:true},
+  {tc:104,section:"Me Tab",description:"From the Me page, tap 'Medical Profile'. Check the app moves to the Medical Profile page with current values.",flow:"Flow 03 + Flow 12 (medical profile)",automatable:true},
+  {tc:105,section:"Me Tab",description:"From the Me page, tap 'Medical History'. Check the app moves to the Medical History page.",flow:"Flow 03 + Flow 12 (medical history)",automatable:true},
+  {tc:106,section:"Me Tab",description:"On the Medical History page, tick one or more conditions, return to Me page. Check the Me page lists these conditions.",flow:"Flow 37 (medical history conditions)",automatable:true},
+  {tc:107,section:"Me Tab",description:"From the Me page, tap 'Personalised Advice'. Check the app moves to the Personalised Advice page.",flow:"Flow 12 (personalised advice)",automatable:true},
+  {tc:108,section:"Me Tab",description:"From the Personalised Advice page. Check that PMOS Action Plan topics only show with Pro subscription.",flow:"Flow 37 (PMOS action plan check)",automatable:true},
+  {tc:109,section:"Me Tab",description:"From the Me page, tap 'Sensors'. Check the app moves to the Sensors page.",flow:"Flow 12 (sensors page)",automatable:true},
+  {tc:110,section:"Me Tab",description:"From the Me page, tap 'Subscriptions'. Check the app moves to the Subscriptions page. Check 'Change subscription email' row.",flow:"Flow 12 (subscriptions + change email)",automatable:true},
+  {tc:111,section:"Me Tab",description:"Use check-subs.php to check and cancel the subscription for 'subs@ovusense.com'. Manage subscription flow.",flow:"Flow 41 (subscription management stub)",automatable:true},
+  {tc:112,section:"Help Tab",description:"Select the Help tab. Check the app shows the Help page.",flow:"Flow 02 (help tab)",automatable:true},
+  {tc:113,section:"Help Tab",description:"Tap the 'Safety Information' option. Check the app moves to the Safety Information page.",flow:"Flow 02 (safety information)",automatable:true},
+  {tc:114,section:"Help Tab",description:"From Help, tap the 'User Guide' option. Check the app moves to the User Guide.",flow:"Flow 02 (user guide)",automatable:true},
+  {tc:115,section:"Help Tab",description:"Scroll down through user guide and check all pictures are displayed.",flow:"Flow 38 (user guide images)",automatable:true},
+  {tc:116,section:"Help Tab",description:"Check version number at the bottom of the guide is as expected for App release.",flow:"Flow 38 (guide version check)",automatable:true},
+  {tc:117,section:"Help Tab",description:"Scroll back to top of user guide using a 'Top ^' link, tap on '1.0 Safety Information', check link to Safety Information works.",flow:"Flow 38 (guide navigation links)",automatable:true},
+  {tc:118,section:"Help Tab",description:"From Help, tap the 'Understanding Your Charts & Cycles' option. Check correct version and all images displayed.",flow:"Flow 02 (charts & cycles)",automatable:true},
+  {tc:119,section:"Help Tab",description:"From Help, tap the 'Before Use' option. Check correct version and all images displayed.",flow:"Flow 02 (before use)",automatable:true},
+  {tc:120,section:"Help Tab",description:"From Help, tap the 'Technical Details' option. Check correct version and all images displayed.",flow:"Flow 02 (technical details)",automatable:true},
+  {tc:121,section:"Help Tab",description:"From Help, tap the 'OvuSense Website' option. Check the website opens in the default browser.",flow:"Flow 02 (website)",automatable:true},
+  {tc:122,section:"Help Tab",description:"From Help, tap the 'OvuSense Support' option. Check the support website opens.",flow:"Flow 02 (support)",automatable:true},
+  {tc:123,section:"Help Tab",description:"From Help, tap the 'Facebook Group' option. Check app opens Facebook.",flow:"Flow 02 (facebook)",automatable:true},
+  {tc:124,section:"Help Tab",description:"From Help, tap the 'Instagram' option. Check app opens Instagram.",flow:"Flow 02 (instagram)",automatable:true},
+  {tc:125,section:"Help Tab",description:"From Help, tap the 'Contact Customer Support' option. Check the support request webpage opens.",flow:"Flow 02 (contact support)",automatable:true},
+  {tc:126,section:"Settings Tab",description:"Select the Settings tab. Check the app shows the Settings page with account email at top and version at bottom.",flow:"Flow 01 (settings tab)",automatable:true},
+  {tc:127,section:"Settings Tab",description:"Tap the 'Account' option, check app moves to the Account page.",flow:"Flow 01 (account page)",automatable:true},
+  {tc:128,section:"Settings Tab",description:"Tap the Update Email option. Check Update Email page appears.",flow:"Flow 01 (update email page)",automatable:true},
+  {tc:129,section:"Settings Tab",description:"Try changing to an existing email - za@cache.uk. Check email is already registered message appears.",flow:"Flow 24 (existing email error)",automatable:true},
+  {tc:130,section:"Settings Tab",description:"Try changing to an unregistered email with a CAPITAL LETTER. Check 'Email changed' message is displayed.",flow:"Flow 24 (email change success)",automatable:true},
+  {tc:131,section:"Settings Tab",description:"Logout and sign in with the updated email. Check app signs in. Then change the email back.",flow:"Flow 24 (email change login verify)",automatable:true},
+  {tc:132,section:"Settings Tab",description:"Tap the Update Password option. Check Update Password page appears.",flow:"Flow 01 (update password page)",automatable:true},
+  {tc:133,section:"Settings Tab",description:"Enter incorrect old password and correct current password in new password boxes. Check Incorrect password message.",flow:"Flow 39 (wrong old password)",automatable:true},
+  {tc:134,section:"Settings Tab",description:"Enter correct old password, and 'abc' in new password boxes. Check 'Please enter a password at least...' message.",flow:"Flow 39 (short password error)",automatable:true},
+  {tc:135,section:"Settings Tab",description:"Enter correct old password, same password in first box plus one extra character in second. Check 'New passwords do not match!' message.",flow:"Flow 39 (password mismatch)",automatable:true},
+  {tc:136,section:"Settings Tab",description:"Enter correct old password, and same password in both new password boxes. Check Password changed message.",flow:"Flow 39 (password change success)",automatable:true},
+  {tc:137,section:"Settings Tab",description:"From Settings > Account, tap the 'Personal Details' option, check app moves to the About Me page.",flow:"Flow 01 + Flow 09 (personal details)",automatable:true},
+  {tc:138,section:"Settings Tab",description:"Tap on the Country option. Check the country list appears and that changing the selection updates the value.",flow:"Flow 09 (country list)",automatable:true},
+  {tc:139,section:"Settings Tab",description:"Tap the Full Name option. Check the text entry form appears. Enter a value and tap Submit.",flow:"Flow 09 (full name)",automatable:true},
+  {tc:140,section:"Settings Tab",description:"Tap on the 'Are you happy for us...' option. Check the switch toggles between on and off.",flow:"Flow 39 (contact toggle)",automatable:true},
+  {tc:141,section:"Settings Tab",description:"From Settings > Account, tap the Delete Account option. Check app opens the 'Account Deletion Request' page.",flow:"Flow 01 (delete account page)",automatable:true},
+  {tc:142,section:"Settings Tab",description:"From Settings, tap the 'Subscription' option, check app moves to the Subscription page.",flow:"Flow 01 (subscription page)",automatable:true},
+  {tc:143,section:"Settings Tab",description:"Tap the 'Change subscription email' option. Check app displays the email entry box, keyboard and 'Submit' button.",flow:"Flow 13 (change sub email dialog)",automatable:true},
+  {tc:144,section:"Settings Tab",description:"Type in another email, and Submit. Check the new email is registered or you get an already registered popup.",flow:"Flow 13 (submit sub email)",automatable:true},
+  {tc:145,section:"Settings Tab",description:"From Settings, tap the 'Notifications' option, check app moves to the Notification Settings page.",flow:"Flow 01 (notifications page)",automatable:true},
+  {tc:146,section:"Settings Tab",description:"From Settings, tap the 'Sensors' option, check app moves to the OvuSense Sensors page.",flow:"Flow 01 (sensors page)",automatable:true},
+  {tc:147,section:"Settings Tab",description:"From Settings, tap the 'Preferences' option, check app moves to the Preferences page.",flow:"Flow 01 + Flow 09 (preferences page)",automatable:true},
+  {tc:148,section:"Settings Tab",description:"Tap Temperature units and select Fahrenheit. Check the Data tab y-axis scale references Fahrenheit.",flow:"Flow 09 (fahrenheit + data tab check)",automatable:true},
+  {tc:149,section:"Settings Tab",description:"Return to Settings, select Celsius. Check the Data tab y-axis scale references Celsius.",flow:"Flow 09 (celsius + data tab check)",automatable:true},
+  {tc:150,section:"Settings Tab",description:"Tap Default graph type and select a different type. Check the Data tab graphs display accordingly.",flow:"Flow 09 (smooth data + data tab check)",automatable:true},
+  {tc:151,section:"Settings Tab",description:"In the Data tab, tap the graph type icon to change display. Check Settings tab reflects the same graph type.",flow:"Flow 09 (graph type sync)",automatable:true},
+  {tc:152,section:"Settings Tab",description:"For pods@ovusense.com, check the 'Sensor data shown on graph' option is available.",flow:"Flow 25 (sensor data option visible)",automatable:true},
+  {tc:153,section:"Settings Tab",description:"Tap 'Sensor data shown on graph' and select 'OvuCore data only'. Check the Data graph shows only OvuCore data.",flow:"Flow 25 (OvuCore filter)",automatable:true},
+  {tc:154,section:"Settings Tab",description:"Tap 'Sensor data shown on graph' and select 'OvuFirst data only'. Check the Data graph shows only OvuFirst data.",flow:"Flow 25 (OvuFirst filter)",automatable:true},
+  {tc:155,section:"Settings Tab",description:"Tap 'Sensor data shown on graph' and select 'All data'. Check the Data graph shows OvuCore & OvuFirst data.",flow:"Flow 25 (all sensor data)",automatable:true},
+  {tc:156,section:"Settings Tab",description:"Tap on each of the Select displayed events options for the different event groups. App moves to the event group selection page.",flow:"Flow 09 (diag tests/procedures/meds)",automatable:true},
+  {tc:157,section:"Settings Tab",description:"Select the Logs tab and move to the Medication log. Check the events displayed are the ones ticked in 'Displayed Events'.",flow:"Flow 27 (displayed events verify)",automatable:true},
+  {tc:158,section:"Settings Tab",description:"Add a displayed event and check it is now listed on Logs > Medication, then remove it and check it disappears.",flow:"Flow 27 (displayed events add/remove)",automatable:true},
+  {tc:159,section:"Settings Tab",description:"Enable the cover line. Check a line is displayed across the graph in the Data tab.",flow:"Flow 09 (cover line toggle + data tab)",automatable:true},
+  {tc:160,section:"Settings Tab",description:"Check you can move the line by sliding your finger up and down the temperature scale.",flow:"Flow 26 (cover line slide)",automatable:true},
+  {tc:161,section:"Settings Tab",description:"Check the cover line stays on the same temperature across different graphs.",flow:"Flow 26 (cover line across graphs)",automatable:true},
+  {tc:162,section:"Settings Tab",description:"Disable the cover line and check it disappears from the graphs on the Data tab.",flow:"Flow 09 (cover line disable)",automatable:true},
+  {tc:163,section:"Settings Tab",description:"Disable haptic feedback. Check moving the graph in the Data tab doesn't create minute vibrations.",flow:"",automatable:false},
+  {tc:164,section:"Settings Tab",description:"Enable haptic feedback. Check moving the graph creates minute vibrations.",flow:"Flow 09 (haptic toggle on)",automatable:true},
+  {tc:165,section:"Settings Tab",description:"From Settings, tap the 'Data Sharing' option. Check the app goes to the Data Sharing page.",flow:"Flow 13 (data sharing page)",automatable:true},
+  {tc:166,section:"Settings Tab",description:"From Settings > Data Sharing, tap 'Share your data'. Check the app goes to the Share Your Data page.",flow:"Flow 13 (share data page)",automatable:true},
+  {tc:167,section:"Settings Tab",description:"Add new user email address and tap 'Send Invitation'. Check 'Data shared' pops up and email is added to list.",flow:"Flow 28 (send invitation)",automatable:true},
+  {tc:168,section:"Settings Tab",description:"Remove the user from the list. Check 'Shared user removed' popup and the user's email is removed.",flow:"Flow 28 (remove shared user)",automatable:true},
+  {tc:169,section:"Settings Tab",description:"Check invited user email holder has received confirmatory email.",flow:"Flow 41 (email verification stub)",automatable:true},
+  {tc:170,section:"Settings Tab",description:"Log out and on Sign in page tap on Forgotten Password. Check 'Please enter your email address...' popup appears.",flow:"Flow 13 (forgot password popup)",automatable:true},
+  {tc:171,section:"Settings Tab",description:"Enter an email address, tap 'Forgotten Password', check 'Password reset...' popup appears, tap Cancel.",flow:"Flow 29 (forgot password cancel)",automatable:true},
+  {tc:172,section:"Settings Tab",description:"Tap 'Forgotten Password' again, check 'Password reset...' popup appears, tap Reset, check 'Check your email...' popup appears.",flow:"Flow 29 (forgot password reset)",automatable:true},
+  {tc:173,section:"Settings Tab",description:"Check this email account receives Password Reset email, and click on reset link.",flow:"Flow 41 (password reset email stub)",automatable:true},
+  {tc:174,section:"Settings Tab",description:"Check 'Reset your password for OvuSense' box appears, enter password, check 'Successfully updated' message.",flow:"Flow 41 (password reset confirm stub)",automatable:true},
+  {tc:175,section:"Settings Tab",description:"Return to app and sign in with that password. Check app displays user's Data.",flow:"Flow 29 (sign in after reset)",automatable:true},
+  {tc:176,section:"Updates",description:"2739: [iOS and Android] Update UDIs : Pass with main functionality tests.",flow:"Flow 11 (UDI check on settings)",automatable:true},
+  {tc:177,section:"Updates",description:"2742: [iOS and Android] Update PCOS naming : Sign in with test@ovusense.com; confirm the new naming for PCOS.",flow:"Flow 11 (medical history + advice)",automatable:true},
+  {tc:178,section:"Updates",description:"2748: [iOS and Android] OvuFirst Graph marker does not show with a zero OvuCore : Sign in with rnd26@ovusense.com; confirm graph marker shows.",flow:"Flow 40 (rnd26 graph marker verify)",automatable:true},
+  {tc:179,section:"Updates",description:"2757: [iOS and Android] Remove references to [PFUser currentUser].email : No visible change. Pass if regression tests okay.",flow:"Flow 11 (regression - pass)",automatable:true},
+  {tc:180,section:"Updates",description:"2698: [Android] Me Page failure with Android 12 : Pass if regression tests okay.",flow:"Flow 03+12 (Me page works)",automatable:true},
+  {tc:181,section:"Updates",description:"2727: [Android] Improve NDEF download and provide read data fallback : No discernible difference. Pass if regression testing okay.",flow:"Regression - pass",automatable:true},
+  {tc:182,section:"Updates",description:"2728: [Android] Add ability to create an SBOM : External change. Pass if regression tests okay.",flow:"Regression - pass",automatable:true},
+  {tc:183,section:"Updates",description:"2729: [Android] Improve Sync Logout : Impossible to force occurrence. Pass if standard regression testing okay.",flow:"",automatable:false},
+  {tc:184,section:"Updates",description:"2780: [Android] Widget cancel via background prevents reopening : Tap Logs > Select Day/Date, dismiss selector, confirm you can reopen.",flow:"Flow 11 (date selector reopen)",automatable:true}
+];
+
+// ============ SCREENSHOT DATA ============
+const screenshots = [
+  "ovusense_logout_confirm.png",
+  "ovusense_r110_me_page.png","ovusense_r110_medicine_reminders.png","ovusense_r110_notification_settings.png","ovusense_r110_notification_timing.png","ovusense_r110_notifications.png",
+  "ovusense_r113_acne_ticked.png","ovusense_r113_conditions_restored.png","ovusense_r113_conditions_ticked.png","ovusense_r113_endometriosis_ticked.png","ovusense_r113_me_page_conditions.png","ovusense_r113_medical_history.png",
+  "ovusense_r115_advice_scrolled1.png","ovusense_r115_advice_scrolled2.png","ovusense_r115_personalised_advice.png","ovusense_r115_pmos_stub.png",
+  "ovusense_r123_guide_page2.png","ovusense_r123_guide_page3.png","ovusense_r123_guide_page4.png","ovusense_r123_guide_page5.png","ovusense_r123_guide_page6.png","ovusense_r123_guide_page7.png","ovusense_r123_guide_page8.png","ovusense_r123_help_page.png","ovusense_r123_user_guide_top.png",
+  "ovusense_r124_guide_bottom_version.png","ovusense_r124_guide_version2.png",
+  "ovusense_r125_safety_info_link.png","ovusense_r125_scrolled_to_top.png",
+  "ovusense_r149_empty_old_password_error.png",
+  "ovusense_r14_create_account_page.png","ovusense_r14_medical_profile_fields.png","ovusense_r14_signin_page.png",
+  "ovusense_r150_empty_new_password_error.png",
+  "ovusense_r151_empty_confirm_password_error.png",
+  "ovusense_r154_full_name_edit.png","ovusense_r154_personal_details.png",
+  "ovusense_r155_country_list.png",
+  "ovusense_r156_dob_edit.png",
+  "ovusense_r15_dob_picker.png",
+  "ovusense_r162_notification_settings.png","ovusense_r162_notification_toggled.png",
+  "ovusense_r16_tracking_goal.png",
+  "ovusense_r172_diagnostic_tests_list.png","ovusense_r172_diagnostic_toggled.png",
+  "ovusense_r17_stub_medical_history.png",
+  "ovusense_r188_graph_day27_area.png","ovusense_r188_graph_marker_check.png","ovusense_r188_graph_scroll1.png","ovusense_r188_graph_scroll2.png","ovusense_r188_graph_scroll3.png","ovusense_r188_ovufirst_marker_verify.png","ovusense_r188_rnd26_initial_data.png",
+  "ovusense_r18_stub_create_cycle.png",
+  "ovusense_r19_scale_marker_swipe1.png","ovusense_r19_scale_marker_swipe2.png",
+  "ovusense_r20_medical_profile.png","ovusense_r20_profile_cycle_period.png","ovusense_r20_profile_weight_height.png",
+  "ovusense_r21_past_period_create_cycle.png",
+  "ovusense_r22_stub_cycle_length_zero.png",
+  "ovusense_r26_graph_initial.png","ovusense_r26_timeline_swipe1.png","ovusense_r26_timeline_swipe2.png","ovusense_r26_timeline_swipe3.png",
+  "ovusense_r28_ovulation_lines.png","ovusense_r28_ovulation_window.png",
+  "ovusense_r30_graph_combined_check.png","ovusense_r30_graph_dialog.png","ovusense_r30_graph_health.png","ovusense_r30_graph_logs.png","ovusense_r30_graph_pain.png","ovusense_r30_graph_period.png","ovusense_r30_graph_temperature.png","ovusense_r30_graph_weight.png",
+  "ovusense_r33_data_sharing_page.png","ovusense_r33_day_page_no_add_edit.png","ovusense_r33_shared_user_graph.png","ovusense_r33_shared_user_selected.png",
+  "ovusense_r34_event_readonly.png",
+  "ovusense_r35_cycles_no_edit.png",
+  "ovusense_r36_data_sharing_users.png","ovusense_r36_day_page_edit_enabled.png","ovusense_r36_own_data.png","ovusense_r36_owner_selected.png",
+  "ovusense_r38_cycle_detail_flags.png","ovusense_r38_cycles_page.png","ovusense_r38_cycles_scrolled.png",
+  "ovusense_r39_personalised_advice.png",
+  "ovusense_r41_day_page.png","ovusense_r41_logs_from_day.png",
+  "ovusense_r42_date_picker.png",
+  "ovusense_r43_date_changed.png",
+  "ovusense_r45_date_restored.png",
+  "ovusense_r46_medication_event_created.png","ovusense_r46_medication_log.png",
+  "ovusense_r47_day_page_events.png","ovusense_r47_event_page_remove.png",
+  "ovusense_r48_date_range.png",
+  "ovusense_r50_swipe_delete.png",
+  "ovusense_r51_event_deleted.png",
+  "ovusense_r56_data_after_miscarriage.png","ovusense_r56_data_reverted.png","ovusense_r56_health_log.png","ovusense_r56_miscarriage_removed.png","ovusense_r56_miscarriage_selected.png","ovusense_r56_preg_initial_data.png",
+  "ovusense_r60_create_cycle_page.png","ovusense_r60_cycle_created.png","ovusense_r60_cycles_page.png","ovusense_r60_date_set.png","ovusense_r60_endometriosis.png","ovusense_r60_medicated_selected.png",
+  "ovusense_r61_data_verify_created.png",
+  "ovusense_r62_cycle_edit_page.png","ovusense_r62_cycle_updated.png","ovusense_r62_ivf_implantation.png",
+  "ovusense_r63_data_verify_edited.png",
+  "ovusense_r64_cycle_natural.png","ovusense_r64_natural_selected.png",
+  "ovusense_r65_data_no_fertile_window.png",
+  "ovusense_r8_lots_cycle_detail.png","ovusense_r8_lots_cycles.png","ovusense_r8_lots_date_edit.png","ovusense_r8_lots_initial_data.png",
+  "ovusense_r9_cycle45_detail.png","ovusense_r9_cycle45_visible.png","ovusense_r9_graph_last_ovucore_point.png","ovusense_r9_graph_scroll1.png","ovusense_r9_graph_scroll2.png",
+  "ovusense_row118_stub_subscription_page.png",
+  "ovusense_row140_stub_email_change_login.png",
+  "ovusense_row159_stub_manage_subscription.png",
+  "ovusense_row163_stub_notification_verify.png",
+  "ovusense_row176_stub_haptic_verify.png",
+  "ovusense_row178_stub_delete_account.png",
+  "ovusense_row183_stub_shared_user_device.png",
+  "ovusense_row23_stub_new_email_signin.png",
+  "ovusense_row4_stub_fresh_install.png",
+  "ovusense_settings.png",
+  "ovusense_settings_account_page.png",
+  "ovusense_tc04_existing_email_entered.png","ovusense_tc04_existing_email_error.png","ovusense_tc04_update_email_page.png",
+  "ovusense_tc05_new_email_capital.png",
+  "ovusense_tc08_incorrect_password_error.png","ovusense_tc08_update_password_page.png","ovusense_tc08_wrong_old_password.png",
+  "ovusense_tc09_short_password_error.png",
+  "ovusense_tc101_nosub_logs_temp.png",
+  "ovusense_tc102_nosub_subscription.png",
+  "ovusense_tc10_password_mismatch_error.png",
+  "ovusense_tc112_me_main.png","ovusense_tc112_me_test_acct.png",
+  "ovusense_tc113_notifications.png","ovusense_tc113_notifications_test.png",
+  "ovusense_tc114_notification_settings.png",
+  "ovusense_tc116_dob_picker.png","ovusense_tc116_medical_profile.png","ovusense_tc116_medical_profile_test.png","ovusense_tc116_tracking_goal.png",
+  "ovusense_tc117_medical_history.png","ovusense_tc117_medical_history_test.png",
+  "ovusense_tc118_medical_history_ticks.png",
+  "ovusense_tc119_personalised_advice.png","ovusense_tc119_personalised_advice_test.png",
+  "ovusense_tc120_personalised_advice_scrolled.png",
+  "ovusense_tc121_sensors.png","ovusense_tc121_sensors_test.png",
+  "ovusense_tc122_change_sub_email.png","ovusense_tc122_subscriptions.png","ovusense_tc122_subscriptions_test.png",
+  "ovusense_tc125_help_main.png",
+  "ovusense_tc126_safety_info.png",
+  "ovusense_tc127_user_guide.png",
+  "ovusense_tc131_charts_cycles.png",
+  "ovusense_tc132_before_use.png",
+  "ovusense_tc133_technical_details.png",
+  "ovusense_tc134_website.png",
+  "ovusense_tc135_support.png",
+  "ovusense_tc136_facebook.png",
+  "ovusense_tc137_instagram.png",
+  "ovusense_tc138_contact_support.png",
+  "ovusense_tc140_settings_main.png",
+  "ovusense_tc141_account.png",
+  "ovusense_tc142_update_email.png",
+  "ovusense_tc146_update_password.png",
+  "ovusense_tc151_personal_details.png","ovusense_tc151_personal_details_test.png",
+  "ovusense_tc152_country_list.png",
+  "ovusense_tc153_fullname.png",
+  "ovusense_tc155_delete_account.png",
+  "ovusense_tc156_subscriptions.png",
+  "ovusense_tc157_change_sub_email.png",
+  "ovusense_tc159_notifications.png",
+  "ovusense_tc15_contact_toggle_visible.png","ovusense_tc15_contact_toggled_1.png","ovusense_tc15_contact_toggled_2.png","ovusense_tc15_personal_details.png",
+  "ovusense_tc160_sensors.png",
+  "ovusense_tc161_preferences.png","ovusense_tc161_prefs_initial.png",
+  "ovusense_tc162_data_fahrenheit.png","ovusense_tc162_fahrenheit_set.png","ovusense_tc162_temp_picker.png",
+  "ovusense_tc163_celsius_set.png","ovusense_tc163_data_celsius.png",
+  "ovusense_tc164_data_smooth.png","ovusense_tc164_graph_type_picker.png",
+  "ovusense_tc170_diag_tests.png","ovusense_tc170_medications.png","ovusense_tc170_procedures.png",
+  "ovusense_tc173_cover_line_toggled.png","ovusense_tc173_data_coverline.png",
+  "ovusense_tc176_cover_line_restored.png",
+  "ovusense_tc177_haptic_toggled.png",
+  "ovusense_tc178_haptic_restored.png",
+  "ovusense_tc179_data_sharing.png","ovusense_tc179_data_sharing_test.png",
+  "ovusense_tc180_share_data_page.png",
+  "ovusense_tc184_back_to_signin.png","ovusense_tc184_forgot_password_popup.png",
+  "ovusense_tc19_change_sub_email_dialog.png","ovusense_tc19_email_entered.png","ovusense_tc19_subscription_page.png",
+  "ovusense_tc26_data_graph_changed.png","ovusense_tc26_data_initial_graph.png","ovusense_tc26_default_graph_type_sync.png","ovusense_tc26_graph_type_dialog.png","ovusense_tc26_settings_graph_sync.png",
+  "ovusense_tc2739_udi_check.png",
+  "ovusense_tc2742_medical_history_pcos.png","ovusense_tc2742_personalised_advice_pcos.png",
+  "ovusense_tc2780_date_selector_dismissed.png","ovusense_tc2780_date_selector_open.png","ovusense_tc2780_date_selector_reopen.png","ovusense_tc2780_logs_before.png",
+  "ovusense_tc27_pods_preferences.png","ovusense_tc27_sensor_data_option.png",
+  "ovusense_tc28_data_ovucore_only.png","ovusense_tc28_ovucore_selected.png","ovusense_tc28_sensor_picker.png",
+  "ovusense_tc29_data_ovufirst_only.png","ovusense_tc29_ovufirst_selected.png",
+  "ovusense_tc30_all_data_selected.png","ovusense_tc30_cycles_list.png","ovusense_tc30_data_all_sensors.png",
+  "ovusense_tc32_logs_medication_items.png","ovusense_tc32_medication_selection_page.png","ovusense_tc32_medications_checked.png","ovusense_tc32_settings_medications_list.png",
+  "ovusense_tc33_before_add.png","ovusense_tc33_logs_after_add.png","ovusense_tc33_logs_after_remove.png","ovusense_tc33_medication_added.png","ovusense_tc33_medication_removed.png","ovusense_tc33_scrolled_medications.png",
+  "ovusense_tc34_graph_settings.png","ovusense_tc34_graph_settings_menu.png","ovusense_tc34_graph_settings_open.png","ovusense_tc34_pods_graph_settings.png",
+  "ovusense_tc35_coverline_enabled.png","ovusense_tc35_coverline_moved_down.png","ovusense_tc35_coverline_moved_up.png","ovusense_tc35_data_coverline_visible.png",
+  "ovusense_tc36_coverline_disabled.png","ovusense_tc36_day_page.png","ovusense_tc36_graph1_coverline.png","ovusense_tc36_graph2_coverline.png","ovusense_tc36_graph3_coverline.png",
+  "ovusense_tc37_data_sharing.png",
+  "ovusense_tc42_after_invitation.png","ovusense_tc42_cycle_flags.png","ovusense_tc42_data_sharing_page.png","ovusense_tc42_invitation_email_entered.png","ovusense_tc42_invitation_sent.png","ovusense_tc42_share_data_page.png",
+  "ovusense_tc43_after_removal.png","ovusense_tc43_shared_user_list.png","ovusense_tc43_user_removed.png",
+  "ovusense_tc44_stub_email_check.png",
+  "ovusense_tc46_back_to_signin.png","ovusense_tc46_email_entered.png","ovusense_tc46_forgot_password_popup.png","ovusense_tc46_password_reset_popup.png","ovusense_tc46_signin_confirmed.png",
+  "ovusense_tc47_after_reset.png","ovusense_tc47_forgot_password_popup2.png","ovusense_tc47_reset_popup.png",
+  "ovusense_tc48_stub_check_email.png",
+  "ovusense_tc49_stub_reset_link.png",
+  "ovusense_tc50_signin_page_final.png","ovusense_tc50_stub_signin_new_pw.png",
+  "ovusense_tc57_high_cycles_no_flags.png","ovusense_tc57_high_data.png",
+  "ovusense_tc58_free_data.png","ovusense_tc58_free_medical_profile.png",
+  "ovusense_tc59_prgs_cycles.png","ovusense_tc59_prgs_data.png",
+  "ovusense_tc60_preg_create_cycle_msg.png","ovusense_tc60_preg_data.png",
+  "ovusense_tc62_logs_selection.png",
+  "ovusense_tc63_cycles_page.png",
+  "ovusense_tc64_create_cycle_page.png",
+  "ovusense_tc67_logs_initial.png",
+  "ovusense_tc68_after_eye_tap.png","ovusense_tc68_carousel_scrolled.png","ovusense_tc68_item_order_scrolled.png","ovusense_tc68_item_order_top.png","ovusense_tc68_log_after_selection.png","ovusense_tc68_logs_initial.png","ovusense_tc68_logs_selection.png","ovusense_tc68_logs_selection_verified.png","ovusense_tc68_sex_log_check1.png","ovusense_tc68_sex_log_check2.png",
+  "ovusense_tc69_after_reorder.png","ovusense_tc69_before_reorder.png","ovusense_tc69_period_log_check.png",
+  "ovusense_tc70_diet_hidden.png","ovusense_tc70_sleep_log_check.png",
+  "ovusense_tc71_diet_restored.png",
+  "ovusense_tc72_grid_tap_period.png","ovusense_tc72_grid_view.png","ovusense_tc72_logs_page.png","ovusense_tc72_logs_tab.png","ovusense_tc72_on_log_item.png",
+  "ovusense_tc74_medication_check.png","ovusense_tc74_medication_check1.png","ovusense_tc74_medication_check2.png","ovusense_tc74_medication_log.png",
+  "ovusense_tc77_diag_tests_check.png","ovusense_tc77_diag_tests_log.png","ovusense_tc77_logs_carousel.png",
+  "ovusense_tc78_log_swipe1.png","ovusense_tc78_log_swipe10.png","ovusense_tc78_log_swipe11.png","ovusense_tc78_log_swipe2.png","ovusense_tc78_log_swipe3.png","ovusense_tc78_log_swipe4.png","ovusense_tc78_log_swipe5.png","ovusense_tc78_log_swipe6.png","ovusense_tc78_log_swipe7.png","ovusense_tc78_log_swipe8.png","ovusense_tc78_log_swipe9.png",
+  "ovusense_tc80_mood_log_check.png",
+  "ovusense_tc82_diet_log_check.png",
+  "ovusense_tc83_exercise_log_check.png",
+  "ovusense_tc84_pain_log_check.png",
+  "ovusense_tc85_prev_day_pain.png",
+  "ovusense_tc86_today_restored.png",
+  "ovusense_tc96_prev_day.png","ovusense_tc96_today_restored.png",
+  "ovusense_tc_data_graph.png","ovusense_tc_data_main.png",
+  "ovusense_tc_final_login_restored.png",
+  "ovusense_tc_log_swipe6.png","ovusense_tc_log_swipe7.png",
+  "ovusense_tc_logs_main.png",
+  "ovusense_tc_lots_data_loaded.png","ovusense_tc_lots_data_loading.png","ovusense_tc_lots_logout_success.png","ovusense_tc_lots_settings_udi.png",
+  "ovusense_tc_pods_data_main.png",
+  "ovusense_tc_signin_screen.png",
+  "ovusense_tc_test_data_main.png"
+];
+
+// ============ SCREENSHOT-TO-TC MAPPING ============
+// Excel row mapping: TC number → excel row number
+const excelRows = {1:4,2:5,3:6,4:7,5:8,6:9,7:10,8:11,9:12,10:13,11:14,12:15,13:16,14:17,15:18,16:19,17:20,18:21,19:22,20:23,21:25,22:26,23:27,24:28,25:29,26:30,27:31,28:32,29:33,30:34,31:35,32:36,33:37,34:38,35:39,36:40,37:41,38:42,39:43,40:44,41:45,42:46,43:47,44:48,45:49,46:50,47:51,48:52,49:53,50:54,51:55,52:56,53:58,54:59,55:60,56:61,57:62,58:63,59:64,60:65,61:67,62:68,63:69,64:70,65:71,66:72,67:73,68:74,69:75,70:76,71:77,72:78,73:79,74:80,75:81,76:82,77:83,78:84,79:85,80:86,81:87,82:88,83:89,84:90,85:91,86:92,87:93,88:94,89:95,90:96,91:97,92:98,93:99,94:100,95:101,96:102,97:103,98:104,99:105,100:107,101:108,102:109,103:110,104:111,105:112,106:113,107:114,108:115,109:116,110:117,111:118,112:120,113:121,114:122,115:123,116:124,117:125,118:126,119:127,120:128,121:129,122:130,123:131,124:132,125:133,126:135,127:136,128:137,129:138,130:139,131:140,132:141,133:142,134:143,135:144,136:145,137:146,138:147,139:148,140:149,141:150,142:151,143:152,144:153,145:154,146:155,147:156,148:157,149:158,150:159,151:160,152:161,153:162,154:163,155:164,156:165,157:166,158:167,159:168,160:169,161:170,162:171,163:172,164:173,165:174,166:175,167:176,168:177,169:178,170:179,171:180,172:181,173:182,174:183,175:184,176:186,177:187,178:188,179:189,180:190,181:191,182:192,183:193,184:194};
+// Build reverse lookup: excel_row → TC number
+const excelRowToTC = {};
+for (const [tc, row] of Object.entries(excelRows)) { excelRowToTC[row] = parseInt(tc); }
+
+// Check if a screenshot is a stub (placeholder login screen, not real evidence)
+function isStub(filename) {
+  return filename.toLowerCase().includes('stub');
+}
+
+// Map each screenshot to TC numbers using ONLY verified-reliable methods:
+// 1. r{N}_ (non-stub) → excel_row mapping (verified: r9=Cycle45, r56=preg data, r60=cycles page)
+// 2. tc{N}_ where N>=100 (non-stub) → excel_row = N-5 (verified: tc112=Me page, tc140=Settings)
+// 3. tc{2739|2742|2780}_ → bug-fix TCs (named after ticket numbers)
+function buildScreenshotMap() {
+  const tcToSS = {}; // tcNumber → [screenshot filenames]
+
+  screenshots.forEach(ss => {
+    if (isStub(ss)) return; // skip all stubs - they are just login screen placeholders
+
+    const stripped = ss.replace('ovusense_','');
+
+    // Method 1: r{N}_ pattern → excel_row lookup (verified accurate)
+    const rMatch = stripped.match(/^r(\d+)_/);
+    if (rMatch) {
+      const excelRow = parseInt(rMatch[1]);
+      const tcNum = excelRowToTC[excelRow];
+      if (tcNum) {
+        if (!tcToSS[tcNum]) tcToSS[tcNum] = [];
+        tcToSS[tcNum].push(ss);
+      }
+      return;
+    }
+
+    // Method 2: tc{N}_ where N >= 100 and N < 200 → excel_row = N-5 (verified accurate)
+    const tcHighMatch = stripped.match(/^tc(\d+)_/);
+    if (tcHighMatch) {
+      const num = parseInt(tcHighMatch[1]);
+      if (num >= 100 && num < 200) {
+        const excelRow = num - 5;
+        const tcNum = excelRowToTC[excelRow];
+        if (tcNum) {
+          if (!tcToSS[tcNum]) tcToSS[tcNum] = [];
+          tcToSS[tcNum].push(ss);
+        }
+        return;
+      }
+      // Method 3: tc2739, tc2742, tc2780 → bug-fix ticket TCs
+      if (num === 2739) { if (!tcToSS[176]) tcToSS[176] = []; tcToSS[176].push(ss); return; }
+      if (num === 2742) { if (!tcToSS[177]) tcToSS[177] = []; tcToSS[177].push(ss); return; }
+      if (num === 2780) { if (!tcToSS[184]) tcToSS[184] = []; tcToSS[184].push(ss); return; }
+    }
+
+    // All other screenshots (tc{N<100}_, tc_*, row{N}_, settings*, logout*) are NOT mapped
+    // to individual TCs because their content doesn't reliably match TC descriptions.
+    // They remain browsable in the Screenshot Evidence section.
+  });
+
+  return tcToSS;
+}
+
+const tcScreenshots = buildScreenshotMap();
+
+// ============ FLOW DURATION DATA (seconds, from Maestro logs) ============
+const flowDurations = {
+  1:101.25, 2:176.5, 3:105.47, 4:43.38, 5:72.13, 6:105.61, 7:95.99,
+  8:120.45, 9:322.13, 10:371.83, 11:122.47, 12:242.19, 13:162.72,
+  14:150.12, 18:174.6, 24:402.65, 25:160.71, 26:177.06, 27:196.64,
+  28:146.14, 29:65.35, 30:198.63, 31:122.39, 32:189.9, 33:142.8,
+  34:118.27, 35:143.23, 36:133.99, 37:179.59, 38:261.08, 39:336.79,
+  40:76.23, 41:74.58
+};
+function formatDuration(secs) {
+  if (!secs) return null;
+  const m = Math.floor(secs / 60);
+  const s = Math.round(secs % 60);
+  return m + 'm ' + String(s).padStart(2,'0') + 's';
+}
+// Extract flow numbers from a TC's flow field text
+function getFlowNumbers(flowText) {
+  if (!flowText) return [];
+  const matches = flowText.match(/Flow\s+(\d+)/gi) || [];
+  return matches.map(m => parseInt(m.replace(/Flow\s+/i, '')));
+}
+// Get total duration for a TC based on its flow(s)
+function getTCDuration(tc) {
+  if (!tc.automatable) return null;
+  const flowNums = getFlowNumbers(tc.flow);
+  if (flowNums.length === 0) return null;
+  // Use the primary (first) flow's duration
+  const dur = flowDurations[flowNums[0]];
+  return dur || null;
+}
+
+// ============ ACCOUNT MAPPING ============
+// Primary account used by each flow number
+const flowAccountMap = {
+  1:'test@', 2:'test@', 3:'test@', 4:'test@', 5:'lots@', 6:'pods@',
+  7:'test@', 8:'test@', 9:'test@', 10:'various', 11:'test@', 12:'test@',
+  13:'pods@', 14:'test@', 15:'various', 16:'pods@', 17:'rnd26@', 18:'test@',
+  19:'test@', 20:'test@', 21:'test@', 22:'test@', 23:'various', 24:'test@',
+  25:'pods@', 26:'test@', 27:'test@', 28:'test@', 29:'test@', 30:'pods@',
+  31:'pods@', 32:'pods@', 33:'test@', 34:'lots@', 35:'preg@', 36:'(new)',
+  37:'test@', 38:'test@', 39:'test@', 40:'rnd26@', 41:'various'
+};
+// TC-level overrides for multi-account flows (flow 10, 15, 23, etc.)
+const tcAccountOverrides = {
+  1:'N/A', 20:'N/A', 163:'N/A', 183:'N/A', // not automatable
+  48:'high@', 49:'free@', 50:'prgs@', 51:'preg@', 52:'preg@',
+  90:'nosub@', 91:'nosub@', 92:'nosub@', 93:'none@', 94:'oldsensor@',
+  8:'test@', 9:'(new)', 10:'(new)', 11:'(new)', 12:'(new)', 13:'(new)',
+  14:'(new)', 15:'(new)', 16:'(new)', 17:'(new)', 18:'(new)', 19:'(new)',
+  87:'test@', 88:'test@', 89:'test@', 95:'test@', 96:'test@', 97:'test@', 98:'test@', 99:'test@',
+  111:'test@', 169:'test@', 173:'test@', 174:'test@',
+  178:'rnd26@', 179:'test@', 180:'test@', 181:'test@', 182:'test@', 184:'test@'
+};
+function getAccountForTC(tc) {
+  if (tcAccountOverrides[tc.tc] !== undefined) return tcAccountOverrides[tc.tc];
+  const flowNums = getFlowNumbers(tc.flow);
+  if (flowNums.length === 0) return tc.automatable ? 'test@' : 'N/A';
+  return flowAccountMap[flowNums[0]] || 'test@';
+}
+function getAccountBadgeClass(account) {
+  if (account === 'N/A') return 'acct-na';
+  if (account === '(new)') return 'acct-new';
+  if (account === 'various') return 'acct-various';
+  const prefix = account.replace(/@.*/, '@');
+  const map = {'test@':'acct-test','pods@':'acct-pods','lots@':'acct-lots','rnd26@':'acct-rnd26','preg@':'acct-preg','prgs@':'acct-prgs','free@':'acct-free','high@':'acct-high','nosub@':'acct-nosub','none@':'acct-none','oldsensor@':'acct-oldsensor'};
+  return map[prefix] || 'acct-test';
+}
+function getAccountShortName(account) {
+  if (account === 'N/A' || account === '(new)' || account === 'various') return account;
+  return account.replace(/@.*/, '@');
+}
+
+// ============ SECTION DEFINITIONS ============
+const sectionOrder = [
+  { key: 'Install, Onboard and Login', label: 'Install, Onboard & Login', range: [1, 20] },
+  { key: 'Data Tab', label: 'Data Tab', range: [21, 52] },
+  { key: 'Data > Cycles', label: 'Data > Cycles', range: [53, 60] },
+  { key: 'Logs Tab', label: 'Logs Tab', range: [61, 99] },
+  { key: 'Me Tab', label: 'Me Tab', range: [100, 111] },
+  { key: 'Help Tab', label: 'Help Tab', range: [112, 125] },
+  { key: 'Settings Tab', label: 'Settings Tab', range: [126, 175] },
+  { key: 'Updates', label: 'Updates / Bug Fixes', range: [176, 184] }
+];
+
+// ============ STATUS CLASSIFICATION ============
+const stubTCs = new Set([88, 89, 95, 97, 111, 169, 173, 174]);
+const regressionTCs = new Set([179, 181, 182]);
+
+function getTCStatus(tc) {
+  if (!tc.automatable) return 'na';
+  if (stubTCs.has(tc.tc)) return 'stub';
+  if (regressionTCs.has(tc.tc)) return 'regression';
+  return 'pass';
+}
+
+function getStatusBadge(status) {
+  switch (status) {
+    case 'pass': return '<span class="badge badge-pass">Automated</span>';
+    case 'stub': return '<span class="badge badge-stub">Stub</span>';
+    case 'regression': return '<span class="badge badge-regression">Regression</span>';
+    case 'na': return '<span class="badge badge-na">Not Automatable</span>';
+    default: return '';
+  }
+}
+
+function getRowStyle(status) {
+  switch (status) {
+    case 'na': return ' style="background:#fee2e2"';
+    case 'stub': return ' style="background:#fffbeb"';
+    case 'regression': return ' style="background:var(--blue-light)"';
+    default: return '';
+  }
+}
+
+// ============ RENDER TEST CASES (COLLAPSIBLE BY SECTION) ============
+function renderTCTable() {
+  const container = document.getElementById('tcSections');
+  let html = '';
+
+  sectionOrder.forEach((sec, idx) => {
+    const sectionTCs = testCases.filter(tc => tc.tc >= sec.range[0] && tc.tc <= sec.range[1]);
+    const automated = sectionTCs.filter(t => getTCStatus(t) === 'pass').length;
+    const total = sectionTCs.length;
+    const pct = Math.round((automated / total) * 100);
+    const openAttr = idx === 0 ? ' open' : '';
+
+    html += `<details class="tc-section-group" data-section-key="${sec.key}"${openAttr}>
+      <summary>
+        ${sec.label}
+        <span class="section-badge">${automated}/${total} automated (${pct}%) &bull; TC-${String(sec.range[0]).padStart(3,'0')} to TC-${String(sec.range[1]).padStart(3,'0')}</span>
+      </summary>
+      <div class="detail-content">
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:60px">TC #</th>
+              <th>Description</th>
+              <th style="width:110px">Account</th>
+              <th style="width:100px">Status</th>
+              <th style="width:80px">Duration</th>
+              <th style="width:180px">Flow Coverage</th>
+              <th style="width:200px">Screenshots</th>
+            </tr>
+          </thead>
+          <tbody>`;
+
+    sectionTCs.forEach(tc => {
+      const status = getTCStatus(tc);
+      const statusBadge = getStatusBadge(status);
+      const flowText = tc.flow || (tc.automatable ? 'Covered via regression flows' : '&mdash;');
+      const rowStyle = getRowStyle(status);
+
+      // Build duration display
+      const tcDur = getTCDuration(tc);
+      const durHtml = tcDur ? `<span style="font-size:12px;font-weight:600;color:var(--teal-dark)">${formatDuration(tcDur)}</span>` : '<span style="font-size:12px;color:var(--gray-300)">&mdash;</span>';
+
+      // Build account badge
+      const account = getAccountForTC(tc);
+      const acctClass = getAccountBadgeClass(account);
+      const acctLabel = getAccountShortName(account);
+      const acctHtml = `<span class="badge-account ${acctClass}">${acctLabel}</span>`;
+
+      // Build screenshot links
+      const ssList = tcScreenshots[tc.tc] || [];
+      let ssHtml = '';
+      if (ssList.length > 0) {
+        ssHtml = `<span class="tc-ss-count">${ssList.length} file${ssList.length > 1 ? 's' : ''}</span><div class="tc-screenshots">`;
+        ssList.forEach(ss => {
+          const shortName = ss.replace('ovusense_','').replace('.png','');
+          ssHtml += `<a class="tc-ss-badge" href="file:///tmp/${ss}" title="${ss}">${shortName}</a>`;
+        });
+        ssHtml += '</div>';
+      } else {
+        ssHtml = '<span style="font-size:12px;color:var(--gray-300)">&mdash;</span>';
+      }
+
+      html += `<tr${rowStyle} data-section="${sec.key}" data-status="${status}" data-account="${acctLabel}" data-tc="${tc.tc}">
+        <td><strong>TC-${String(tc.tc).padStart(3,'0')}</strong></td>
+        <td>${tc.description}</td>
+        <td>${acctHtml}</td>
+        <td>${statusBadge}</td>
+        <td>${durHtml}</td>
+        <td style="font-size:13px">${flowText}</td>
+        <td>${ssHtml}</td>
+      </tr>`;
+    });
+
+    html += `</tbody></table></div></div></details>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ============ TOGGLE ALL SECTIONS ============
+function toggleAllSections(open) {
+  document.querySelectorAll('.tc-section-group').forEach(d => d.open = open);
+}
+
+// ============ FILTER TEST CASES ============
+function filterTCs() {
+  const search = document.getElementById('tcSearch').value.toLowerCase();
+  const status = document.getElementById('tcStatusFilter').value;
+  const account = document.getElementById('tcAccountFilter').value;
+  let totalShown = 0;
+
+  document.querySelectorAll('.tc-section-group').forEach(group => {
+    const rows = group.querySelectorAll('tbody tr');
+    let sectionShown = 0;
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const rowStatus = row.getAttribute('data-status');
+      const rowAccount = row.getAttribute('data-account') || '';
+      let visible = true;
+      if (search && !text.includes(search)) visible = false;
+      if (status && rowStatus !== status) visible = false;
+      if (account && rowAccount !== account) visible = false;
+      row.style.display = visible ? '' : 'none';
+      if (visible) sectionShown++;
+    });
+    totalShown += sectionShown;
+    // Auto-open sections with matches when searching, hide empty sections
+    if (search || status || account) {
+      if (sectionShown > 0) {
+        group.open = true;
+        group.style.display = '';
+      } else {
+        group.style.display = 'none';
+      }
+    } else {
+      group.style.display = '';
+    }
+  });
+  document.getElementById('tcCount').textContent = `Showing ${totalShown} of 184 test cases`;
+}
+
+// ============ RENDER SCREENSHOTS (grouped by section) ============
+function renderScreenshots() {
+  const container = document.getElementById('screenshotSection');
+
+  // Group screenshots by section using TC mapping
+  const sectionSS = {};
+  sectionOrder.forEach(s => sectionSS[s.label] = new Set());
+  sectionSS['General'] = new Set();
+  const allMappedSS = new Set();
+
+  // Collect all mapped screenshots
+  for (const [tcNumStr, ssList] of Object.entries(tcScreenshots)) {
+    const tcNum = parseInt(tcNumStr);
+    const sec = sectionOrder.find(s => tcNum >= s.range[0] && tcNum <= s.range[1]);
+    const label = sec ? sec.label : 'General';
+    ssList.forEach(ss => {
+      sectionSS[label].add(ss);
+      allMappedSS.add(ss);
+    });
+  }
+
+  // Add unmapped screenshots to General
+  screenshots.forEach(ss => {
+    if (!allMappedSS.has(ss)) sectionSS['General'].add(ss);
+  });
+
+  let html = '';
+  for (const [label, ssSet] of Object.entries(sectionSS)) {
+    if (ssSet.size === 0) continue;
+    const sorted = Array.from(ssSet).sort();
+    html += `<details style="margin-bottom:12px">
+      <summary style="font-size:15px;padding:10px 16px;background:var(--gray-100)">${label} <span style="font-size:12px;color:var(--gray-500);margin-left:8px">${sorted.length} screenshots</span></summary>
+      <div style="padding:12px">
+        <div class="ss-grid">`;
+    sorted.forEach(ss => {
+      html += `<div class="ss-item"><a class="ss-link" href="file:///tmp/${ss}" title="${ss}">${ss}</a></div>`;
+    });
+    html += '</div></div></details>';
+  }
+  container.innerHTML = html;
+}
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', function() {
+  renderTCTable();
+  renderScreenshots();
+});
+</script>
+
+</body>
+</html>

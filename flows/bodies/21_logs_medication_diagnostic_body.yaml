@@ -1,0 +1,318 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs - Medication & Diagnostic Tests Interactions"
+---
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-14: Medication Log - open selection page, check items
+# ============================================================
+# Navigate to Medication Log via carousel
+# Swipe far right to Logs Selection first
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+
+# Swipe left through carousel to reach Medication log
+# Order from Selection: Temperature, Sex, ?, Period, Sleep, Water?, Weight,
+# Height, Mood, Diet, Exercise, Pain, Medication, Diagnostic Tests
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc80_medication_log
+
+# Scroll down to find "Select which medications you would like to track"
+- scrollUntilVisible:
+    element: "Select which medications.*"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc80_medication_select_visible
+
+# Tap "Select which medications you would like to track"
+- tapOn:
+    text: "Select which medications.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc80_medication_selection_page
+
+# Verify medication selection page opens - check for list items
+- takeScreenshot: /tmp/ovusense_tc80_medication_list
+
+# Tap a medication to toggle selection
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc80_medication_toggled
+
+# Go back to the Medication Log
+- back
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc80_medication_selection_updated
+
+# ============================================================
+# TC-15: Tap a medication, add value and notes, confirm
+# ============================================================
+# Tap the first medication in the list
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc81_medication_event_page
+
+# Check Event page opens with no values set
+# Tap the value row to add a value
+- tapOn:
+    text: ".*value.*"
+    optional: true
+- tapOn:
+    text: ".*Value.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc81_medication_value_entry
+
+# Enter a value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- inputText: "100"
+- hideKeyboard
+- waitForAnimationToEnd
+
+# Tap notes row to add notes
+- tapOn:
+    text: ".*notes.*"
+    optional: true
+- tapOn:
+    text: ".*Notes.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Enter notes text
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- inputText: "Test medication note"
+- hideKeyboard
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc81_medication_notes_entered
+
+# Tap Confirm button
+- tapOn:
+    text: "Confirm"
+    optional: true
+- tapOn:
+    text: "CONFIRM"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc81_medication_confirmed
+
+# ============================================================
+# TC-16: Tap same medication, verify values, then Remove
+# ============================================================
+# Tap the same medication again
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc82_medication_verify_values
+
+# Verify the values are correct (screenshot for verification)
+# Tap Remove button
+- tapOn:
+    text: "Remove"
+    optional: true
+- tapOn:
+    text: "REMOVE"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc82_medication_removed
+
+# ============================================================
+# TC-17: Diagnostic Tests Log - open selection page
+# ============================================================
+# Swipe left to Diagnostic Tests log (next after Medication)
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc83_diagnostic_log
+
+# Scroll down to find "Select which diagnostic tests..."
+- scrollUntilVisible:
+    element: "Select which diagnostic tests.*"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc83_diagnostic_select_visible
+
+# Tap "Select which diagnostic tests you would like to track"
+- tapOn:
+    text: "Select which diagnostic tests.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc83_diagnostic_selection_page
+
+# Tap a test to toggle selection
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc83_diagnostic_toggled
+
+# Go back to the Diagnostic Tests Log
+- back
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc83_diagnostic_updated
+
+# ============================================================
+# TC-18: Tap a diagnostic test, add value and notes, confirm
+# ============================================================
+# Tap the first test in the list
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc84_diagnostic_event_page
+
+# Tap the value row
+- tapOn:
+    text: ".*value.*"
+    optional: true
+- tapOn:
+    text: ".*Value.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Enter a value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- inputText: "5.5"
+- hideKeyboard
+- waitForAnimationToEnd
+
+# Tap notes row
+- tapOn:
+    text: ".*notes.*"
+    optional: true
+- tapOn:
+    text: ".*Notes.*"
+    optional: true
+- waitForAnimationToEnd
+
+# Enter notes text
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- inputText: "Test diagnostic note"
+- hideKeyboard
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc84_diagnostic_notes_entered
+
+# Tap Confirm
+- tapOn:
+    text: "Confirm"
+    optional: true
+- tapOn:
+    text: "CONFIRM"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc84_diagnostic_confirmed
+
+# ============================================================
+# TC-19: Tap same test, verify values, then Remove
+# ============================================================
+# Tap the same test again
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc85_diagnostic_verify_values
+
+# Tap Remove button
+- tapOn:
+    text: "Remove"
+    optional: true
+- tapOn:
+    text: "REMOVE"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc85_diagnostic_removed

@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Data Tab - Graph Details & Dual Graph Options (pods@)"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/30_data_tab_graph_details_body.yaml
+# Cleanup
+- clearState

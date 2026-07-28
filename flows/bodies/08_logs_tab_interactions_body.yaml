@@ -1,0 +1,100 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs Tab - Interaction Tests"
+---
+# TC-72: Tap Logs tab. Check logs page appears
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc72_logs_tab
+
+# TC-78: Move through the Logs options - swipe carousel right to see different logs
+# Swipe to Period log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe1
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe2
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe3
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe4
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe5
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe6
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe7
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe8
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe9
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe10
+
+# Swipe to next log
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_log_swipe11
+
+# TC-96: At top of the page, tap the left arrow to change to previous day
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_left_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc96_prev_day
+
+# TC-96: Tap right arrow to go back to today
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_right_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc96_today_restored

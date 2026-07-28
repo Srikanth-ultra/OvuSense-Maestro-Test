@@ -1,0 +1,24 @@
+appId: com.fertilityfocus.ovusense3
+name: "Chain - pods@ Pattern A (06,16)"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Login once with pods@ovusense.com
+- runFlow:
+    file: ../helpers/login_force.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+
+# Flow 06: Data Tab pods
+- runFlow: ../bodies/06_data_tab_pods_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 16: pods Deep Tests
+- runFlow: ../bodies/16_pods_deep_body.yaml
+
+# Logout once
+- runFlow: ../helpers/logout_full.yaml

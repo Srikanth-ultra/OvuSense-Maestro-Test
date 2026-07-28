@@ -1,0 +1,122 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Help Tab - User Guide Deep Tests"
+---
+# Navigate to Help tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_help"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_help_page
+
+# ============================================================
+# Row 123: Scroll through User Guide, check pictures displayed
+# ============================================================
+- tapOn: "User Guide"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_user_guide_top
+
+# Scroll through guide taking screenshots at intervals
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page2
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page3
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page4
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page5
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page6
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page7
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r123_guide_page8
+
+# ============================================================
+# Row 124: Check version number at bottom of guide
+# ============================================================
+# Continue scrolling to find version at bottom
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r124_guide_bottom_version
+
+# Try to find version text
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 20%"
+    duration: 600
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r124_guide_version2
+
+# ============================================================
+# Row 125: Scroll to top via 'Top ^' link
+# ============================================================
+# Look for Top link
+- tapOn:
+    text: "Top.*"
+    optional: true
+- tapOn:
+    text: ".*Top.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r125_scrolled_to_top
+
+# Look for Safety Information link
+- tapOn:
+    text: ".*Safety Information.*"
+    optional: true
+- tapOn:
+    text: "1.0.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r125_safety_info_link
+
+# Go back
+- back
+- waitForAnimationToEnd
+

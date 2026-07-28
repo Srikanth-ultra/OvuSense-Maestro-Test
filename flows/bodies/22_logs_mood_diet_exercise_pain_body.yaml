@@ -1,0 +1,400 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs - Mood, Diet, Exercise, Pain Interactions"
+---
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Navigate to Logs Selection first (far right of carousel)
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-20: Mood Log - select and deselect multiple options
+# ============================================================
+# Swipe left through carousel to reach Mood log
+# Approximate position: 8 swipes from Logs Selection
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_mood_log_initial
+
+# Select first mood option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_mood_option1_selected
+
+# Select second mood option (multi-select should work)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 1
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_mood_option2_selected
+
+# Select third mood option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 2
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_mood_multi_selected
+
+# Deselect first option (tap again)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+
+# Deselect second option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 1
+    optional: true
+- waitForAnimationToEnd
+
+# Deselect third option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 2
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc86_mood_all_deselected
+
+# ============================================================
+# TC-21: Long press a Mood option to add notes
+# ============================================================
+# Long press the first mood option
+- longPressOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc87_mood_notes_popup
+
+# Enter notes in the popup
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- tapOn:
+    id: "android:id/edit"
+    optional: true
+- inputText: "Feeling good today"
+- hideKeyboard
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc87_mood_notes_entered
+
+# Tap Update button
+- tapOn:
+    text: "Update"
+    optional: true
+- tapOn:
+    text: "UPDATE"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc87_mood_notes_confirmed
+
+# ============================================================
+# TC-22: Diet Log - select values, zero removes item
+# ============================================================
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc88_diet_log_initial
+
+# Tap first diet option to set a value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc88_diet_option1
+
+# If a value picker or stepper appears, increase value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc88_diet_value_set
+
+# Tap second diet option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 1
+    optional: true
+- waitForAnimationToEnd
+
+# Set a value on the second option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc88_diet_option2_set
+
+# Set the first option value to zero to remove it
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc88_diet_zero_removed
+
+# ============================================================
+# TC-23: Exercise Log - select time intervals, zero removes
+# ============================================================
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc89_exercise_log_initial
+
+# Tap first exercise option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc89_exercise_option1
+
+# Increase time interval
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc89_exercise_time_set
+
+# Tap second exercise option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 1
+    optional: true
+- waitForAnimationToEnd
+
+# Set time on second option
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc89_exercise_option2_set
+
+# Set first option to zero to remove it
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc89_exercise_zero_removed
+
+# ============================================================
+# TC-24: Pain Log - pain levels and descriptors
+# ============================================================
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_log_initial
+
+# Tap Head pain option
+- tapOn:
+    text: "Head"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_head_selected
+
+# Set pain level (increase)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_head_level
+
+# Select a descriptor for Head pain (if descriptors are shown)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 1
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_head_descriptor
+
+# Tap Back pain
+- scrollUntilVisible:
+    element: "Back"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: "Back"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_back_selected
+
+# Set pain level for Back
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_back_level
+
+# Try Pelvic pain
+- scrollUntilVisible:
+    element: "Pelvic"
+    direction: DOWN
+    timeout: 5000
+- tapOn:
+    text: "Pelvic"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_pelvic
+
+# Set zero pain level — check item stays with value 0
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc90_pain_zero_keeps_item
+
+# ============================================================
+# TC-26: Pain log persistence across day navigation
+# ============================================================
+# Navigate to previous day
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_left_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc92_pain_prev_day
+
+# Set a pain value on yesterday
+- tapOn:
+    text: "Head"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc92_pain_yesterday_set
+
+# Navigate back to Today
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_right_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc92_pain_today_restored
+
+# Navigate back to yesterday again to verify pain value persisted
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_left_arrow"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc92_pain_yesterday_persisted
+
+# Navigate back to today
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_right_arrow"
+    optional: true
+- waitForAnimationToEnd
+

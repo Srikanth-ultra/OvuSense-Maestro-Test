@@ -1,0 +1,84 @@
+appId: com.fertilityfocus.ovusense3
+name: "Chain - test@ Pattern A (07,08,09,11,12,14,18,19,20,21,22,24)"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Login once with test@ovusense.com
+- runFlow:
+    file: ../helpers/login_force.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+
+# Flow 07: Data Cycles Test
+- runFlow: ../bodies/07_data_cycles_test_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 08: Logs Tab Interactions
+- runFlow: ../bodies/08_logs_tab_interactions_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 09: Settings Preferences Deep
+- runFlow: ../bodies/09_settings_preferences_deep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 11: Updates Bug Fixes
+- runFlow: ../bodies/11_updates_bugfixes_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 12: Me Tab Deep
+- runFlow: ../bodies/12_me_tab_deep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 14: Logs Deep
+- runFlow: ../bodies/14_logs_deep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 18: Logs Selection & Reorder
+- runFlow: ../bodies/18_logs_selection_reorder_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 19: Logs Sex, Period, Sleep
+- runFlow: ../bodies/19_logs_sex_period_sleep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 20: Logs Water, Weight, Height
+- runFlow: ../bodies/20_logs_water_weight_height_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 21: Logs Medication & Diagnostic
+- runFlow: ../bodies/21_logs_medication_diagnostic_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 22: Logs Mood, Diet, Exercise, Pain
+- runFlow: ../bodies/22_logs_mood_diet_exercise_pain_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 24: Settings Account Tests
+- runFlow: ../bodies/24_settings_account_tests_body.yaml
+
+# Logout once
+- runFlow: ../helpers/logout_full.yaml

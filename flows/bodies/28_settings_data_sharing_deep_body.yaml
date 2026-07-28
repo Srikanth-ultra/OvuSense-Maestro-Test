@@ -1,0 +1,111 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings - Data Sharing & Subscription Email Tests"
+---
+# ============================================================
+# TC-19 (STUB): Change subscription email - submit new email
+# Navigate to Subscriptions > Change subscription email
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Subscriptions"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc19_subscription_page
+
+- tapOn:
+    text: "Change subscription email"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc19_change_sub_email_dialog
+
+# Enter a test email (STUB - captures screenshot only)
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_input"
+    optional: true
+- inputText: "stubtest@ovusense.com"
+- hideKeyboard
+- takeScreenshot: /tmp/ovusense_tc19_email_entered
+
+# Screenshot for manual verification - NOT submitting
+# Dismiss without submitting
+- tapOn:
+    text: "Cancel"
+    optional: true
+- tapOn:
+    text: "CANCEL"
+    optional: true
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-42 (STUB): Data Sharing - send invitation to new user
+# ============================================================
+# Navigate via bottom nav to ensure we're on Settings main
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Data Sharing"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc42_data_sharing_page
+
+- tapOn:
+    text: "Share your data"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc42_share_data_page
+
+# Enter an email address in the invitation field
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/settings_input"
+    optional: true
+- tapOn:
+    text: "Enter.*"
+    optional: true
+- inputText: "stubshare@test.com"
+- hideKeyboard
+- takeScreenshot: /tmp/ovusense_tc42_invitation_email_entered
+
+# Tap 'Send Invitation' button
+- tapOn:
+    text: "Send Invitation"
+    optional: true
+- tapOn:
+    text: "SEND INVITATION"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc42_invitation_sent
+
+# Check for popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc42_after_invitation
+
+# ============================================================
+# TC-43 (STUB): Remove the shared user
+# ============================================================
+# Check if the shared email appears in the list
+- takeScreenshot: /tmp/ovusense_tc43_shared_user_list
+
+# Tap Delete button next to the shared email
+- tapOn:
+    text: "Delete"
+    optional: true
+- tapOn:
+    text: "DELETE"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc43_user_removed
+
+# Check for popup
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc43_after_removal
+
+# TC-44: Check invited user received email (EXTERNAL - cannot automate)
+# Screenshot stub only
+- takeScreenshot: /tmp/ovusense_tc44_stub_email_check
+

@@ -1,0 +1,231 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings Preferences - Deep Tests"
+---
+# Go to Settings > Preferences
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc161_prefs_initial
+
+# TC-162: Tap Temperature units and select Fahrenheit
+- tapOn: "Temperature units"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc162_temp_picker
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_title"
+    index: 1
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc162_fahrenheit_set
+
+# Switch to Data tab and check scale
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc162_data_fahrenheit
+
+# TC-163: Return to Settings, select Celsius
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- tapOn: "Temperature units"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_title"
+    index: 0
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc163_celsius_set
+
+# Check Data tab shows Celsius
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc163_data_celsius
+
+# TC-164: Tap Default graph type and select different type
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- tapOn: "Default graph type"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc164_graph_type_picker
+
+# Select Smooth data (dialog auto-applies on tap)
+- tapOn: "Smooth data"
+- waitForAnimationToEnd
+
+# Check Data tab shows updated graph type
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc164_data_smooth
+
+# Reset to Combined data
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- tapOn: "Default graph type"
+- waitForAnimationToEnd
+- tapOn: "Combined data"
+- waitForAnimationToEnd
+
+# TC-170: Tap each Select displayed events option
+- scrollUntilVisible:
+    element: "Select displayed Diagnostic Tests"
+    direction: DOWN
+- tapOn: "Select displayed Diagnostic Tests"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc170_diag_tests
+- back
+- waitForAnimationToEnd
+
+- tapOn: "Select displayed Procedures"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc170_procedures
+- back
+- waitForAnimationToEnd
+
+- tapOn: "Select displayed Medications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc170_medications
+- back
+- waitForAnimationToEnd
+
+# Re-navigate to Preferences (back may go to Settings main)
+- tapOn:
+    text: "Preferences"
+    optional: true
+- waitForAnimationToEnd
+
+# TC-173: Toggle cover line
+- scrollUntilVisible:
+    element: "Enable cover line"
+    direction: DOWN
+- tapOn: "Enable cover line"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc173_cover_line_toggled
+
+# Check Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc173_data_coverline
+
+# Toggle back
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: "Enable cover line"
+    direction: DOWN
+- tapOn: "Enable cover line"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc176_cover_line_restored
+
+# TC-177/178: Toggle haptic feedback
+- scrollUntilVisible:
+    element: "Enable haptic feedback"
+    direction: DOWN
+- tapOn: "Enable haptic feedback"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc177_haptic_toggled
+
+# Re-enable haptic
+- tapOn: "Enable haptic feedback"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc178_haptic_restored
+
+# Go back to Settings
+- back
+- waitForAnimationToEnd
+
+# TC-151/153: Settings > Account > Personal Details
+- tapOn: "Account"
+- waitForAnimationToEnd
+- tapOn: "Personal Details"
+- waitForAnimationToEnd
+# Dismiss display name dialog if it appears
+- tapOn:
+    text: "Cancel"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc151_personal_details_test
+
+# TC-153: Tap Full Name option
+- tapOn: "Full Name"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc153_fullname
+- back
+- waitForAnimationToEnd
+
+# Dismiss display name dialog if it appears
+- tapOn:
+    text: "Cancel"
+    optional: true
+- waitForAnimationToEnd
+
+# TC-152: Tap Country option
+- tapOn: "Country"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc152_country_list
+- back
+- waitForAnimationToEnd
+
+# TC-140: Tap 'Are you happy for us...' toggle
+- scrollUntilVisible:
+    element: "Are you happy"
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    text: "Are you happy.*"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc140_contact_toggled
+# Toggle back
+- tapOn:
+    text: "Are you happy.*"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc140_contact_restored
+
+- back
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# TC-151: Data tab graph type icon sync with Settings
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+# Tap graph settings icon on Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_graph_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc151_data_graph_settings_icon
+# Select a graph type
+- tapOn:
+    text: "Smooth.*"
+    optional: true
+- waitForAnimationToEnd
+# Go to Settings > Preferences and verify same graph type shown
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc151_prefs_graph_type_synced
+# Reset to Combined
+- tapOn: "Default graph type"
+- waitForAnimationToEnd
+- tapOn: "Combined data"
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd

@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Settings - Displayed Events & Medication Log Sync"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/27_settings_displayed_events_body.yaml
+# Cleanup
+- clearState

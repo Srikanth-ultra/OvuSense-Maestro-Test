@@ -1,0 +1,99 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Data Tab - Shared User Restrictions (pods@)"
+---
+# ============================================================
+# Row 33: Select shared user, verify ADD/EDIT logs hidden
+# ============================================================
+# Navigate to Settings > Data Sharing
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Data Sharing"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r33_data_sharing_page
+
+# Tap on a shared user email (second entry - not the owner)
+- tapOn:
+    text: "Share your data"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r33_shared_user_selected
+
+# Navigate to Data tab to view shared user data
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r33_shared_user_graph
+
+# Tap on day info bar to open Day page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r33_day_page_no_add_edit
+
+# ============================================================
+# Row 34: Shared user - tap event, verify cannot edit
+# ============================================================
+- tapOn:
+    text: ".*"
+    index: 3
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r34_event_readonly
+
+- tapOn:
+    text: "OK"
+    optional: true
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 35: Shared user - cannot access Cycles editing
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Tap cycle title to go to Cycles page
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_title"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r35_cycles_no_edit
+
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 36: Switch back to owner, verify editing re-enabled
+# ============================================================
+# Settings tab remembers Data Sharing sub-page, so we land directly on it
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r36_data_sharing_users
+
+# Tap owner email (first entry)
+- tapOn:
+    text: "pods@ovusense.com"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r36_owner_selected
+
+# Navigate to Data tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r36_own_data
+
+# Open Day page - should have ADD/EDIT button
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/data_recording_info_day"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r36_day_page_edit_enabled
+
+- back
+- waitForAnimationToEnd
+

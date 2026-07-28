@@ -1,0 +1,51 @@
+appId: com.fertilityfocus.ovusense3
+name: "Chain - test@ Pattern B (26,27,28,38,37,33,39)"
+---
+# Clean login with test@ovusense.com
+- runFlow:
+    file: ../helpers/login_clean.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
+
+# Flow 26: Settings Graph & Coverline
+- runFlow: ../bodies/26_settings_graph_coverline_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 27: Settings Displayed Events
+- runFlow: ../bodies/27_settings_displayed_events_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 28: Settings Data Sharing Deep
+- runFlow: ../bodies/28_settings_data_sharing_deep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 38: Help User Guide Deep
+- runFlow: ../bodies/38_help_user_guide_deep_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 37: Me Tab Deep Tests
+- runFlow: ../bodies/37_me_tab_deep_tests_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 33: Data Cycles Create & Edit (state-mutating - placed late)
+- runFlow: ../bodies/33_data_cycles_create_edit_body.yaml
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+
+# Flow 39: Settings Password & Personal (state-mutating - placed last)
+- runFlow: ../bodies/39_settings_password_personal_body.yaml
+
+# Cleanup
+- clearState

@@ -1,0 +1,130 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Me Tab - Notifications, Medical History & Advice (test@)"
+---
+# ============================================================
+# Row 110: Notification Settings > Medicine Reminders
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r110_me_page
+
+# Navigate to Notifications
+- tapOn: "Notifications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r110_notifications
+
+# Look for Set up notifications
+- tapOn:
+    text: "Set up notifications"
+    optional: true
+- tapOn:
+    text: ".*notifications.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r110_notification_settings
+
+# Look for Medicine Reminders
+- tapOn:
+    text: "Medicine Reminders"
+    optional: true
+- tapOn:
+    text: ".*edicine.*"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r110_medicine_reminders
+
+# Look for add time or edit time option
+- tapOn:
+    text: ".*"
+    index: 2
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r110_notification_timing
+
+# Go back to Me tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 113: Medical History - tick conditions
+# ============================================================
+- tapOn: "Medical History"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r113_medical_history
+
+# Tick Acne (visible on initial screen)
+- tapOn:
+    text: "Acne"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r113_acne_ticked
+
+# Tick Anxiety (visible on initial screen)
+- tapOn:
+    text: "Anxiety"
+    optional: true
+- waitForAnimationToEnd
+
+# Tick Asthma (visible on initial screen)
+- tapOn:
+    text: "Asthma"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r113_conditions_ticked
+
+# Go back to Me page to verify conditions listed
+- back
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r113_me_page_conditions
+
+# Go back and untick to restore state
+- tapOn: "Medical History"
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Acne"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Anxiety"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "Asthma"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r113_conditions_restored
+
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# Row 115: Personalised Advice - PMOS Action Plan (STUB)
+# ============================================================
+- tapOn: "Personalised Advice"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r115_personalised_advice
+
+# Scroll down to look for PMOS section
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r115_advice_scrolled1
+
+- swipe:
+    start: "50%, 70%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r115_advice_scrolled2
+
+# PMOS Action Plan check (STUB - requires Pro subscription)
+- takeScreenshot: /tmp/ovusense_r115_pmos_stub
+
+- back
+- waitForAnimationToEnd
+

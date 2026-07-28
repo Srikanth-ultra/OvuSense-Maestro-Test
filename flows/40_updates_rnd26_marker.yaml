@@ -1,0 +1,84 @@
+appId: com.fertilityfocus.ovusense3
+name: "Updates - rnd26@ OvuFirst Graph Marker"
+---
+- clearState
+- launchApp
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+
+# Login with rnd26@ovusense.com
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "rnd26@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+
+# ============================================================
+# Row 188: OvuFirst graph marker with zero OvuCore
+# Sign in with rnd26@, go to Data, scroll to day 27
+# Confirm graph marker (circle) shows around OvuFirst data point
+# ============================================================
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_data"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_rnd26_initial_data
+
+# Scroll through graph to find day 27
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_graph_scroll1
+
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_graph_scroll2
+
+- swipe:
+    start: "70%, 50%"
+    end: "30%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_graph_scroll3
+
+# Look for day 27 in the timeline
+- swipe:
+    start: "30%, 50%"
+    end: "70%, 50%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_graph_day27_area
+
+# Take additional screenshots for graph marker verification
+- swipe:
+    start: "30%, 50%"
+    end: "50%, 50%"
+    duration: 400
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_r188_graph_marker_check
+
+# Screenshot for final verification of OvuFirst marker
+- takeScreenshot: /tmp/ovusense_r188_ovufirst_marker_verify
+
+# Cleanup
+- clearState

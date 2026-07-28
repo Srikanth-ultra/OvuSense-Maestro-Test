@@ -1,0 +1,60 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Updates - Bug Fix Verification"
+---
+# Check Me > Medical History for PCOS naming
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_me"
+- waitForAnimationToEnd
+- tapOn: "Medical History"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2742_medical_history_pcos
+- back
+- waitForAnimationToEnd
+
+# Check Me > Personalised Advice for PCOS naming
+- tapOn: "Personalised Advice"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2742_personalised_advice_pcos
+- back
+- waitForAnimationToEnd
+
+# ========== 2780: Widget cancel via background ==========
+# Go to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2780_logs_before
+
+# Tap date at top to open date selector
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_date_text"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2780_date_selector_open
+
+# Dismiss by tapping background (press back)
+- back
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2780_date_selector_dismissed
+
+# Try to reopen date selector - should work per bug fix
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/logs_date_text"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2780_date_selector_reopen
+
+- back
+- waitForAnimationToEnd
+
+# ========== 2739: UDI Update ==========
+# Check UDI in Settings
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- assertVisible:
+    id: "com.fertilityfocus.ovusense3:id/settings_options_footer"
+- takeScreenshot: /tmp/ovusense_tc2739_udi_check

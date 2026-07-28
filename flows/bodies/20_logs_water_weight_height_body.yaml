@@ -1,0 +1,226 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Logs - Water, Weight, Height Interactions"
+---
+# Navigate to Logs tab
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-11: Water Log - quantity +/-, cup drag, units via settings
+# ============================================================
+# Navigate to Water Log via carousel
+# First go to Logs Selection (far right), then count swipes to Water
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: RIGHT
+    duration: 500
+- waitForAnimationToEnd
+
+# Swipe left from Logs Selection to navigate through logs to Water
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_log_initial
+
+# Tap the + button to increase water quantity
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_plus1
+
+# Tap + again to add more
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_plus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_plus2
+
+# Tap - button to decrease quantity
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_minus"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_minus
+
+# Drag up on cup icon to increase quantity
+- swipe:
+    start: "50%, 60%"
+    end: "50%, 40%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_drag_up
+
+# Drag down on cup icon to decrease quantity
+- swipe:
+    start: "50%, 40%"
+    end: "50%, 60%"
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_drag_down
+
+# Tap settings icon to change units
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc77_water_units
+
+# Dismiss settings if dialog appeared
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-12: Weight Log - set weight, change units via settings
+# ============================================================
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_weight_log_initial
+
+# Tap on weight value to enter/edit weight
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_value"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_weight_entry
+
+# If a text entry or picker appears, enter a value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- eraseText: 10
+- inputText: "65"
+- hideKeyboard
+- waitForAnimationToEnd
+
+# Submit/confirm the weight
+- tapOn:
+    text: "Submit"
+    optional: true
+- tapOn:
+    text: "OK"
+    optional: true
+- tapOn:
+    text: "Confirm"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_weight_set
+
+# Tap settings icon to change weight units
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc78_weight_units
+
+# Dismiss settings
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd
+
+# ============================================================
+# TC-13: Height Log - set height, change units via settings
+# ============================================================
+- swipe:
+    direction: LEFT
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc79_height_log_initial
+
+# Tap on height value to enter/edit height
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_value"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc79_height_entry
+
+# If a text entry or picker appears, enter a value
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_input"
+    optional: true
+- eraseText: 10
+- inputText: "170"
+- hideKeyboard
+- waitForAnimationToEnd
+
+# Submit/confirm the height
+- tapOn:
+    text: "Submit"
+    optional: true
+- tapOn:
+    text: "OK"
+    optional: true
+- tapOn:
+    text: "Confirm"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc79_height_set
+
+# Tap settings icon to change height units
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/widget_settings"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc79_height_units
+
+# Dismiss settings
+- tapOn:
+    text: "OK"
+    optional: true
+- waitForAnimationToEnd
+- back
+- waitForAnimationToEnd

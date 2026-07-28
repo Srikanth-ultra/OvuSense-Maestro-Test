@@ -1,0 +1,13 @@
+appId: com.fertilityfocus.ovusense3
+name: "Settings - Sensor Data Graph Filtering (pods@)"
+---
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "pods@ovusense.com"
+      PASSWORD: "ovutest?0"
+# Test body
+- runFlow: bodies/25_settings_sensor_data_filter_body.yaml
+# Cleanup
+- clearState

@@ -1,0 +1,136 @@
+appId: com.fertilityfocus.ovusense3
+name: "Body - Settings - Displayed Events & Medication Log Sync"
+---
+# ============================================================
+# TC-32: Check Medication log items match Displayed Events
+# ============================================================
+# First, go to Settings > Preferences > Select displayed Medications
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+# Scroll to Displayed Events section
+- scrollUntilVisible:
+    element: "Select displayed Medications"
+    direction: DOWN
+    timeout: 10000
+- takeScreenshot: /tmp/ovusense_tc32_settings_medications_list
+
+# Tap to see the selection page
+- tapOn: "Select displayed Medications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc32_medication_selection_page
+
+# Note which medications are checked
+- takeScreenshot: /tmp/ovusense_tc32_medications_checked
+
+# Now navigate to Logs > Medication log via nav bar
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Use long-press carousel to open grid view, then tap Medications
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Medications"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc32_logs_medication_items
+
+# Screenshot captures the medication log items for comparison
+# with the displayed events list from Settings
+
+# ============================================================
+# TC-33: Add a displayed event, check Medication log, remove it
+# ============================================================
+# Go to Settings > Preferences > Select displayed Medications
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+- scrollUntilVisible:
+    element: "Select displayed Medications"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Select displayed Medications"
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_before_add
+
+# Scroll down to find an unchecked medication and tap to add it
+- swipe:
+    start: "50%, 60%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_scrolled_medications
+
+# Tap on a medication item to toggle it on
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_medication_added
+
+# Check Logs > Medication to verify the new item appears
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+
+# Use grid view to navigate to Medications
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Medications"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_logs_after_add
+
+# Now go back to Settings and remove the added medication
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "Preferences"
+- waitForAnimationToEnd
+
+- scrollUntilVisible:
+    element: "Select displayed Medications"
+    direction: DOWN
+    timeout: 10000
+- tapOn: "Select displayed Medications"
+- waitForAnimationToEnd
+
+# Scroll to find the medication and tap to deselect
+- swipe:
+    start: "50%, 60%"
+    end: "50%, 30%"
+    duration: 500
+- waitForAnimationToEnd
+
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/row_detail_title"
+    index: 0
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_medication_removed
+
+# Check Logs > Medication to verify the item disappeared
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_logs"
+- waitForAnimationToEnd
+- longPressOn:
+    point: "50%, 80%"
+- waitForAnimationToEnd
+- tapOn:
+    text: "Medications"
+    optional: true
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc33_logs_after_remove
+

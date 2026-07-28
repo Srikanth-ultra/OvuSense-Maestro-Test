@@ -1,0 +1,85 @@
+appId: com.fertilityfocus.ovusense3
+name: "Bug 2748 - rnd26@ OvuFirst Graph Marker"
+---
+- launchApp
+- waitForAnimationToEnd
+
+# Logout if already logged in
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    text: "LOG OUT"
+    optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- waitForAnimationToEnd
+
+# Wait for sign-in screen
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 10000
+
+# Login with rnd26@ovusense.com
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_email"
+- eraseText: 50
+- inputText: "rnd26@ovusense.com"
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_password"
+- eraseText: 50
+- inputText: "ovutest?0"
+- hideKeyboard
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/navigation_data"
+    timeout: 20000
+- takeScreenshot: /tmp/ovusense_tc2748_rnd26_data
+
+# Navigate to the graph and scroll/swipe to find day 27
+# Swipe left on graph to go back in time
+- swipe:
+    direction: RIGHT
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2748_rnd26_scroll1
+
+- swipe:
+    direction: RIGHT
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2748_rnd26_scroll2
+
+- swipe:
+    direction: RIGHT
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2748_rnd26_scroll3
+
+- swipe:
+    direction: RIGHT
+    duration: 800
+- waitForAnimationToEnd
+- takeScreenshot: /tmp/ovusense_tc2748_rnd26_scroll4
+
+# Logout
+- tapOn:
+    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+- waitForAnimationToEnd
+- tapOn: "LOG OUT"
+- waitForAnimationToEnd
+- tapOn:
+    id: "android:id/autofill_save_no"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
+    timeout: 15000
+- waitForAnimationToEnd
