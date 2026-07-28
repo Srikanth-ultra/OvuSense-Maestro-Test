@@ -323,7 +323,8 @@ jobs:
           arch: x86_64
           ram-size: 4096M
           disk-size: 8G
-          emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect
+          profile: pixel_6
+          emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect -skin 1080x2400
           script: bash run_tests.sh "${{ env.APK_PATH }}" "${{ env.APP_PACKAGE }}" "${{ matrix.shard }}"
 
       - name: Upload test results
@@ -449,6 +450,188 @@ jobs:
           echo "| none@, oldsensor@ | 15,23 |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "</details>" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate HTML report
+        if: always()
+        run: |
+          SCOPE="${{ github.event.inputs.test_scope || 'all' }}"
+          FEATURE="${{ github.event.inputs.feature }}"
+          FLOW_INPUT="${{ github.event.inputs.flows }}"
+          API_LEVEL="${{ github.event.inputs.api_level || '33' }}"
+          SHARD_COUNT="${{ github.event.inputs.shard_count || '4' }}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          python3 - <<'PYEOF'
+          import json, glob, os, html
+
+          scope = os.environ.get("SCOPE", "all")
+          feature = os.environ.get("FEATURE", "")
+          flow_input = os.environ.get("FLOW_INPUT", "")
+          api_level = os.environ.get("API_LEVEL", "33")
+          shard_count = os.environ.get("SHARD_COUNT", "4")
+          run_url = os.environ.get("RUN_URL", "")
+          timestamp = os.environ.get("TIMESTAMP", "")
+
+          if scope == "feature" and feature:
+              scope_label = f"Feature: {feature}"
+          elif scope == "flows" and flow_input:
+              scope_label = f"Flows: {flow_input}"
+          else:
+              scope_label = "All flows"
+
+          shards = []
+          grand_pass = grand_fail = grand_total = 0
+          max_dur = 0
+
+          for sf in sorted(glob.glob("all-results/shard-*/summary.json")):
+              try:
+                  data = json.load(open(sf))
+                  if data.get("skipped"):
+                      shards.append({"shard": data["shard"], "skipped": True})
+                      continue
+                  shards.append(data)
+                  grand_pass += data["passed"]
+                  grand_fail += data["failed"]
+                  grand_total += data["total"]
+                  if data["duration_seconds"] > max_dur:
+                      max_dur = data["duration_seconds"]
+              except Exception:
+                  pass
+
+          # Collect per-flow results from log files
+          flow_results = []
+          for log_file in sorted(glob.glob("all-results/shard-*/[0-9]*.log")):
+              name = os.path.basename(log_file).replace(".log", "")
+              shard = log_file.split("shard-")[1].split("/")[0]
+              content = open(log_file).read()
+              has_failure_png = os.path.exists(log_file.replace(".log", "_failure.png"))
+              # Detect pass/fail from log content
+              if "[Failed]" in content:
+                  status = "failed"
+                  # Extract error message
+                  for line in content.split("\n"):
+                      if "[Failed]" in line:
+                          error = line.split("[Failed]")[-1].strip()
+                          break
+                  else:
+                      error = "Unknown error"
+              else:
+                  status = "passed"
+                  error = ""
+              flow_results.append({"name": name, "shard": shard, "status": status, "error": error, "has_screenshot": has_failure_png})
+
+          pass_rate = (grand_pass / grand_total * 100) if grand_total > 0 else 0
+          max_mins = max_dur // 60
+          max_secs = max_dur % 60
+
+          report = f"""<!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>OvuSense Maestro Test Report</title>
+          <style>
+          :root {{
+            --teal: #0d9488; --teal-dark: #0f766e; --teal-light: #ccfbf1;
+            --green: #16a34a; --green-light: #dcfce7;
+            --red: #dc2626; --red-light: #fee2e2;
+            --amber: #d97706; --amber-light: #fef3c7;
+            --blue: #2563eb; --blue-light: #dbeafe;
+            --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+            --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+          }}
+          * {{ margin:0; padding:0; box-sizing:border-box; }}
+          body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-50); color: var(--gray-900); line-height:1.6; }}
+          .container {{ max-width:1200px; margin:0 auto; padding:20px; }}
+          .header {{ background: linear-gradient(135deg, var(--teal-dark), var(--teal), var(--blue)); color:white; padding:30px 40px; border-radius:12px; margin-bottom:24px; }}
+          .header h1 {{ font-size:24px; margin-bottom:4px; }}
+          .header .meta {{ font-size:14px; opacity:0.85; margin-top:12px; display:flex; flex-wrap:wrap; gap:20px; }}
+          .stats {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px; }}
+          .stat-card {{ background:white; border-radius:10px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; }}
+          .stat-card .value {{ font-size:32px; font-weight:700; }}
+          .stat-card .label {{ font-size:13px; color:var(--gray-500); margin-top:4px; }}
+          .stat-card.pass .value {{ color: var(--green); }}
+          .stat-card.fail .value {{ color: var(--red); }}
+          .stat-card.rate .value {{ color: var(--teal); }}
+          .stat-card.time .value {{ color: var(--blue); font-size:24px; }}
+          .section {{ background:white; border-radius:10px; padding:24px; margin-bottom:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }}
+          .section h2 {{ font-size:18px; margin-bottom:16px; color: var(--gray-700); }}
+          table {{ width:100%; border-collapse:collapse; font-size:14px; }}
+          th {{ background:var(--gray-100); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--gray-200); }}
+          td {{ padding:10px 12px; border-bottom:1px solid var(--gray-200); }}
+          tr:hover {{ background:var(--gray-50); }}
+          .badge {{ display:inline-block; padding:2px 10px; border-radius:12px; font-size:12px; font-weight:600; }}
+          .badge.pass {{ background:var(--green-light); color:var(--green); }}
+          .badge.fail {{ background:var(--red-light); color:var(--red); }}
+          .badge.skip {{ background:var(--amber-light); color:var(--amber); }}
+          .error-msg {{ font-size:12px; color:var(--red); margin-top:4px; max-width:600px; word-break:break-word; }}
+          .progress-bar {{ height:8px; background:var(--gray-200); border-radius:4px; overflow:hidden; margin-top:8px; }}
+          .progress-fill {{ height:100%; border-radius:4px; }}
+          a {{ color: var(--blue); text-decoration:none; }}
+          a:hover {{ text-decoration:underline; }}
+          </style>
+          </head>
+          <body>
+          <div class="container">
+          <div class="header">
+            <h1>OvuSense 3.2.0 - Maestro Test Report</h1>
+            <div class="meta">
+              <span>Scope: {html.escape(scope_label)}</span>
+              <span>API Level: {api_level}</span>
+              <span>Shards: {shard_count}</span>
+              <span>{html.escape(timestamp)}</span>
+              <span><a href="{html.escape(run_url)}" style="color:#dbeafe">View on GitHub</a></span>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-card pass"><div class="value">{grand_pass}</div><div class="label">Passed</div></div>
+            <div class="stat-card fail"><div class="value">{grand_fail}</div><div class="label">Failed</div></div>
+            <div class="stat-card rate">
+              <div class="value">{pass_rate:.0f}%</div><div class="label">Pass Rate</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:{pass_rate:.0f}%;background:{'var(--green)' if pass_rate >= 80 else 'var(--amber)' if pass_rate >= 50 else 'var(--red)'}"></div></div>
+            </div>
+            <div class="stat-card time"><div class="value">{int(max_mins)}m {int(max_secs)}s</div><div class="label">Wall Clock</div></div>
+          </div>
+
+          <div class="section">
+            <h2>Shard Summary</h2>
+            <table>
+              <thead><tr><th>Shard</th><th>Passed</th><th>Failed</th><th>Total</th><th>Duration</th><th>Status</th></tr></thead>
+              <tbody>"""
+
+          for s in shards:
+              if s.get("skipped"):
+                  report += f'<tr><td>Shard {s["shard"]}</td><td colspan="4">-</td><td><span class="badge skip">Skipped</span></td></tr>'
+              else:
+                  dur = s["duration_seconds"]
+                  m, sec = int(dur) // 60, int(dur) % 60
+                  st = "pass" if s["failed"] == 0 else "fail"
+                  report += f'<tr><td>Shard {s["shard"]}</td><td>{s["passed"]}</td><td>{s["failed"]}</td><td>{s["total"]}</td><td>{m}m {sec}s</td><td><span class="badge {st}">{"Passed" if st == "pass" else "Failed"}</span></td></tr>'
+
+          report += """</tbody></table></div>
+
+          <div class="section">
+            <h2>Flow Results</h2>
+            <table>
+              <thead><tr><th>#</th><th>Flow</th><th>Shard</th><th>Status</th><th>Details</th></tr></thead>
+              <tbody>"""
+
+          for i, fr in enumerate(flow_results, 1):
+              st = "pass" if fr["status"] == "passed" else "fail"
+              err_html = f'<div class="error-msg">{html.escape(fr["error"])}</div>' if fr["error"] else ""
+              report += f'<tr><td>{i}</td><td><code>{html.escape(fr["name"])}</code></td><td>{fr["shard"]}</td><td><span class="badge {st}">{"Passed" if st == "pass" else "Failed"}</span></td><td>{err_html}</td></tr>'
+
+          report += """</tbody></table></div>
+          </div>
+          </body>
+          </html>"""
+
+          with open("all-results/report.html", "w") as f:
+              f.write(report)
+          print(f"HTML report generated: all-results/report.html")
+          PYEOF
 
       - name: Upload combined report
         if: always()

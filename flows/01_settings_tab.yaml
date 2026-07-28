@@ -3,5 +3,13 @@ name: "Settings Tab - Navigation and Verification"
 ---
 - launchApp
 - waitForAnimationToEnd
+# Force logout + login
+- runFlow:
+    file: helpers/login_force.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
 # Test body
 - runFlow: bodies/01_settings_tab_body.yaml
+# Logout
+- runFlow: helpers/logout_full.yaml

@@ -26,6 +26,7 @@ name: "Helper - Force logout then login"
     id: "com.fertilityfocus.ovusense3:id/user_email"
 - eraseText: 50
 - inputText: "${EMAIL}"
+- hideKeyboard
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/user_password"
 - eraseText: 50
