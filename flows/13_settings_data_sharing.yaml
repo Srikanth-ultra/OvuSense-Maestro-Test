@@ -26,29 +26,11 @@ name: "Settings - Data Sharing and Forgot Password"
     id: "com.fertilityfocus.ovusense3:id/user_sign_in"
 - waitForAnimationToEnd
 
-# Dismiss any autofill/save-password prompts
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
-- tapOn:
-    text: "No thanks"
-    optional: true
-- tapOn:
-    text: "Not now"
-    optional: true
-- tapOn:
-    text: "NO THANKS"
-    optional: true
-
+# Wait for main app to fully load
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/navigation_data"
     timeout: 30000
-
-# Dismiss any remaining overlays
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
 - waitForAnimationToEnd
 
 # TC-179: Settings > Data Sharing
@@ -88,12 +70,6 @@ name: "Settings - Data Sharing and Forgot Password"
 # Logout for Forgot Password test
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
-- tapOn:
-    text: "No thanks"
-    optional: true
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/user_sign_in"
@@ -141,14 +117,8 @@ name: "Settings - Data Sharing and Forgot Password"
 - tapOn:
     id: "com.fertilityfocus.ovusense3:id/user_sign_in"
 - waitForAnimationToEnd
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
-- tapOn:
-    text: "No thanks"
-    optional: true
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/navigation_data"
-    timeout: 20000
+    timeout: 30000
 - takeScreenshot: /tmp/ovusense_tc_final_login_restored

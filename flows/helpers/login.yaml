@@ -17,21 +17,9 @@ name: "Helper - Login with provided credentials"
     id: "com.fertilityfocus.ovusense3:id/user_sign_in"
 - waitForAnimationToEnd
 
-# Dismiss any autofill/save-password prompts after login
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
-- tapOn:
-    text: "No thanks"
-    optional: true
-- tapOn:
-    text: "Not now"
-    optional: true
-- tapOn:
-    text: "NO THANKS"
-    optional: true
-
+# Wait for main app to fully load
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/navigation_data"
     timeout: 30000
+- waitForAnimationToEnd

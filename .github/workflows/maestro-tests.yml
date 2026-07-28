@@ -268,12 +268,18 @@ jobs:
           adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS 2>/dev/null || true
           # Increase screen timeout to max
           adb shell settings put system screen_off_timeout 2147483647 2>/dev/null || true
+          # Disable Google credential manager / autofill overlays
+          adb shell pm disable-user --user 0 com.google.android.gms/.autofill.service.AutofillService 2>/dev/null || true
+          adb shell settings put secure credential_service "" 2>/dev/null || true
+          adb shell settings put secure credential_service_primary "" 2>/dev/null || true
           echo "Emulator configured for testing"
           adb install -r "$APK_PATH"
           echo "APK installed: $APP_PACKAGE"
           # Grant all runtime permissions to avoid permission dialogs
           adb shell pm grant "$APP_PACKAGE" android.permission.POST_NOTIFICATIONS 2>/dev/null || true
           echo "Using account: $EMAIL"
+          # Take a debug screenshot of emulator home screen
+          adb exec-out screencap -p > "${RESULTS_DIR}/00_emulator_ready.png" 2>/dev/null || true
           mkdir -p "$RESULTS_DIR"
           SHARD_FLOWS=$(tr '\n' ' ' < shard_flows.txt)
           echo "Flows for this shard:"
