@@ -73,15 +73,30 @@ jobs:
         run: |
           APK_URL="${{ github.event.inputs.apk_url }}"
           if [ -z "$APK_URL" ]; then
-            # Default: download from OvuSense dev server
-            APK_URL="https://dev.ovusense.com/adhocapps/android.php"
+            # Default: scrape the download token from the OvuSense dev server listing page
+            LISTING_URL="https://dev.ovusense.com/adhocapps/android.php"
+            echo "Fetching APK listing from: $LISTING_URL"
+            FILE_TOKEN=$(curl -sL "$LISTING_URL" | grep -oP 'android\.php\?f=\K[A-Za-z0-9]+' | head -1)
+            if [ -z "$FILE_TOKEN" ]; then
+              echo "::error::Could not extract APK download token from $LISTING_URL"
+              exit 1
+            fi
+            APK_URL="${LISTING_URL}?f=${FILE_TOKEN}"
+            echo "Resolved APK download URL: $APK_URL"
           fi
           echo "Downloading APK from: $APK_URL"
           curl -L -f -o "${{ env.APK_PATH }}" "$APK_URL" || {
-            echo "::warning::Failed to download APK from $APK_URL"
-            echo "::warning::Please provide a valid APK URL via workflow_dispatch input"
+            echo "::error::Failed to download APK from $APK_URL"
             exit 1
           }
+          # Verify the downloaded file is actually an APK
+          FILE_TYPE=$(file -b "${{ env.APK_PATH }}")
+          if echo "$FILE_TYPE" | grep -qiE "zip|jar|android"; then
+            echo "APK verified: $FILE_TYPE"
+          else
+            echo "::error::Downloaded file is not a valid APK: $FILE_TYPE"
+            exit 1
+          fi
           echo "APK downloaded: $(ls -lh ${{ env.APK_PATH }})"
 
       - name: Upload APK for test jobs
