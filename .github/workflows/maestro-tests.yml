@@ -162,7 +162,161 @@ jobs:
           echo "shard_count=$SHARDS" >> $GITHUB_OUTPUT
           echo "api_level=$API" >> $GITHUB_OUTPUT
 
+      - name: Resolve flows for this shard
+        id: resolve
+        run: |
+          TEST_SCOPE="${{ github.event.inputs.test_scope || 'all' }}"
+          FEATURE="${{ github.event.inputs.feature }}"
+          FLOW_INPUT="${{ github.event.inputs.flows }}"
+          SHARD_COUNT=${{ steps.config.outputs.shard_count }}
+          SHARD_INDEX=${{ matrix.shard }}
+
+          # Skip this shard if index >= shard_count
+          if [ "$SHARD_INDEX" -ge "$SHARD_COUNT" ]; then
+            echo "::notice::Shard $SHARD_INDEX skipped (only $SHARD_COUNT shards configured)"
+            mkdir -p test-results/shard-${{ matrix.shard }}
+            echo '{"shard": ${{ matrix.shard }}, "skipped": true}' > test-results/shard-${{ matrix.shard }}/summary.json
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Resolve flow list based on scope
+          if [ "$TEST_SCOPE" = "feature" ] && [ -n "$FEATURE" ]; then
+            echo "Scope: feature ($FEATURE)"
+            case "$FEATURE" in
+              settings)           NUMS="01 09 13 24 25 26 27 28 29 39" ;;
+              help)               NUMS="02 38" ;;
+              me_tab)             NUMS="03 12 37" ;;
+              data_tab)           NUMS="04 06 07 30 31 32 33 35" ;;
+              logs)               NUMS="08 14 18 19 20 21 22 23" ;;
+              login_onboarding)   NUMS="05 34 36" ;;
+              special_accounts)   NUMS="10 15" ;;
+              updates_bugfixes)   NUMS="11 17 40" ;;
+              pods)               NUMS="16" ;;
+              *) echo "::error::Unknown feature: $FEATURE"; exit 1 ;;
+            esac
+            FLOW_FILES=""
+            for n in $NUMS; do
+              match=$(ls flows/${n}_*.yaml 2>/dev/null)
+              [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
+            done
+          elif [ "$TEST_SCOPE" = "flows" ] && [ -n "$FLOW_INPUT" ]; then
+            echo "Scope: specific flows ($FLOW_INPUT)"
+            FLOW_FILES=""
+            for n in $(echo "$FLOW_INPUT" | tr ',' ' '); do
+              n=$(echo "$n" | xargs)
+              n=$(printf "%02d" "$((10#$n))")
+              match=$(ls flows/${n}_*.yaml 2>/dev/null)
+              [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
+            done
+          else
+            echo "Scope: all flows"
+            FLOW_FILES=$(ls flows/[0-9]*.yaml 2>/dev/null | sort)
+          fi
+
+          ALL_FLOWS=$(echo "$FLOW_FILES" | xargs -n1 | sort)
+          TOTAL_FLOWS=$(echo "$ALL_FLOWS" | wc -l | tr -d ' ')
+
+          if [ -z "$ALL_FLOWS" ]; then
+            echo "::error::No matching flow files found"
+            exit 1
+          fi
+
+          # Distribute flows across shards (round-robin)
+          SHARD_FLOWS=""
+          INDEX=0
+          for flow in $ALL_FLOWS; do
+            if [ $((INDEX % SHARD_COUNT)) -eq $SHARD_INDEX ]; then
+              SHARD_FLOWS="$SHARD_FLOWS $flow"
+            fi
+            INDEX=$((INDEX + 1))
+          done
+
+          SHARD_FLOWS=$(echo "$SHARD_FLOWS" | xargs)
+          if [ -z "$SHARD_FLOWS" ]; then
+            echo "::notice::No flows assigned to shard $SHARD_INDEX"
+            mkdir -p test-results/shard-${{ matrix.shard }}
+            echo '{"shard": ${{ matrix.shard }}, "skipped": true}' > test-results/shard-${{ matrix.shard }}/summary.json
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Write flow list to file for emulator step
+          echo "$SHARD_FLOWS" | tr ' ' '\n' > shard_flows.txt
+          echo "Total flows: $TOTAL_FLOWS, Shard $SHARD_INDEX gets: $(wc -l < shard_flows.txt) flows"
+          cat shard_flows.txt
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Generate test runner script
+        if: steps.resolve.outputs.skip != 'true'
+        run: |
+          cat > run_tests.sh <<'RUNSCRIPT'
+          #!/usr/bin/env bash
+          set -uo pipefail
+          APK_PATH="$1"
+          APP_PACKAGE="$2"
+          SHARD_INDEX="$3"
+          RESULTS_DIR="test-results/shard-${SHARD_INDEX}"
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+          echo "Emulator booted successfully"
+          adb install -r "$APK_PATH"
+          echo "APK installed: $APP_PACKAGE"
+          echo "Using account: $EMAIL"
+          mkdir -p "$RESULTS_DIR"
+          SHARD_FLOWS=$(tr '\n' ' ' < shard_flows.txt)
+          echo "Flows for this shard:"
+          cat shard_flows.txt
+          PASSED=0
+          FAILED=0
+          TOTAL=0
+          ERRORS=""
+          START_TIME=$(date +%s)
+          for flow in $SHARD_FLOWS; do
+          FLOW_NAME=$(basename "$flow" .yaml)
+          TOTAL=$((TOTAL + 1))
+          FLOW_START=$(date +%s)
+          echo ""
+          echo "=========================================="
+          echo "[$TOTAL] Running: $FLOW_NAME"
+          echo "=========================================="
+          maestro test "$flow" --format junit --output "${RESULTS_DIR}/${FLOW_NAME}.xml" 2>&1 | tee "${RESULTS_DIR}/${FLOW_NAME}.log"
+          MAESTRO_EXIT=${PIPESTATUS[0]}
+          FLOW_END=$(date +%s)
+          FLOW_DUR=$((FLOW_END - FLOW_START))
+          if [ "$MAESTRO_EXIT" -eq 0 ]; then
+          echo "PASSED: $FLOW_NAME (${FLOW_DUR}s)"
+          PASSED=$((PASSED + 1))
+          else
+          echo "::error::FAILED: $FLOW_NAME (${FLOW_DUR}s)"
+          FAILED=$((FAILED + 1))
+          ERRORS="$ERRORS\n  - $FLOW_NAME"
+          adb exec-out screencap -p > "${RESULTS_DIR}/${FLOW_NAME}_failure.png" 2>/dev/null || true
+          fi
+          done
+          END_TIME=$(date +%s)
+          TOTAL_DUR=$((END_TIME - START_TIME))
+          MINUTES=$((TOTAL_DUR / 60))
+          SECONDS=$((TOTAL_DUR % 60))
+          printf '{"shard":%s,"passed":%s,"failed":%s,"total":%s,"duration_seconds":%s,"skipped":false}\n' \
+            "$SHARD_INDEX" "$PASSED" "$FAILED" "$TOTAL" "$TOTAL_DUR" > "${RESULTS_DIR}/summary.json"
+          echo ""
+          echo "=========================================="
+          echo "SHARD $SHARD_INDEX COMPLETE"
+          echo "=========================================="
+          echo "Passed:   $PASSED"
+          echo "Failed:   $FAILED"
+          echo "Duration: ${MINUTES}m ${SECONDS}s"
+          if [ -n "$ERRORS" ]; then
+          echo -e "Failed flows:$ERRORS"
+          fi
+          if [ "$FAILED" -gt 0 ]; then
+          exit 1
+          fi
+          RUNSCRIPT
+          chmod +x run_tests.sh
+
       - name: Run Maestro tests on emulator
+        if: steps.resolve.outputs.skip != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ steps.config.outputs.api_level }}
@@ -170,168 +324,7 @@ jobs:
           ram-size: 4096M
           disk-size: 8G
           emulator-options: -no-window -no-audio -no-snapshot -gpu swiftshader_indirect
-          script: |
-            # Wait for emulator to be fully booted
-            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
-            echo "Emulator booted successfully"
-
-            # Install the app
-            adb install -r "${{ env.APK_PATH }}"
-            echo "APK installed: ${{ env.APP_PACKAGE }}"
-
-            # Credentials are already in env from 'Load test account config' step
-            echo "Using account: $EMAIL"
-
-            # Create output directory
-            mkdir -p test-results/shard-${{ matrix.shard }}
-
-            # ── Resolve which flows to run based on test_scope ──
-            TEST_SCOPE="${{ github.event.inputs.test_scope || 'all' }}"
-            FEATURE="${{ github.event.inputs.feature }}"
-            FLOW_INPUT="${{ github.event.inputs.flows }}"
-
-            if [ "$TEST_SCOPE" = "feature" ] && [ -n "$FEATURE" ]; then
-              echo "Scope: feature ($FEATURE)"
-              case "$FEATURE" in
-                settings)           NUMS="01 09 13 24 25 26 27 28 29 39" ;;
-                help)               NUMS="02 38" ;;
-                me_tab)             NUMS="03 12 37" ;;
-                data_tab)           NUMS="04 06 07 30 31 32 33 35" ;;
-                logs)               NUMS="08 14 18 19 20 21 22 23" ;;
-                login_onboarding)   NUMS="05 34 36" ;;
-                special_accounts)   NUMS="10 15" ;;
-                updates_bugfixes)   NUMS="11 17 40" ;;
-                pods)               NUMS="16" ;;
-                *) echo "::error::Unknown feature: $FEATURE"; exit 1 ;;
-              esac
-              FLOW_FILES=""
-              for n in $NUMS; do
-                match=$(ls flows/${n}_*.yaml 2>/dev/null)
-                [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
-              done
-              FLOW_FILES=$(echo "$FLOW_FILES" | xargs -n1 | sort)
-
-            elif [ "$TEST_SCOPE" = "flows" ] && [ -n "$FLOW_INPUT" ]; then
-              echo "Scope: specific flows ($FLOW_INPUT)"
-              FLOW_FILES=""
-              IFS=',' read -ra NUMS <<< "$FLOW_INPUT"
-              for n in "${NUMS[@]}"; do
-                n=$(echo "$n" | xargs)  # trim whitespace
-                # zero-pad to 2 digits
-                n=$(printf "%02d" "$((10#$n))")
-                match=$(ls flows/${n}_*.yaml 2>/dev/null)
-                [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
-              done
-              FLOW_FILES=$(echo "$FLOW_FILES" | xargs -n1 | sort)
-
-            else
-              echo "Scope: all flows"
-              FLOW_FILES=$(ls flows/[0-9]*.yaml 2>/dev/null | sort)
-            fi
-
-            if [ -z "$FLOW_FILES" ]; then
-              echo "::error::No matching flow files found"
-              exit 1
-            fi
-
-            TOTAL_FLOWS=$(echo "$FLOW_FILES" | wc -l | tr -d ' ')
-            SHARD_COUNT=${{ steps.config.outputs.shard_count }}
-            SHARD_INDEX=${{ matrix.shard }}
-
-            echo "Total flows: $TOTAL_FLOWS, Shard: $SHARD_INDEX of $SHARD_COUNT"
-
-            # Skip this shard if index >= shard_count
-            if [ "$SHARD_INDEX" -ge "$SHARD_COUNT" ]; then
-              echo "::notice::Shard $SHARD_INDEX skipped (only $SHARD_COUNT shards configured)"
-              echo '{"shard": ${{ matrix.shard }}, "skipped": true}' > test-results/shard-${{ matrix.shard }}/summary.json
-              exit 0
-            fi
-
-            # Distribute flows across shards (round-robin)
-            SHARD_FLOWS=""
-            INDEX=0
-            for flow in $FLOW_FILES; do
-              if [ $((INDEX % SHARD_COUNT)) -eq $SHARD_INDEX ]; then
-                SHARD_FLOWS="$SHARD_FLOWS $flow"
-              fi
-              INDEX=$((INDEX + 1))
-            done
-
-            echo ""
-            echo "Flows assigned to shard $SHARD_INDEX:"
-            for f in $SHARD_FLOWS; do echo "  - $(basename $f)"; done
-            echo ""
-
-            # Run each flow and track results
-            PASSED=0
-            FAILED=0
-            TOTAL=0
-            ERRORS=""
-            START_TIME=$(date +%s)
-
-            for flow in $SHARD_FLOWS; do
-              FLOW_NAME=$(basename "$flow" .yaml)
-              TOTAL=$((TOTAL + 1))
-              FLOW_START=$(date +%s)
-
-              echo ""
-              echo "=========================================="
-              echo "[$TOTAL] Running: $FLOW_NAME"
-              echo "=========================================="
-
-              if maestro test "$flow" --format junit \
-                --output "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}.xml" \
-                2>&1 | tee "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}.log"; then
-                FLOW_END=$(date +%s)
-                FLOW_DUR=$((FLOW_END - FLOW_START))
-                echo "PASSED: $FLOW_NAME (${FLOW_DUR}s)"
-                PASSED=$((PASSED + 1))
-              else
-                FLOW_END=$(date +%s)
-                FLOW_DUR=$((FLOW_END - FLOW_START))
-                echo "::error::FAILED: $FLOW_NAME (${FLOW_DUR}s)"
-                FAILED=$((FAILED + 1))
-                ERRORS="$ERRORS\n  - $FLOW_NAME"
-
-                # Capture screenshot on failure for debugging
-                adb exec-out screencap -p > \
-                  "test-results/shard-${{ matrix.shard }}/${FLOW_NAME}_failure.png" 2>/dev/null || true
-              fi
-            done
-
-            END_TIME=$(date +%s)
-            TOTAL_DUR=$((END_TIME - START_TIME))
-            MINUTES=$((TOTAL_DUR / 60))
-            SECONDS=$((TOTAL_DUR % 60))
-
-            # Write summary JSON for report job
-            cat > "test-results/shard-${{ matrix.shard }}/summary.json" <<EOJSON
-            {
-              "shard": ${{ matrix.shard }},
-              "passed": $PASSED,
-              "failed": $FAILED,
-              "total": $TOTAL,
-              "duration_seconds": $TOTAL_DUR,
-              "skipped": false
-            }
-            EOJSON
-
-            # Print summary
-            echo ""
-            echo "=========================================="
-            echo "SHARD $SHARD_INDEX COMPLETE"
-            echo "=========================================="
-            echo "Passed:   $PASSED"
-            echo "Failed:   $FAILED"
-            echo "Duration: ${MINUTES}m ${SECONDS}s"
-            if [ -n "$ERRORS" ]; then
-              echo -e "Failed flows:$ERRORS"
-            fi
-
-            # Fail the job if any flow failed
-            if [ $FAILED -gt 0 ]; then
-              exit 1
-            fi
+          script: bash run_tests.sh "${{ env.APK_PATH }}" "${{ env.APP_PACKAGE }}" "${{ matrix.shard }}"
 
       - name: Upload test results
         if: always()
