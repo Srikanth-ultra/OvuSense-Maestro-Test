@@ -7,6 +7,36 @@ on:
     branches: [main]
   workflow_dispatch:
     inputs:
+      test_scope:
+        description: 'What to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - feature
+          - flows
+      feature:
+        description: 'Feature area (only when test_scope = feature)'
+        required: false
+        default: ''
+        type: choice
+        options:
+          - ''
+          - settings
+          - help
+          - me_tab
+          - data_tab
+          - logs
+          - login_onboarding
+          - special_accounts
+          - updates_bugfixes
+          - pods
+      flows:
+        description: 'Comma-separated flow numbers, e.g. 01,05,10 (only when test_scope = flows)'
+        required: false
+        default: ''
+        type: string
       shard_count:
         description: 'Number of parallel shards (1-4)'
         required: false
@@ -140,8 +170,55 @@ jobs:
             # Create output directory
             mkdir -p test-results/shard-${{ matrix.shard }}
 
-            # Get list of numbered flow files only (exclude helpers, check_, test_ utilities)
-            FLOW_FILES=$(ls flows/[0-9]*.yaml 2>/dev/null | sort)
+            # ── Resolve which flows to run based on test_scope ──
+            TEST_SCOPE="${{ github.event.inputs.test_scope || 'all' }}"
+            FEATURE="${{ github.event.inputs.feature }}"
+            FLOW_INPUT="${{ github.event.inputs.flows }}"
+
+            if [ "$TEST_SCOPE" = "feature" ] && [ -n "$FEATURE" ]; then
+              echo "Scope: feature ($FEATURE)"
+              case "$FEATURE" in
+                settings)           NUMS="01 09 13 24 25 26 27 28 29 39" ;;
+                help)               NUMS="02 38" ;;
+                me_tab)             NUMS="03 12 37" ;;
+                data_tab)           NUMS="04 06 07 30 31 32 33 35" ;;
+                logs)               NUMS="08 14 18 19 20 21 22 23" ;;
+                login_onboarding)   NUMS="05 34 36" ;;
+                special_accounts)   NUMS="10 15" ;;
+                updates_bugfixes)   NUMS="11 17 40" ;;
+                pods)               NUMS="16" ;;
+                *) echo "::error::Unknown feature: $FEATURE"; exit 1 ;;
+              esac
+              FLOW_FILES=""
+              for n in $NUMS; do
+                match=$(ls flows/${n}_*.yaml 2>/dev/null)
+                [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
+              done
+              FLOW_FILES=$(echo "$FLOW_FILES" | xargs -n1 | sort)
+
+            elif [ "$TEST_SCOPE" = "flows" ] && [ -n "$FLOW_INPUT" ]; then
+              echo "Scope: specific flows ($FLOW_INPUT)"
+              FLOW_FILES=""
+              IFS=',' read -ra NUMS <<< "$FLOW_INPUT"
+              for n in "${NUMS[@]}"; do
+                n=$(echo "$n" | xargs)  # trim whitespace
+                # zero-pad to 2 digits
+                n=$(printf "%02d" "$((10#$n))")
+                match=$(ls flows/${n}_*.yaml 2>/dev/null)
+                [ -n "$match" ] && FLOW_FILES="$FLOW_FILES $match"
+              done
+              FLOW_FILES=$(echo "$FLOW_FILES" | xargs -n1 | sort)
+
+            else
+              echo "Scope: all flows"
+              FLOW_FILES=$(ls flows/[0-9]*.yaml 2>/dev/null | sort)
+            fi
+
+            if [ -z "$FLOW_FILES" ]; then
+              echo "::error::No matching flow files found"
+              exit 1
+            fi
+
             TOTAL_FLOWS=$(echo "$FLOW_FILES" | wc -l | tr -d ' ')
             SHARD_COUNT=${{ steps.config.outputs.shard_count }}
             SHARD_INDEX=${{ matrix.shard }}
@@ -279,7 +356,17 @@ jobs:
         run: |
           echo "## OvuSense 3.2.0 - Maestro UI Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**App:** \`${{ env.APP_PACKAGE }}\` | **API Level:** ${{ github.event.inputs.api_level || '33' }} | **Shards:** ${{ github.event.inputs.shard_count || '4' }}" >> $GITHUB_STEP_SUMMARY
+          SCOPE="${{ github.event.inputs.test_scope || 'all' }}"
+          FEATURE="${{ github.event.inputs.feature }}"
+          FLOW_INPUT="${{ github.event.inputs.flows }}"
+          if [ "$SCOPE" = "feature" ] && [ -n "$FEATURE" ]; then
+            SCOPE_LABEL="Feature: **${FEATURE}**"
+          elif [ "$SCOPE" = "flows" ] && [ -n "$FLOW_INPUT" ]; then
+            SCOPE_LABEL="Flows: **${FLOW_INPUT}**"
+          else
+            SCOPE_LABEL="**All flows**"
+          fi
+          echo "**App:** \`${{ env.APP_PACKAGE }}\` | **Scope:** ${SCOPE_LABEL} | **API Level:** ${{ github.event.inputs.api_level || '33' }} | **Shards:** ${{ github.event.inputs.shard_count || '4' }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Parse shard summaries
