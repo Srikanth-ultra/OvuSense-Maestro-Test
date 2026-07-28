@@ -6,7 +6,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # Navigate to Subscriptions > Change subscription email
 # ============================================================
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
@@ -46,7 +46,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # ============================================================
 # Navigate via bottom nav to ensure we're on Settings main
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"

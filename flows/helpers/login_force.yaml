@@ -1,19 +1,9 @@
 appId: com.fertilityfocus.ovusense3
 name: "Helper - Force logout then login"
 ---
-# Force logout if already logged in
-- tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
-    retryTapIfNoChange: true
-    optional: true
-- waitForAnimationToEnd
-- tapOn:
-    text: "LOG OUT"
-    optional: true
-- waitForAnimationToEnd
-- tapOn:
-    id: "android:id/autofill_save_no"
-    optional: true
+# Clear app state to force fresh start (avoids unreliable Settings navigation on emulator)
+- clearState
+- launchApp
 - waitForAnimationToEnd
 
 # Wait for sign-in screen

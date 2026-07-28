@@ -5,7 +5,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-27: Check 'Sensor data shown on graph' option available
 # ============================================================
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
@@ -45,7 +45,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-29: Select 'OvuFirst data only'
 # ============================================================
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -73,7 +73,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-30: Select 'All data'
 # ============================================================
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"

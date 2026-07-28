@@ -6,7 +6,7 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # ============================================================
 # Navigate to Settings > Data Sharing
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
@@ -71,7 +71,7 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # ============================================================
 # Settings tab remembers Data Sharing sub-page, so we land directly on it
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - takeScreenshot: /tmp/ovusense_r36_data_sharing_users

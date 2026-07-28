@@ -3,7 +3,7 @@ name: "Body - Settings Preferences - Deep Tests"
 ---
 # Go to Settings > Preferences
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:
@@ -31,7 +31,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # TC-163: Return to Settings, select Celsius
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -52,7 +52,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # TC-164: Tap Default graph type and select different type
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -73,7 +73,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # Reset to Combined data
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -127,7 +127,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # Toggle back
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -225,7 +225,7 @@ name: "Body - Settings Preferences - Deep Tests"
 - waitForAnimationToEnd
 # Go to Settings > Preferences and verify same graph type shown
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"

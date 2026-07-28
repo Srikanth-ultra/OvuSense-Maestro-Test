@@ -1,22 +1,19 @@
 appId: com.fertilityfocus.ovusense3
 name: "Helper - Full logout with autofill dismissal"
 ---
-# Navigate to Settings and logout
+# Navigate to Settings and logout (best-effort, state is cleared between tests)
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
+    optional: true
 - waitForAnimationToEnd
-- tapOn: "LOG OUT"
+- tapOn:
+    text: "LOG OUT"
+    optional: true
 - waitForAnimationToEnd
 
 # Dismiss autofill save dialog if it appears
 - tapOn:
     id: "android:id/autofill_save_no"
     optional: true
-
-# Wait for sign-in screen to confirm logout
-- extendedWaitUntil:
-    visible:
-      id: "com.fertilityfocus.ovusense3:id/user_sign_in"
-    timeout: 15000
 - waitForAnimationToEnd

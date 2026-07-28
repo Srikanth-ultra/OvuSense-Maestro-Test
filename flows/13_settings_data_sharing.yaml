@@ -42,7 +42,7 @@ name: "Settings - Data Sharing and Forgot Password"
 
 # TC-179: Settings > Data Sharing
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - extendedWaitUntil:

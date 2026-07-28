@@ -297,6 +297,9 @@ jobs:
           echo "=========================================="
           echo "[$TOTAL] Running: $FLOW_NAME"
           echo "=========================================="
+          # Clear app state before each test to ensure clean start
+          adb shell pm clear "$APP_PACKAGE" 2>/dev/null || true
+          sleep 2
           maestro test "$flow" --format junit --output "${RESULTS_DIR}/${FLOW_NAME}.xml" 2>&1 | tee "${RESULTS_DIR}/${FLOW_NAME}.log"
           MAESTRO_EXIT=${PIPESTATUS[0]}
           FLOW_END=$(date +%s)

@@ -25,7 +25,7 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 
 # Switch to Settings > Preferences and check same graph type is displayed
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"
@@ -101,7 +101,7 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 
 # Disable cover line back in Settings
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Preferences"

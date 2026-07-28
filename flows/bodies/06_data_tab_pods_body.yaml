@@ -49,7 +49,7 @@ name: "Body - Data Tab - pods@ovusense.com"
 
 # TC-37: Go to Settings > Data Sharing
 - tapOn:
-    id: "com.fertilityfocus.ovusense3:id/navigation_settings"
+    text: "Settings"
     retryTapIfNoChange: true
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
