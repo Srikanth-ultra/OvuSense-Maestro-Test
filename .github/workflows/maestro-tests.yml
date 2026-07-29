@@ -259,6 +259,10 @@ jobs:
           RESULTS_DIR="test-results/shard-${SHARD_INDEX}"
           adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
           echo "Emulator booted successfully"
+          # Force 3-button navigation to prevent gesture nav from intercepting
+          # touches near the bottom of the screen (fixes Settings tab tap issue)
+          adb shell cmd overlay enable com.android.internal.systemui.navbar.threebutton 2>/dev/null || true
+          sleep 2
           # Disable autofill to prevent save-password dialogs from blocking UI
           adb shell settings put secure autofill_service null 2>/dev/null || true
           # Disable IME popups and spell checker

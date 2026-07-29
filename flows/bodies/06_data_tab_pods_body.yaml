@@ -48,8 +48,10 @@ name: "Body - Data Tab - pods@ovusense.com"
 - waitForAnimationToEnd
 
 # TC-37: Go to Settings > Data Sharing
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd

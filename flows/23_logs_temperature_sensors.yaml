@@ -9,9 +9,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout if already logged in
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -50,8 +51,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
     timeout: 20000
 
 # Navigate to Settings > Subscription
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Subscription"
@@ -78,9 +81,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout nosub
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -173,8 +177,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout none@
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -256,8 +262,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - takeScreenshot: /tmp/ovusense_tc100_oldsensor_register_only
 
 # Logout oldsensor@
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -378,8 +386,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # TC-38/39: Navigate to Settings > Sensors
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Sensors"
@@ -455,8 +465,10 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Screenshots capture current state for manual verification
 
 # Logout
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

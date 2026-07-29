@@ -5,8 +5,10 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # TC-32: Check Medication log items match Displayed Events
 # ============================================================
 # First, go to Settings > Preferences > Select displayed Medications
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -51,8 +53,10 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # TC-33: Add a displayed event, check Medication log, remove it
 # ============================================================
 # Go to Settings > Preferences > Select displayed Medications
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -97,8 +101,10 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 - takeScreenshot: /tmp/ovusense_tc33_logs_after_add
 
 # Now go back to Settings and remove the added medication
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

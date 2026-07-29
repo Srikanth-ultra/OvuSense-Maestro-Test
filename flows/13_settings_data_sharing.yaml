@@ -41,8 +41,10 @@ name: "Settings - Data Sharing and Forgot Password"
 - waitForAnimationToEnd
 
 # TC-179: Settings > Data Sharing
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Data Sharing"

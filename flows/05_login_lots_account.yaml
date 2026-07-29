@@ -5,9 +5,10 @@ name: "Login & Data - lots@ovusense.com"
 - waitForAnimationToEnd
 
 # Ensure we're logged out first
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -49,8 +50,10 @@ name: "Login & Data - lots@ovusense.com"
 - takeScreenshot: /tmp/ovusense_tc_lots_data_loaded
 
 # TC: Confirm version number & UDI on Settings page
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - assertVisible:
     id: "com.fertilityfocus.ovusense3:id/settings_options_footer"

@@ -2,9 +2,10 @@ appId: com.fertilityfocus.ovusense3
 name: "Helper - Logout"
 ---
 # Navigate to Settings and logout (best-effort, state is cleared between tests)
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"

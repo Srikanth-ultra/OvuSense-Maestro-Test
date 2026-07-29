@@ -134,8 +134,10 @@ name: "Body - Data Tab - pods@ Deep Tests"
 - waitForAnimationToEnd
 
 # TC-152/153/154/155: Sensor data shown on graph
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -163,8 +165,10 @@ name: "Body - Data Tab - pods@ Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc153_data_ovucore_only
 
 # TC-154: Select OvuFirst data only
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -186,8 +190,10 @@ name: "Body - Data Tab - pods@ Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc154_data_ovufirst_only
 
 # TC-155: Select All data
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

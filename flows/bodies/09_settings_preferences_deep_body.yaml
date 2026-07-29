@@ -2,8 +2,10 @@ appId: com.fertilityfocus.ovusense3
 name: "Body - Settings Preferences - Deep Tests"
 ---
 # Go to Settings > Preferences
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -29,8 +31,10 @@ name: "Body - Settings Preferences - Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc162_data_fahrenheit
 
 # TC-163: Return to Settings, select Celsius
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -49,8 +53,10 @@ name: "Body - Settings Preferences - Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc163_data_celsius
 
 # TC-164: Tap Default graph type and select different type
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -69,8 +75,10 @@ name: "Body - Settings Preferences - Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc164_data_smooth
 
 # Reset to Combined data
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -122,8 +130,10 @@ name: "Body - Settings Preferences - Deep Tests"
 - takeScreenshot: /tmp/ovusense_tc173_data_coverline
 
 # Toggle back
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -219,8 +229,10 @@ name: "Body - Settings Preferences - Deep Tests"
     optional: true
 - waitForAnimationToEnd
 # Go to Settings > Preferences and verify same graph type shown
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

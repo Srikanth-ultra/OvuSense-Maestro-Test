@@ -5,9 +5,10 @@ name: "Account Tests - none@ and oldsensor@"
 - waitForAnimationToEnd
 
 # Logout if already logged in
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -86,8 +87,10 @@ name: "Account Tests - none@ and oldsensor@"
 - takeScreenshot: /tmp/ovusense_tc93_none_temperature_log
 
 # Logout
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -161,8 +164,10 @@ name: "Account Tests - none@ and oldsensor@"
 - takeScreenshot: /tmp/ovusense_tc94_oldsensor_temperature_log
 
 # Logout
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

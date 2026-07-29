@@ -5,8 +5,10 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # Row 33: Select shared user, verify ADD/EDIT logs hidden
 # ============================================================
 # Navigate to Settings > Data Sharing
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd
@@ -69,8 +71,10 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # Row 36: Switch back to owner, verify editing re-enabled
 # ============================================================
 # Settings tab remembers Data Sharing sub-page, so we land directly on it
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - takeScreenshot: /tmp/ovusense_r36_data_sharing_users
 

@@ -2,8 +2,10 @@ appId: com.fertilityfocus.ovusense3
 name: "Body - Settings - Account Email, Password & Contact Tests"
 ---
 # Navigate to Settings > Account
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Account"
@@ -63,8 +65,10 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 # TC-05 & TC-06 require actually changing email - STUB only
 
 # Navigate to Settings main via bottom nav (reliable), then Account > Update Password
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn: "Account"
 - waitForAnimationToEnd
@@ -179,8 +183,10 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 - takeScreenshot: /tmp/ovusense_tc11_stub_not_changing
 
 # Navigate to Settings main via bottom nav (reliable), then Account > Personal Details
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 
 # ============================================================
@@ -213,7 +219,9 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 - takeScreenshot: /tmp/ovusense_tc15_contact_toggled_2
 
 # Navigate to Settings main via bottom nav (reliable)
-- tapOn:
-    point: "972,2200"
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 

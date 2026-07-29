@@ -3,9 +3,10 @@ name: "Helper - Logout and capture login screen"
 ---
 - launchApp
 - waitForAnimationToEnd
-- tapOn:
-    point: "972,2200"
-    optional: true
+- swipe:
+    start: "972,2200"
+    end: "968,2200"
+    duration: 200
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
