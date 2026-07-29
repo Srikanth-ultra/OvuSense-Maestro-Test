@@ -6,8 +6,7 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # ============================================================
 # Navigate to Settings > Data Sharing
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd
@@ -71,8 +70,7 @@ name: "Body - Data Tab - Shared User Restrictions (pods@)"
 # ============================================================
 # Settings tab remembers Data Sharing sub-page, so we land directly on it
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - takeScreenshot: /tmp/ovusense_r36_data_sharing_users
 

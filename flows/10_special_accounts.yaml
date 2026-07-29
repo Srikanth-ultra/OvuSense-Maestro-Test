@@ -6,8 +6,7 @@ name: "Special Account Tests"
 
 # Logout if already logged in
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -55,8 +54,7 @@ name: "Special Account Tests"
 
 # Logout
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -104,8 +102,7 @@ name: "Special Account Tests"
 
 # Logout
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -148,8 +145,7 @@ name: "Special Account Tests"
 
 # Logout
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -185,8 +181,7 @@ name: "Special Account Tests"
 
 # Logout
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -226,8 +221,7 @@ name: "Special Account Tests"
 
 # TC-102: Check Subscription status says 'No subscription'
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Subscriptions"
 - waitForAnimationToEnd

@@ -1,7 +1,11 @@
 appId: com.fertilityfocus.ovusense3
 name: "Me Tab - Navigation and Verification"
 ---
-- launchApp
-- waitForAnimationToEnd
+# Clean login
+- runFlow:
+    file: helpers/login_clean.yaml
+    env:
+      EMAIL: "test@ovusense.com"
+      PASSWORD: "ovutest?0"
 # Test body
 - runFlow: bodies/03_me_tab_body.yaml

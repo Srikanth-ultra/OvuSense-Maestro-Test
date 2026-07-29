@@ -5,8 +5,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-27: Check 'Sensor data shown on graph' option available
 # ============================================================
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -45,8 +44,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-29: Select 'OvuFirst data only'
 # ============================================================
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -73,8 +71,7 @@ name: "Body - Settings - Sensor Data Graph Filtering (pods@)"
 # TC-30: Select 'All data'
 # ============================================================
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

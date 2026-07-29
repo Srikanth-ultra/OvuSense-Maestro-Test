@@ -3,8 +3,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 ---
 # Navigate to Settings > Account
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Account"
@@ -65,8 +64,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 
 # Navigate to Settings main via bottom nav (reliable), then Account > Update Password
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Account"
 - waitForAnimationToEnd
@@ -182,8 +180,7 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 
 # Navigate to Settings main via bottom nav (reliable), then Account > Personal Details
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 
 # ============================================================
@@ -217,7 +214,6 @@ name: "Body - Settings - Account Email, Password & Contact Tests"
 
 # Navigate to Settings main via bottom nav (reliable)
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 

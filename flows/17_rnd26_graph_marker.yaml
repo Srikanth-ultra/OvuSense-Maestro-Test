@@ -6,8 +6,7 @@ name: "Bug 2748 - rnd26@ OvuFirst Graph Marker"
 
 # Logout if already logged in
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -72,8 +71,7 @@ name: "Bug 2748 - rnd26@ OvuFirst Graph Marker"
 
 # Logout
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

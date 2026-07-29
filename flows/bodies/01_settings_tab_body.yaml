@@ -3,8 +3,7 @@ name: "Body - Settings Tab - Navigation and Verification"
 ---
 # TC-140: Select the Settings tab. Check Settings page with account email and version
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:

@@ -3,8 +3,7 @@ name: "Helper - Logout"
 ---
 # Navigate to Settings and logout (best-effort, state is cleared between tests)
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
     optional: true
 - waitForAnimationToEnd
 - tapOn:

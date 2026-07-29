@@ -6,8 +6,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # ============================================================
 # First, go to Settings > Preferences > Select displayed Medications
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -53,8 +52,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 # ============================================================
 # Go to Settings > Preferences > Select displayed Medications
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -100,8 +98,7 @@ name: "Body - Settings - Displayed Events & Medication Log Sync"
 
 # Now go back to Settings and remove the added medication
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

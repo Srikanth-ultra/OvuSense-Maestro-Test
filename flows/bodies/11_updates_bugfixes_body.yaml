@@ -53,8 +53,7 @@ name: "Body - Updates - Bug Fix Verification"
 # ========== 2739: UDI Update ==========
 # Check UDI in Settings
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - assertVisible:
     id: "com.fertilityfocus.ovusense3:id/settings_options_footer"

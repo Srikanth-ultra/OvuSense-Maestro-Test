@@ -25,8 +25,7 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 
 # Switch to Settings > Preferences and check same graph type is displayed
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -101,8 +100,7 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 
 # Disable cover line back in Settings
 - tapOn:
-    text: "Settings"
-    retryTapIfNoChange: true
+    point: "90%,91%"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
