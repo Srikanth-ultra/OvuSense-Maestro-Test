@@ -2,9 +2,14 @@ appId: com.fertilityfocus.ovusense3
 name: "Body - Settings Tab - Navigation and Verification"
 ---
 # TC-140: Select the Settings tab. Check Settings page with account email and version
+# DEBUG: Screenshot before Settings tap
+- takeScreenshot: /tmp/ovusense_debug_before_settings_tap
+# Try tapping Settings tab at absolute pixel coordinates (center of rightmost nav item)
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
+# DEBUG: Screenshot after Settings tap
+- takeScreenshot: /tmp/ovusense_debug_after_settings_tap
 - extendedWaitUntil:
     visible:
       id: "com.fertilityfocus.ovusense3:id/app_toolbar_title"

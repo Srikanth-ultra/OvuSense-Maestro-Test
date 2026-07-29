@@ -49,7 +49,7 @@ name: "Body - Data Tab - pods@ovusense.com"
 
 # TC-37: Go to Settings > Data Sharing
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd

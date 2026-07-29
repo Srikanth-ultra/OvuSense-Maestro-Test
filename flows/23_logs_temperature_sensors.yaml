@@ -10,7 +10,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Logout if already logged in
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -51,7 +51,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Navigate to Settings > Subscription
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Subscription"
@@ -79,7 +79,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Logout nosub
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
     optional: true
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
@@ -174,7 +174,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Logout none@
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -257,7 +257,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Logout oldsensor@
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -379,7 +379,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # TC-38/39: Navigate to Settings > Sensors
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Sensors"
@@ -456,7 +456,7 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 
 # Logout
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

@@ -6,7 +6,7 @@ name: "Account Tests - none@ and oldsensor@"
 
 # Logout if already logged in
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
     optional: true
 - waitForAnimationToEnd
 - tapOn:
@@ -87,7 +87,7 @@ name: "Account Tests - none@ and oldsensor@"
 
 # Logout
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -162,7 +162,7 @@ name: "Account Tests - none@ and oldsensor@"
 
 # Logout
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

@@ -4,7 +4,7 @@ name: "Helper - Logout and capture login screen"
 - launchApp
 - waitForAnimationToEnd
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
     optional: true
 - waitForAnimationToEnd
 - tapOn:

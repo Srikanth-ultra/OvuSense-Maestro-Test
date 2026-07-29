@@ -42,7 +42,7 @@ name: "Settings - Data Sharing and Forgot Password"
 
 # TC-179: Settings > Data Sharing
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Data Sharing"

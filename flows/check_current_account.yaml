@@ -1,7 +1,7 @@
 appId: com.fertilityfocus.ovusense3
 ---
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - assertVisible: "Settings"
 - takeScreenshot: /tmp/ovusense_settings

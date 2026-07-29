@@ -6,7 +6,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # Navigate to Subscriptions > Change subscription email
 # ============================================================
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Subscriptions"
@@ -45,7 +45,7 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # ============================================================
 # Navigate via bottom nav to ensure we're on Settings main
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd

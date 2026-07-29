@@ -3,7 +3,7 @@ name: "Body - Settings Preferences - Deep Tests"
 ---
 # Go to Settings > Preferences
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Preferences"
@@ -30,7 +30,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # TC-163: Return to Settings, select Celsius
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -50,7 +50,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # TC-164: Tap Default graph type and select different type
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -70,7 +70,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # Reset to Combined data
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -123,7 +123,7 @@ name: "Body - Settings Preferences - Deep Tests"
 
 # Toggle back
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -220,7 +220,7 @@ name: "Body - Settings Preferences - Deep Tests"
 - waitForAnimationToEnd
 # Go to Settings > Preferences and verify same graph type shown
 - tapOn:
-    point: "90%,91%"
+    point: "972,2200"
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd

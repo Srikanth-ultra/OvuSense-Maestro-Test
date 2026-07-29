@@ -113,7 +113,7 @@ jobs:
     name: "Shard ${{ matrix.shard }}"
     runs-on: ubuntu-latest
     needs: prepare-apk
-    timeout-minutes: 30
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
@@ -273,14 +273,43 @@ jobs:
           adb shell settings put secure credential_service "" 2>/dev/null || true
           adb shell settings put secure credential_service_primary "" 2>/dev/null || true
           echo "Emulator configured for testing"
+          # Log screen dimensions and density for debugging
+          echo "=== EMULATOR DISPLAY INFO ==="
+          adb shell wm size 2>/dev/null || true
+          adb shell wm density 2>/dev/null || true
+          adb shell dumpsys display | grep -E "mBaseDisplayInfo|DisplayDeviceInfo" | head -5 2>/dev/null || true
+          echo "=== END DISPLAY INFO ==="
           adb install -r "$APK_PATH"
           echo "APK installed: $APP_PACKAGE"
           # Grant all runtime permissions to avoid permission dialogs
           adb shell pm grant "$APP_PACKAGE" android.permission.POST_NOTIFICATIONS 2>/dev/null || true
           echo "Using account: $EMAIL"
+          mkdir -p "$RESULTS_DIR"
           # Take a debug screenshot of emulator home screen
           adb exec-out screencap -p > "${RESULTS_DIR}/00_emulator_ready.png" 2>/dev/null || true
-          mkdir -p "$RESULTS_DIR"
+          # ========================================
+          # DEBUG: Test adb input tap on Settings tab
+          # This tests if adb shell input tap works at the bottom-right nav
+          # ========================================
+          echo "=== DEBUG: Testing adb input tap on Settings nav ==="
+          # Launch app, clear state, login, then test Settings tap
+          adb shell pm clear "$APP_PACKAGE" 2>/dev/null || true
+          adb shell am start -n "$APP_PACKAGE/com.fertilityfocus.ovusense3.activity.LaunchActivity" 2>/dev/null || true
+          sleep 5
+          adb exec-out screencap -p > "${RESULTS_DIR}/debug_01_app_launched.png" 2>/dev/null || true
+          # Run a quick Maestro login flow to get to main screen
+          maestro test flows/helpers/login_clean.yaml -e EMAIL="$EMAIL" -e PASSWORD="$PASSWORD" 2>&1 | tail -5 || true
+          sleep 2
+          adb exec-out screencap -p > "${RESULTS_DIR}/debug_02_after_login.png" 2>/dev/null || true
+          # Now test: adb shell input tap at Settings coordinates (center of rightmost nav item)
+          echo "Sending adb input tap at (972, 2200)..."
+          adb shell input tap 972 2200
+          sleep 2
+          adb exec-out screencap -p > "${RESULTS_DIR}/debug_03_after_adb_tap_settings.png" 2>/dev/null || true
+          echo "=== DEBUG: adb input tap test complete ==="
+          # Clear state again before actual tests
+          adb shell pm clear "$APP_PACKAGE" 2>/dev/null || true
+          sleep 2
           SHARD_FLOWS=$(tr '\n' ' ' < shard_flows.txt)
           echo "Flows for this shard:"
           cat shard_flows.txt
@@ -300,8 +329,16 @@ jobs:
           # Clear app state before each test to ensure clean start
           adb shell pm clear "$APP_PACKAGE" 2>/dev/null || true
           sleep 2
-          maestro test "$flow" --format junit --output "${RESULTS_DIR}/${FLOW_NAME}.xml" 2>&1 | tee "${RESULTS_DIR}/${FLOW_NAME}.log"
+          # Start video recording in background (max 180s, will be killed after test)
+          adb shell screenrecord --time-limit 180 "/sdcard/${FLOW_NAME}.mp4" &
+          RECORD_PID=$!
+          maestro test "$flow" --format junit --output "${RESULTS_DIR}/${FLOW_NAME}.xml" --debug-output "${RESULTS_DIR}/${FLOW_NAME}_debug" 2>&1 | tee "${RESULTS_DIR}/${FLOW_NAME}.log"
           MAESTRO_EXIT=${PIPESTATUS[0]}
+          # Stop video recording
+          kill $RECORD_PID 2>/dev/null || true
+          sleep 2
+          adb pull "/sdcard/${FLOW_NAME}.mp4" "${RESULTS_DIR}/${FLOW_NAME}.mp4" 2>/dev/null || true
+          adb shell rm "/sdcard/${FLOW_NAME}.mp4" 2>/dev/null || true
           FLOW_END=$(date +%s)
           FLOW_DUR=$((FLOW_END - FLOW_START))
           if [ "$MAESTRO_EXIT" -eq 0 ]; then
