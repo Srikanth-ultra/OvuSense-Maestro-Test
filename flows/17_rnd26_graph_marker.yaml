@@ -5,10 +5,8 @@ name: "Bug 2748 - rnd26@ OvuFirst Graph Marker"
 - waitForAnimationToEnd
 
 # Logout if already logged in
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -71,10 +69,8 @@ name: "Bug 2748 - rnd26@ OvuFirst Graph Marker"
 - takeScreenshot: /tmp/ovusense_tc2748_rnd26_scroll4
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

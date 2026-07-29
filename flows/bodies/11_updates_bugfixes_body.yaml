@@ -52,10 +52,8 @@ name: "Body - Updates - Bug Fix Verification"
 
 # ========== 2739: UDI Update ==========
 # Check UDI in Settings
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - assertVisible:
     id: "com.fertilityfocus.ovusense3:id/settings_options_footer"

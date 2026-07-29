@@ -5,10 +5,8 @@ name: "Body - Settings Tab - Navigation and Verification"
 # DEBUG: Screenshot before Settings tap
 - takeScreenshot: /tmp/ovusense_debug_before_settings_tap
 # Try tapping Settings tab at absolute pixel coordinates (center of rightmost nav item)
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 # DEBUG: Screenshot after Settings tap
 - takeScreenshot: /tmp/ovusense_debug_after_settings_tap

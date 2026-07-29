@@ -314,6 +314,14 @@ jobs:
           # Clear state again before actual tests
           adb shell pm clear "$APP_PACKAGE" 2>/dev/null || true
           sleep 2
+          # Start the adb tap HTTP server (bridges Maestro JS to adb shell input tap)
+          # Maestro's tapOn/swipe doesn't work at Settings tab coordinates on CI emulator,
+          # but adb shell input tap does. This server lets Maestro JS call adb tap via HTTP.
+          python3 scripts/tap_server.py 8089 &
+          TAP_SERVER_PID=$!
+          sleep 1
+          # Verify tap server is running
+          curl -s http://localhost:8089/health > /dev/null 2>&1 && echo "Tap server started (PID: $TAP_SERVER_PID)" || echo "WARNING: Tap server may not have started"
           SHARD_FLOWS=$(tr '\n' ' ' < shard_flows.txt)
           echo "Flows for this shard:"
           cat shard_flows.txt
@@ -371,6 +379,8 @@ jobs:
           if [ -n "$ERRORS" ]; then
           echo -e "Failed flows:$ERRORS"
           fi
+          # Stop the tap server
+          kill $TAP_SERVER_PID 2>/dev/null || true
           if [ "$FAILED" -gt 0 ]; then
           exit 1
           fi

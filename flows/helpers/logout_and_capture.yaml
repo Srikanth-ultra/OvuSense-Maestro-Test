@@ -3,10 +3,8 @@ name: "Helper - Logout and capture login screen"
 ---
 - launchApp
 - waitForAnimationToEnd
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"

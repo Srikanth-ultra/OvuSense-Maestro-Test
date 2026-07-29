@@ -5,10 +5,8 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # TC-19 (STUB): Change subscription email - submit new email
 # Navigate to Subscriptions > Change subscription email
 # ============================================================
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible: "Subscriptions"
@@ -46,10 +44,8 @@ name: "Body - Settings - Data Sharing & Subscription Email Tests"
 # TC-42 (STUB): Data Sharing - send invitation to new user
 # ============================================================
 # Navigate via bottom nav to ensure we're on Settings main
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "Data Sharing"
 - waitForAnimationToEnd

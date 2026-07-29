@@ -9,10 +9,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout if already logged in
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -51,10 +49,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
     timeout: 20000
 
 # Navigate to Settings > Subscription
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Subscription"
@@ -81,10 +77,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout nosub
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -177,10 +171,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # Logout none@
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -262,10 +254,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - takeScreenshot: /tmp/ovusense_tc100_oldsensor_register_only
 
 # Logout oldsensor@
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -386,10 +376,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 - waitForAnimationToEnd
 
 # TC-38/39: Navigate to Settings > Sensors
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - scrollUntilVisible:
     element: "Sensors"
@@ -465,10 +453,8 @@ name: "Logs - Temperature & Sensor Tests (Stubs)"
 # Screenshots capture current state for manual verification
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd

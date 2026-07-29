@@ -5,10 +5,8 @@ name: "Special Account Tests"
 - waitForAnimationToEnd
 
 # Logout if already logged in
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn:
     text: "LOG OUT"
@@ -54,10 +52,8 @@ name: "Special Account Tests"
 - waitForAnimationToEnd
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -104,10 +100,8 @@ name: "Special Account Tests"
 - waitForAnimationToEnd
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -149,10 +143,8 @@ name: "Special Account Tests"
 - waitForAnimationToEnd
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -187,10 +179,8 @@ name: "Special Account Tests"
 - takeScreenshot: /tmp/ovusense_tc60_preg_create_cycle_msg
 
 # Logout
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "LOG OUT"
 - waitForAnimationToEnd
@@ -229,10 +219,8 @@ name: "Special Account Tests"
 - takeScreenshot: /tmp/ovusense_tc101_nosub_logs_temp
 
 # TC-102: Check Subscription status says 'No subscription'
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "Subscriptions"
 - waitForAnimationToEnd

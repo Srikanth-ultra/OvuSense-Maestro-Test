@@ -24,10 +24,8 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 - waitForAnimationToEnd
 
 # Switch to Settings > Preferences and check same graph type is displayed
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
@@ -101,10 +99,8 @@ name: "Body - Settings - Graph Type Sync & Cover Line Tests"
 - takeScreenshot: /tmp/ovusense_tc36_graph3_coverline
 
 # Disable cover line back in Settings
-- swipe:
-    start: "972,2200"
-    end: "968,2200"
-    duration: 200
+- runScript:
+    file: ../scripts/tap_settings.js
 - waitForAnimationToEnd
 - tapOn: "Preferences"
 - waitForAnimationToEnd
